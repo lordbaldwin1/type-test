@@ -8,4 +8,4 @@
 - [] Figure out db schema for users, stats, leaderboard
 - [] Refactor typing test? pull out 
 ## Notes
-- 
+- CONSOLIDATE types/interfaces

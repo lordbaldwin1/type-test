@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback, memo, forwardRef } from "react";
 import { generateRandomWords } from "../lib/utils";
 import { Clock, Hash } from "lucide-react";
+import { useGameTimer } from "~/lib/hooks/useGameTimer";
 
 interface LetterCount {
   correct: number;
@@ -61,8 +62,20 @@ export default function TypeTest() {
     },
     wordCount: 10,
     timeLimit: 0,
-    sampleText: generateRandomWords(10).split(" "),
+    sampleText: [],
   });
+
+  // const { time, resetTimer } = useGameTimer(gameState.mode, gameState.status, gameState.timeLimit);
+
+  // Initialize sample text on client side only
+  useEffect(() => {
+    if (gameState.sampleText.length === 0) {
+      setGameState(prev => ({
+        ...prev,
+        sampleText: generateRandomWords(prev.wordCount).split(" ")
+      }));
+    }
+  }, [gameState.sampleText.length, gameState.wordCount]);
 
   // Ref/useEffect to focus input box
   const inputRef = useRef<HTMLInputElement>(null);
