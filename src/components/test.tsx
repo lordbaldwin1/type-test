@@ -18,7 +18,6 @@ type GameMode = "words" | "time";
 interface GameState {
   status: GameStatus;
   mode: GameMode;
-  time: number;
   stats: {
     wpm: number;
     rawWpm: number;
@@ -34,15 +33,18 @@ interface GameState {
 }
 
 export default function TypeTest() {
+  // Typing state
   const [input, setInput] = useState<string>("");
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
+  const [completedWords, setCompletedWords] = useState<string[]>([]);
+
   const [letterCount, setLetterCount] = useState<LetterCount>({
     correct: 0,
     incorrect: 0,
     extra: 0,
     missed: 0,
   });
-  const [completedWords, setCompletedWords] = useState<string[]>([]);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +52,6 @@ export default function TypeTest() {
   const [gameState, setGameState] = useState<GameState>({
     status: "before",
     mode: "words",
-    time: 0,
     stats: {
       wpm: 0,
       rawWpm: 0,
@@ -65,7 +66,7 @@ export default function TypeTest() {
     sampleText: [],
   });
 
-  // const { time, resetTimer } = useGameTimer(gameState.mode, gameState.status, gameState.timeLimit);
+  const { time, resetTimer } = useGameTimer(gameState.mode, gameState.status, gameState.timeLimit);
 
   // Initialize sample text on client side only
   useEffect(() => {
@@ -106,7 +107,7 @@ export default function TypeTest() {
     if (gameState.mode === "time") {
       timeInMinutes = gameState.timeLimit / 60;
     } else {
-      timeInMinutes = gameState.time / 60;
+      timeInMinutes = time / 60;
     }
     if (timeInMinutes === 0) return;
 
@@ -127,7 +128,7 @@ export default function TypeTest() {
         missed: letterCount.missed,
       },
     }));
-  }, [completedWords, letterCount, gameState.mode, gameState.time, gameState.timeLimit]);
+  }, [completedWords, letterCount, gameState.mode, time, gameState.timeLimit]);
 
   const startGame = useCallback(() => {
     setGameState((prev) => ({
@@ -140,7 +141,6 @@ export default function TypeTest() {
     setGameState((prev) => ({
       ...prev,
       status: "before",
-      time: prev.mode === "time" ? prev.timeLimit : 0,
       sampleText: generateRandomWords(prev.wordCount).split(" "),
       stats: {
         wpm: 0,
@@ -152,7 +152,8 @@ export default function TypeTest() {
         missed: 0,
       },
     }));
-  }, []);
+    resetTimer();
+  }, [resetTimer]);
 
   const updateLetterCount = useCallback((submittedWord: string[], sampleWord: string[]) => {
     if (gameState.status !== "during") {
@@ -240,7 +241,7 @@ export default function TypeTest() {
     }
   }, [gameState.status]);
 
-  if (gameState.mode === "time" && gameState.time === 0 && gameState.status === "during") {
+  if (gameState.mode === "time" && time === 0 && gameState.status === "during") {
     handleEndGame();
   }
   // Focus input when game starts or resets
@@ -249,33 +250,6 @@ export default function TypeTest() {
       inputRef.current?.focus();
     }
   }, [gameState.status]);
-
-  // Timers
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout | undefined;
-
-    if (gameState.status === "during" && gameState.mode === "words") {
-      intervalId = setInterval(() => {
-        setGameState((prev) => ({
-          ...prev,
-          time: prev.time + 1,
-        }));
-      }, 1000);
-    }
-
-    if (gameState.status === "during" && gameState.mode === "time") {
-      intervalId = setInterval(() => {
-        setGameState((prev) => ({
-          ...prev,
-          time: prev.time - 1,
-        }));
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [gameState.status, gameState.mode]);
 
   // Reset typing states when game status changes
   useEffect(() => {
@@ -328,7 +302,7 @@ export default function TypeTest() {
             </div>
             <div className="flex flex-col items-center p-3 bg-muted rounded">
               <span className="text-muted-foreground text-sm">Time</span>
-              <span className="text-2xl font-bold text-primary">{gameState.time}s</span>
+              <span className="text-2xl font-bold text-primary">{time}s</span>
             </div>
           </div>
 
@@ -386,7 +360,7 @@ export default function TypeTest() {
                 <p className="text-2xl font-bold text-primary">{`${completedWords.length}/${gameState.sampleText.length}`}</p>
               )}
               {gameState.mode === "time" && (
-                <p className="text-2xl font-bold text-primary">{`${gameState.time}s`}</p>
+                <p className="text-2xl font-bold text-primary">{`${time}s`}</p>
               )}
             </div>
             
