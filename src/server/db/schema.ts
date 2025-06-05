@@ -1,27 +1,27 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
 import { sql } from "drizzle-orm";
 import { index, pgTableCreator } from "drizzle-orm/pg-core";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
 export const createTable = pgTableCreator((name) => `type-test_${name}`);
 
-export const posts = createTable(
-  "post",
+export const games = createTable(
+  "game",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
+    userId: d.varchar({ length: 256 }),
+    mode: d.varchar({ length: 256 }),
+    timeLimit: d.integer(),
+    wordCount: d.integer(),
+    wpm: d.integer(),
+    rawWpm: d.integer(),
+    accuracy: d.integer(),
+    correct: d.integer(),
+    incorrect: d.integer(),
+    extra: d.integer(),
+    missed: d.integer(),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
   }),
-  (t) => [index("name_idx").on(t.name)],
+  (t) => [index("mode_idx").on(t.mode)],
 );

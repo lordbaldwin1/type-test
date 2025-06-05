@@ -4,6 +4,9 @@ import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/lib/theme-provider";
 import Navbar from "~/components/navbar";
+import {
+  ClerkProvider,
+} from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "type-test",
@@ -20,20 +23,22 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
-      <head />
+    <ClerkProvider>
+      <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
+        <head />
 
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+        <body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

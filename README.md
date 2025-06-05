@@ -2,10 +2,16 @@
 
 ## TODO
 - [x] Setup and deploy app/db
-- [] Port over typing test
-- [] Setup shadcn and dark/light mode
-- [] Setup auth
-- [] Figure out db schema for users, stats, leaderboard
-- [] Refactor typing test? pull out 
+- [x] Port over typing test
+- [x] Setup shadcn and dark/light mode
+- [x] Setup auth
+- [x] Figure out db schema for users, stats, leaderboard
+- [x] Refactor typing test?
+- [] Continue refactor
+- [] Profile page with stats
+- [] Leaderboards (plan)
+- [] About page
+
 ## Notes
 - CONSOLIDATE types/interfaces
+- Add error handling 

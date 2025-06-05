@@ -1,6 +1,12 @@
-import { Crown, Info, Keyboard, Rabbit } from "lucide-react";
+import { Crown, Info, Keyboard, Rabbit, User } from "lucide-react";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
@@ -25,8 +31,17 @@ export default function Navbar() {
             </Link>
           </div>
         </div>
-
-        <ModeToggle />
+        <div className="flex items-center">
+          <ModeToggle />
+          <SignedOut>
+            <SignInButton mode="modal" >
+              <User className="h-4.5 w-4.5 text-muted-foreground hover:scale-110 hover:text-foreground" />
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
     </div>
   );
