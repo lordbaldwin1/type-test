@@ -1,29 +1,16 @@
-// input state
-// currentWordIndex state
-// completedWords state
-// handleInputChange function
-// handleSubmit function (the keydown handler)
-// The logic for moving between words
-// Word completion detection
-
 import { useCallback, useEffect, useState } from "react";
+import { calculateLetterCount, type LetterCount } from "../_utils/gameStats";
 
 type GameStatus = "before" | "during" | "after";
-interface LetterCount {
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-}
 
 interface UseTypingGameProps {
   sampleText: string[];
-  gameStatus: GameStatus; // To know when to reset, etc.
+  gameStatus: GameStatus;
   onGameStart?: () => void;
   onGameComplete?: (
     finalLetterCount: LetterCount,
     finalCompletedWords: string[],
-  ) => Promise<void>; // Callback now expects these args
+  ) => Promise<void>;
 }
 
 export function useTypingGame({
@@ -74,32 +61,13 @@ export function useTypingGame({
       if (gameStatus !== "during") {
         return;
       }
-      const extraCount =
-        submittedWord.length > sampleWord.length
-          ? submittedWord.slice(sampleWord.length).length
-          : 0;
 
-      const missedCount =
-        submittedWord.length < sampleWord.length
-          ? sampleWord.length - submittedWord.length
-          : 0;
-
-      let correctCount = 0;
-      let incorrectCount = 0;
-
-      for (let i = 0; i < submittedWord.length; i++) {
-        if (submittedWord[i] === sampleWord[i]) {
-          correctCount++;
-        } else if (submittedWord[i] !== sampleWord[i]) {
-          incorrectCount++;
-        }
-      }
-
+      const newLetterCount = calculateLetterCount(submittedWord, sampleWord);
       setLetterCount((prev) => ({
-        correct: prev.correct + correctCount,
-        incorrect: prev.incorrect + incorrectCount,
-        extra: prev.extra + extraCount,
-        missed: prev.missed + missedCount,
+        correct: prev.correct + newLetterCount.correct,
+        incorrect: prev.incorrect + newLetterCount.incorrect,
+        extra: prev.extra + newLetterCount.extra,
+        missed: prev.missed + newLetterCount.missed,
       }));
     },
     [gameStatus],
