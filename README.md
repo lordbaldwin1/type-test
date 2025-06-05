@@ -14,4 +14,6 @@
 
 ## Notes
 - CONSOLIDATE types/interfaces
-- Add error handling 
+- Add error handling to db fail?
+- Fix switching between text blur
+- Fix loading blur
