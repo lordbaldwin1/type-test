@@ -25,3 +25,36 @@ export const games = createTable(
   }),
   (t) => [index("mode_idx").on(t.mode)],
 );
+
+export const users = createTable(
+  "user",
+  (d) => ({
+    id: d.varchar({ length: 256 }).primaryKey(),
+    username: d.varchar({ length: 256 }),
+    averageWpm: d.real().notNull(),
+    averageAccuracy: d.real().notNull(),
+    averageCorrect: d.real().notNull(),
+    averageIncorrect: d.real().notNull(),
+    averageExtra: d.real().notNull(),
+    averageMissed: d.real().notNull(),
+    totalGames: d.integer().notNull(),
+    highestWpm: d.real().notNull(),
+    highestAccuracy: d.real().notNull(),
+    highestCorrect: d.real().notNull(),
+    highestIncorrect: d.real().notNull(),
+    highestExtra: d.real().notNull(),
+    highestMissed: d.real().notNull(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: d
+      .timestamp({ withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  }),
+  (t) => [index("id_idx").on(t.id)],
+);
+
+export type User = typeof users.$inferSelect;
+export type Game = typeof games.$inferSelect;

@@ -8,13 +8,12 @@ import { useTypingGame } from "~/app/(test)/_hooks/useTypingGame";
 import { saveGameStats } from "~/server/db/actions";
 import { useGameState } from "~/app/(test)/_hooks/useGameState";
 import { calculateStats, type LetterCount } from "~/app/(test)/_utils/gameStats";
-import { GameStats } from "./GameStats";
-import { GameArea } from "./GameArea";
-import { GameModeConfig } from "./GameModeConfig";
+import { GameStats } from "./game-stats";
+import { GameArea } from "./game-area";
+import { GameModeConfig } from "./game-mode-config";
 
 export default function TypeTest(props: { initialSampleText: string[] }) {
   const { userId } = useAuth();
-
   const {
     gameState,
     updateGameStatus,
@@ -25,18 +24,17 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     updateSampleText,
     resetGameState,
   } = useGameState(props.initialSampleText);
-
-  useEffect(() => {
-    if (gameState.sampleText.length === 0 || gameState.status === "before") {
-      updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
-    }
-  }, [gameState.wordCount, gameState.status, updateSampleText, gameState.sampleText]);
-
   const { time } = useGameTimer(
     gameState.mode,
     gameState.status,
     gameState.timeLimit,
   );
+  // Generate random words when game mode is changed or game is reset
+  useEffect(() => {
+    if (gameState.status === "before") {
+      updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
+    }
+  }, [gameState.wordCount, gameState.status, updateSampleText]);
 
   const startGame = useCallback(() => {
     updateGameStatus("during");

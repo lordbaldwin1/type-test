@@ -23,7 +23,7 @@ export default function Navbar() {
             <Link href={`/`}>
               <Keyboard className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
-            <Link href={`/`}>
+            <Link href={`/leaderboard`}>
               <Crown className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
             <Link href={`/`}>

@@ -15,6 +15,13 @@
       "when": 1749098300930,
       "tag": "0001_solid_millenium_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749242378387,
+      "tag": "0002_bright_omega_flight",
+      "breakpoints": true
     }
   ]
 }

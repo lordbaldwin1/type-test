@@ -7,6 +7,7 @@ import Navbar from "~/components/navbar";
 import {
   ClerkProvider,
 } from "@clerk/nextjs";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "type-test",
@@ -36,6 +37,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

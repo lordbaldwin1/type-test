@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { RotateCcw } from "lucide-react";
-import { Word } from "./Word";
+import { Word } from "./word";
 import type { GameMode } from "~/app/(test)/_hooks/useGameState";
 
 interface GameAreaProps {
@@ -50,7 +50,7 @@ export function GameArea({
         if (status === "during" || status === "before") {
             inputRef.current?.focus();
         }
-    }, [status]);
+    }, [status, sampleText]);
 
     const handleGameAreaClick = () => {
         if (status === "during" || status === "before") {
@@ -60,18 +60,11 @@ export function GameArea({
 
     return (
         <div className="flex w-full max-w-3xl flex-col gap-2">
-            <div className="mt-8 flex flex-col items-center">
+            <div className="mt-8 flex flex-col items-center" onClick={handleGameAreaClick}>
                 <input
                     ref={inputRef}
                     onFocus={() => setIsInputFocused(true)}
-                    onBlur={(e) => {
-                        setIsInputFocused(false);
-                        if (e.relatedTarget) return;
-
-                        if (status === "during" || status === "before") {
-                            inputRef.current?.focus();
-                        }
-                    }}
+                    onBlur={() => inputRef.current?.blur()}
                     type="text"
                     value={input}
                     maxLength={15}
@@ -97,7 +90,7 @@ export function GameArea({
                         </div>
                     )}
 
-                    <div className="mt-36 ml-4 w-full">
+                    <div className="mt-24 ml-4 w-full">
                         {mode === "words" && (
                             <p className="text-primary text-2xl font-bold">{`${completedWords.length}/${sampleText.length}`}</p>
                         )}
@@ -133,7 +126,7 @@ export function GameArea({
                 </div>
                 <Button
                     variant="ghost"
-                    className="text-muted-foreground hover:text-foreground mt-12 hover:scale-110"
+                    className="text-muted-foreground hover:text-foreground mt-24 hover:scale-110"
                     onClick={onReset}
                 >
                     <RotateCcw />
