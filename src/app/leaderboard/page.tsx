@@ -33,7 +33,7 @@ export default async function Leaderboard() {
             {showModal &&
                 <UsernameDialog />
             }
-            <LeaderboardTable userList={userList} user={user} userPosition={userPosition?.[0] ?? undefined} totalPlayers={totalPlayers?.[0]?.count ?? 0} />
+            <LeaderboardTable users={userList} user={user} userPosition={userPosition?.[0] ?? undefined} totalPlayers={totalPlayers?.[0]?.count ?? 0} />
         </div>
     );
 }
