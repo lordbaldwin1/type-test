@@ -42,7 +42,7 @@ export function GameArea({
   // Focus input on keypress
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (status !== "during" && status !== "before") return;
+      if (status !== "during" && status !== "before" && status !== "restart") return;
 
       if (document.activeElement === inputRef.current) return;
 
@@ -108,7 +108,7 @@ export function GameArea({
         {/* Wrapper for stats and text area with blur overlay */}
         <div className="relative" onClick={handleGameAreaClick}>
           {/* Blur overlay when input not focused */}
-          {!isInputFocused && (status === "during" || status === "before") && (
+          {!isInputFocused && (status === "during" || status === "before" || status === "restart") && (
             <div className="absolute inset-0 z-20 mt-32 flex items-center justify-center">
               <div className="absolute inset-0 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">

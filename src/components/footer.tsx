@@ -1,4 +1,4 @@
-import { Code, TentTree } from "lucide-react";
+import { Cat, Code, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -21,9 +21,19 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
-            <TentTree className="h-4 w-4" />
-            <span className="text-sm">my portfolio</span>
+            <Cat className="h-4 w-4" />
+            <span className="text-sm">portfolio</span>
           </a>
+          <a
+            href="mailto:springerczachary@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Mail className="h-4 w-4" />
+            contact
+            </a>
+          
         </div>
 
         {/* Attribution */}
