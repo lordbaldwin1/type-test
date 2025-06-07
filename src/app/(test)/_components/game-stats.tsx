@@ -1,13 +1,5 @@
 import { Button } from "~/components/ui/button";
-import type { GameStats as GameStatsType } from "~/app/(test)/_hooks/useGameState";
-
-interface GameStatsProps {
-    stats: GameStatsType;
-    mode: "words" | "time";
-    timeLimit: number;
-    time: number;
-    onReset: () => void;
-}
+import type { GameStatsProps } from "~/app/(test)/_utils/types";
 
 export function GameStats({ stats, mode, timeLimit, time, onReset }: GameStatsProps) {
     return (
