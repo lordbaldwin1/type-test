@@ -1,19 +1,6 @@
-import type { GameStats } from "../_hooks/useGameState";
+import type { GameStats, LetterCount, StatsCalculationInput } from "./types";
 
-export interface LetterCount {
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-}
 
-export interface StatsCalculationInput {
-  letterCount: LetterCount;
-  completedWords: string[];
-  timeInSeconds: number;
-  mode: "words" | "time";
-  timeLimit?: number;
-}
 
 export function calculateStats({
   letterCount,

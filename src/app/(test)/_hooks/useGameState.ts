@@ -1,26 +1,11 @@
 import { useCallback, useState } from "react";
-
-export type GameMode = "words" | "time";
-export type GameStatus = "before" | "during" | "after";
-
-export interface GameStats {
-  wpm: number;
-  rawWpm: number;
-  accuracy: number;
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-}
-
-export interface GameState {
-  status: GameStatus;
-  mode: GameMode;
-  stats: GameStats;
-  wordCount: number;
-  timeLimit: number;
-  sampleText: string[];
-}
+import type {
+  GameState,
+  GameStats,
+  GameStatus,
+  GameMode,
+  SaveStats,
+} from "../_utils/types";
 
 const initialStats: GameStats = {
   wpm: 0,
@@ -40,42 +25,54 @@ export function useGameState(initialSampleText: string[]) {
     wordCount: 10,
     timeLimit: 0,
     sampleText: initialSampleText,
+    saveStats: "false",
   });
 
   const updateGameStatus = useCallback((status: GameStatus) => {
-    setGameState(prev => ({ ...prev, status }));
+    setGameState((prev) => ({ ...prev, status }));
   }, []);
 
   const updateGameMode = useCallback((mode: GameMode) => {
-    setGameState(prev => ({ ...prev, mode }));
+    setGameState((prev) => ({ ...prev, mode }));
   }, []);
 
   const updateStats = useCallback((stats: Partial<GameStats>) => {
-    setGameState(prev => ({
+    setGameState((prev) => ({
       ...prev,
       stats: { ...prev.stats, ...stats },
     }));
   }, []);
 
   const updateWordCount = useCallback((wordCount: number) => {
-    setGameState(prev => ({ ...prev, wordCount }));
+    setGameState((prev) => ({ ...prev, wordCount }));
   }, []);
 
   const updateTimeLimit = useCallback((timeLimit: number) => {
-    setGameState(prev => ({ ...prev, timeLimit }));
+    setGameState((prev) => ({ ...prev, timeLimit }));
   }, []);
 
   const updateSampleText = useCallback((sampleText: string[]) => {
-    setGameState(prev => ({ ...prev, sampleText }));
+    setGameState((prev) => ({ ...prev, sampleText }));
+  }, []);
+
+  const updateSaveStats = useCallback((saveStats: SaveStats) => {
+    setGameState((prev) => ({ ...prev, saveStats }));
   }, []);
 
   const resetGameState = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      status: "before",
-      stats: initialStats,
-    }));
-  }, []);
+    if (gameState.status === "before") {
+      setGameState((prev) => ({
+        ...prev,
+        status: "restart",
+        stats: initialStats,
+      }));
+    } else {
+      setGameState((prev) => ({
+        ...prev,
+        status: "before",
+      }));
+    }
+  }, [gameState.status]);
 
   const resetAllState = useCallback(() => {
     setGameState({
@@ -85,6 +82,7 @@ export function useGameState(initialSampleText: string[]) {
       wordCount: 10,
       timeLimit: 0,
       sampleText: initialSampleText,
+      saveStats: "false",
     });
   }, [initialSampleText]);
 
@@ -98,5 +96,6 @@ export function useGameState(initialSampleText: string[]) {
     updateSampleText,
     resetGameState,
     resetAllState,
+    updateSaveStats,
   };
-} 
+}

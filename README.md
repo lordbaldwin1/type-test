@@ -9,10 +9,10 @@
 - [x] Figure out db schema for users, stats, leaderboard
 - [x] Refactor typing test?
 - [x] Continue refactor
-- [] Add user table with userId and username
+- [x] Add user table with userId and username
 - [] Profile page with stats
-- [] Leaderboards (plan)
 - [] About page
+- [x] Leaderboard
 
 ## Notes
 

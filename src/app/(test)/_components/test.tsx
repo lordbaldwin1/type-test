@@ -7,10 +7,11 @@ import { useGameTimer } from "~/app/(test)/_hooks/useGameTimer";
 import { useTypingGame } from "~/app/(test)/_hooks/useTypingGame";
 import { saveGameStats } from "~/server/db/actions";
 import { useGameState } from "~/app/(test)/_hooks/useGameState";
-import { calculateStats, type LetterCount } from "~/app/(test)/_utils/gameStats";
+import { calculateStats } from "~/app/(test)/_utils/gameStats";
 import { GameStats } from "./game-stats";
 import { GameArea } from "./game-area";
 import { GameModeConfig } from "./game-mode-config";
+import type { LetterCount } from "~/app/(test)/_utils/types";
 
 export default function TypeTest(props: { initialSampleText: string[] }) {
   const { userId } = useAuth();
@@ -23,7 +24,9 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     updateTimeLimit,
     updateSampleText,
     resetGameState,
+    updateSaveStats,
   } = useGameState(props.initialSampleText);
+
   const { time } = useGameTimer(
     gameState.mode,
     gameState.status,
@@ -31,7 +34,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   );
   // Generate random words when game mode is changed or game is reset
   useEffect(() => {
-    if (gameState.status === "before") {
+    if (gameState.status === "before" || gameState.status === "restart") {
       updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
     }
   }, [gameState.wordCount, gameState.status, updateSampleText]);
@@ -142,15 +145,13 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   }
 
   const handleReset = () => {
+    console.log("resetting");
     resetInputState();
     resetGameState();
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-start px-4 py-8"
-      style={{ minHeight: "calc(100vh - 8rem)" }}
-    >
+    <div className="flex flex-col items-center justify-start px-4 py-8">
       {gameState.status === "after" ? (
         <GameStats
           stats={gameState.stats}
@@ -170,6 +171,8 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
               setTimeLimit={updateTimeLimit}
               setWordCount={updateWordCount}
               resetGameState={resetGameState}
+              saveStats={gameState.saveStats}
+              updateSaveStats={updateSaveStats}
             />
           </div>
           <GameArea

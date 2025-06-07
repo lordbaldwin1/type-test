@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-type GameMode = "words" | "time";
-type GameStatus = "before" | "during" | "after";
+import type { GameMode, GameStatus } from "../_utils/types";
 
 export function useGameTimer(
   mode: GameMode, 

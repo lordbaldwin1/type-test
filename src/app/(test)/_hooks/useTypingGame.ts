@@ -1,17 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { calculateLetterCount, type LetterCount } from "../_utils/gameStats";
-
-type GameStatus = "before" | "during" | "after";
-
-interface UseTypingGameProps {
-  sampleText: string[];
-  gameStatus: GameStatus;
-  onGameStart?: () => void;
-  onGameComplete?: (
-    finalLetterCount: LetterCount,
-    finalCompletedWords: string[],
-  ) => Promise<void>;
-}
+import { calculateLetterCount } from "../_utils/gameStats";
+import type { LetterCount, UseTypingGameProps } from "../_utils/types";
 
 export function useTypingGame({
   sampleText,

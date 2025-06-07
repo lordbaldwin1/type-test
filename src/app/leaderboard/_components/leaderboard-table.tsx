@@ -17,13 +17,9 @@ import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
 
 export default function LeaderboardTable({
   users,
-  user,
-  userPosition,
   totalPlayers,
 }: {
   users: User[];
-  user: User | undefined;
-  userPosition: { rank: number } | undefined;
   totalPlayers: number;
 }) {
   const [userList, setUserList] = useState<User[]>(users);
@@ -128,24 +124,6 @@ export default function LeaderboardTable({
   };
 
   return (
-    <div className="flex min-h-[100vh] flex-col items-center p-8 font-mono">
-      <h1 className="mb-6 text-3xl font-bold">Global Leaderboard</h1>
-      {userPosition && user && (
-        <div className="bg-muted mb-8 flex flex-row gap-2 rounded-lg p-2">
-          <p className="text-muted-foreground border-border border-r pr-2 text-sm">
-            {userPosition?.rank} / {totalPlayers}
-          </p>
-          <p className="text-muted-foreground border-border border-r pr-2 text-sm">
-            {user.username}
-          </p>
-          <p className="text-muted-foreground border-border border-r pr-2 text-sm">
-            {user.averageWpm.toFixed(2)} wpm
-          </p>
-          <p className="text-muted-foreground text-sm">
-            {user.averageAccuracy.toFixed(2)}% accuracy
-          </p>
-        </div>
-      )}
       <div className="w-full max-w-4xl">
         <Table>
           <TableCaption>Top 50 Players by Average WPM</TableCaption>
@@ -252,6 +230,5 @@ export default function LeaderboardTable({
           </TableFooter>
         </Table>
       </div>
-    </div>
   );
 }

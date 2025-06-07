@@ -5,10 +5,8 @@ import { generateRandomWords } from "./_utils/generateRandomWords"
 export default function HomePage() {
   const initialSampleText = generateRandomWords(10).split(" ");
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <TypeTest initialSampleText={initialSampleText} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <TypeTest initialSampleText={initialSampleText} />
+    </Suspense>
   );
 }

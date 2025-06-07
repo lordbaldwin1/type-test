@@ -4,10 +4,10 @@ import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/lib/theme-provider";
 import Navbar from "~/components/navbar";
-import {
-  ClerkProvider,
-} from "@clerk/nextjs";
+import Footer from "~/components/footer";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "~/components/ui/sonner";
+import { dark } from "@clerk/themes";
 
 export const metadata: Metadata = {
   title: "type-test",
@@ -24,11 +24,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
         <head />
 
-        <body>
+        <body className="font-mono flex h-screen flex-col overflow-hidden">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -36,7 +36,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            {children}
+            <main className="flex-1 overflow-auto">
+              {children}
+            </main>
+            <Footer />
             <Toaster />
           </ThemeProvider>
         </body>
