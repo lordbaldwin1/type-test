@@ -34,16 +34,19 @@ export default function LeaderboardTable({
     "name" | "ave. wpm" | "ave. accuracy" | "total games"
   >("name");
 
-  
   const sortName = () => {
     if (sortState === "desc") {
-      const sorted = users.sort((a, b) => a.username!.localeCompare(b.username!));
+      const sorted = users.sort((a, b) =>
+        a.username!.localeCompare(b.username!),
+      );
       setUserList(sorted);
     } else {
-      const sorted = users.sort((a, b) => b.username!.localeCompare(a.username!));
+      const sorted = users.sort((a, b) =>
+        b.username!.localeCompare(a.username!),
+      );
       setUserList(sorted);
     }
-  }
+  };
 
   const sortAveWpm = () => {
     if (sortState === "desc") {
@@ -53,17 +56,21 @@ export default function LeaderboardTable({
       const sorted = users.sort((a, b) => b.averageWpm - a.averageWpm);
       setUserList(sorted);
     }
-  }
+  };
 
   const sortAveAccuracy = () => {
     if (sortState === "desc") {
-      const sorted = users.sort((a, b) => a.averageAccuracy - b.averageAccuracy);
+      const sorted = users.sort(
+        (a, b) => a.averageAccuracy - b.averageAccuracy,
+      );
       setUserList(sorted);
     } else {
-      const sorted = users.sort((a, b) => b.averageAccuracy - a.averageAccuracy);
+      const sorted = users.sort(
+        (a, b) => b.averageAccuracy - a.averageAccuracy,
+      );
       setUserList(sorted);
     }
-  }
+  };
 
   const sortTotalGames = () => {
     if (sortState === "desc") {
@@ -73,9 +80,11 @@ export default function LeaderboardTable({
       const sorted = users.sort((a, b) => b.totalGames - a.totalGames);
       setUserList(sorted);
     }
-  }
+  };
 
-  const handleSort = (column: "name" | "ave. wpm" | "ave. accuracy" | "total games") => {
+  const handleSort = (
+    column: "name" | "ave. wpm" | "ave. accuracy" | "total games",
+  ) => {
     if (sortColumn !== column) {
       setSortColumn(column);
       setSortState("desc");
@@ -116,8 +125,7 @@ export default function LeaderboardTable({
         setUserList(users);
       }
     }
-  }
-
+  };
 
   return (
     <div className="flex min-h-[100vh] flex-col items-center p-8 font-mono">
@@ -145,58 +153,75 @@ export default function LeaderboardTable({
             <TableRow>
               <TableHead className="w-[80px] text-center">rank</TableHead>
               <TableHead className="w-[180px]">
-                <Button variant="ghost" size="sm" onClick={() => handleSort("name")}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("name")}
+                >
                   name
                   {(sortColumn !== "name" || sortState === "original") && (
                     <ArrowDownUp className="h-4 w-4" />
                   )}
-                  {(sortColumn === "name" && sortState === "desc") && (
+                  {sortColumn === "name" && sortState === "desc" && (
                     <ArrowDown className="h-4 w-4" />
                   )}
-                  {(sortColumn === "name" && sortState === "asc") && (
+                  {sortColumn === "name" && sortState === "asc" && (
                     <ArrowUp className="h-4 w-4" />
                   )}
-
                 </Button>
               </TableHead>
               <TableHead className="w-[120px] text-center">
-                <Button variant="ghost" size="sm" onClick={() => handleSort("ave. wpm")}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("ave. wpm")}
+                >
                   ave. wpm
                   {(sortColumn !== "ave. wpm" || sortState === "original") && (
                     <ArrowDownUp className="h-4 w-4" />
                   )}
-                  {(sortColumn === "ave. wpm" && sortState === "desc") && (
+                  {sortColumn === "ave. wpm" && sortState === "desc" && (
                     <ArrowDown className="h-4 w-4" />
                   )}
-                  {(sortColumn === "ave. wpm" && sortState === "asc") && (
+                  {sortColumn === "ave. wpm" && sortState === "asc" && (
                     <ArrowUp className="h-4 w-4" />
                   )}
                 </Button>
               </TableHead>
               <TableHead className="w-[120px] text-center">
-                <Button variant="ghost" size="sm" onClick={() => handleSort("ave. accuracy")}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("ave. accuracy")}
+                >
                   ave. accuracy
-                  {(sortColumn !== "ave. accuracy" || sortState === "original") && (
+                  {(sortColumn !== "ave. accuracy" ||
+                    sortState === "original") && (
                     <ArrowDownUp className="h-4 w-4" />
                   )}
-                  {(sortColumn === "ave. accuracy" && sortState === "desc") && (
+                  {sortColumn === "ave. accuracy" && sortState === "desc" && (
                     <ArrowDown className="h-4 w-4" />
                   )}
-                  {(sortColumn === "ave. accuracy" && sortState === "asc") && (
+                  {sortColumn === "ave. accuracy" && sortState === "asc" && (
                     <ArrowUp className="h-4 w-4" />
                   )}
                 </Button>
               </TableHead>
               <TableHead className="w-[120px] text-center">
-                <Button variant="ghost" size="sm" onClick={() => handleSort("total games")}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("total games")}
+                >
                   total games
-                  {(sortColumn !== "total games" || sortState === "original") && (
+                  {(sortColumn !== "total games" ||
+                    sortState === "original") && (
                     <ArrowDownUp className="h-4 w-4" />
                   )}
-                  {(sortColumn === "total games" && sortState === "desc") && (
+                  {sortColumn === "total games" && sortState === "desc" && (
                     <ArrowDown className="h-4 w-4" />
                   )}
-                  {(sortColumn === "total games" && sortState === "asc") && (
+                  {sortColumn === "total games" && sortState === "asc" && (
                     <ArrowUp className="h-4 w-4" />
                   )}
                 </Button>

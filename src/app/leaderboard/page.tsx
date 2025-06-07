@@ -20,10 +20,19 @@ export default async function Leaderboard() {
     const user = userId ? await db.query.users.findFirst({
         where: eq(users.id, userId),
     }) : undefined;
-    const userPosition = (userId && user) ? await db.select({
-        rank: sql<number>`(SELECT COUNT(*) + 1 FROM ${users} u2 WHERE u2."averageWpm" > ${users}."averageWpm")`
-    }).from(users).where(eq(users.id, userId)) : undefined;
-
+    
+    let userPosition: { rank: number } | undefined = undefined;
+    if (userId && user) {
+        try {
+            const higherRankedUsers = await db.select({ count: count() })
+                .from(users)
+                .where(sql`${users.averageWpm} > ${user.averageWpm}`);
+            userPosition = { rank: (higherRankedUsers[0]?.count ?? 0) + 1 };
+        } catch (error) {
+            console.error("Error calculating user position:", error);
+            userPosition = undefined;
+        }
+    }
 
     const userList = await db.select().from(users).orderBy(desc(users.averageWpm)).limit(50);
     const totalPlayers = await db.select({ count: count() }).from(users);
@@ -33,7 +42,7 @@ export default async function Leaderboard() {
             {showModal &&
                 <UsernameDialog />
             }
-            <LeaderboardTable users={userList} user={user} userPosition={userPosition?.[0] ?? undefined} totalPlayers={totalPlayers?.[0]?.count ?? 0} />
+            <LeaderboardTable users={userList} user={user} userPosition={userPosition} totalPlayers={totalPlayers?.[0]?.count ?? 0} />
         </div>
     );
 }
