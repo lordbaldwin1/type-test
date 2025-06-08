@@ -47,7 +47,7 @@ export default async function Leaderboard() {
   const totalPlayers = await db.select({ count: count() }).from(users);
 
   return (
-    <div className="mx-auto flex max-w-4xl mt-8 flex-col gap-8 items-center font-mono">
+    <div className="mx-auto flex max-w-4xl mt-8 flex-col gap-8 items-center font-mono animate-in fade-in duration-500">
       <h1 className="text-3xl font-bold">Global Leaderboard</h1>
       <div className="relative flex w-full justify-center">
         <div className="relative">

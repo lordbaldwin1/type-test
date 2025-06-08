@@ -53,6 +53,7 @@ export interface GameAreaProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onInputSubmit: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onReset: () => void;
+  isTextChanging: boolean;
 }
 
 export interface GameStatsProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { generateRandomWords } from "../_utils/generateRandomWords";
 import { useGameTimer } from "~/app/(test)/_hooks/useGameTimer";
@@ -15,6 +15,9 @@ import type { LetterCount } from "~/app/(test)/_utils/types";
 
 export default function TypeTest(props: { initialSampleText: string[] }) {
   const { userId } = useAuth();
+  const [isTextChanging, setIsTextChanging] = useState(false);
+  const isInitialLoad = useRef(true);
+  
   const {
     gameState,
     updateGameStatus,
@@ -32,10 +35,25 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     gameState.status,
     gameState.timeLimit,
   );
-  // Generate random words when game mode is changed or game is reset
+  
+  // Generate random words when game mode is changed or game is reset with fade animation
   useEffect(() => {
+    // Skip animation on initial load
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+    
     if (gameState.status === "before" || gameState.status === "restart") {
-      updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
+      setIsTextChanging(true);
+      
+      // Fade out, then update text, then fade in
+      setTimeout(() => {
+        updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
+        setTimeout(() => {
+          setIsTextChanging(false);
+        }, 50); // Quick fade in
+      }, 150); // Fade out duration
     }
   }, [gameState.wordCount, gameState.status, updateSampleText]);
 
@@ -188,6 +206,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             onInputSubmit={handleSubmit}
             onReset={handleReset}
             saveStats={gameState.saveStats}
+            isTextChanging={isTextChanging}
           />
         </div>
       )}

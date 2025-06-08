@@ -1,12 +1,11 @@
 import TypeTest from "./_components/test"
-import { Suspense } from "react"
 import { generateRandomWords } from "./_utils/generateRandomWords"
 
 export default function HomePage() {
   const initialSampleText = generateRandomWords(10).split(" ");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <div className="animate-in fade-in duration-500">
       <TypeTest initialSampleText={initialSampleText} />
-    </Suspense>
+    </div>
   );
 }

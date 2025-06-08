@@ -18,6 +18,7 @@ export function GameArea({
   onInputChange,
   onInputSubmit,
   onReset,
+  isTextChanging,
 }: GameAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
@@ -159,7 +160,9 @@ export function GameArea({
 
           <div
             ref={containerRef}
-            className="relative mx-auto ml-2 flex h-[7.9em] w-full max-w-full items-start justify-center overflow-hidden"
+            className={`relative mx-auto ml-2 flex h-[7.9em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${
+              isTextChanging ? "opacity-0" : "opacity-100"
+            }`}
           >
             <div className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide" onClick={handleGameAreaClick}>
               {sampleText.map((word, index) => (
