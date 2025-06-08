@@ -11,7 +11,7 @@ import { calculateStats } from "~/app/(test)/_utils/gameStats";
 import { GameStats } from "./game-stats";
 import { GameArea } from "./game-area";
 import { GameModeConfig } from "./game-mode-config";
-import { useTestLayout } from "../layout";
+import { useTestLayout } from "../_context/test-layout-context";
 import type { LetterCount, wpmPerSecond } from "~/app/(test)/_utils/types";
 
 

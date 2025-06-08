@@ -109,3 +109,4 @@ export interface StatsCalculationInput {
   mode: "words" | "time";
   timeLimit?: number;
 }
+
