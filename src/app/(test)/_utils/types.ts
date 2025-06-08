@@ -37,6 +37,12 @@ export interface GameState {
   saveStats: SaveStats;
 }
 
+export interface wpmPerSecond {
+  time: number;
+  wpm: number;
+  rawWpm: number;
+}
+
 // =====================================
 // Component Props Interfaces
 // =====================================
@@ -54,6 +60,10 @@ export interface GameAreaProps {
   onInputSubmit: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onReset: () => void;
   isTextChanging: boolean;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  onInputFocus: () => void;
+  onInputBlur: () => void;
+  showUi: boolean;
 }
 
 export interface GameStatsProps {
@@ -62,6 +72,7 @@ export interface GameStatsProps {
   timeLimit: number;
   time: number;
   onReset: () => void;
+  wpmPerSecond: wpmPerSecond[];
 }
 
 export interface UseTypingGameProps {
@@ -84,6 +95,7 @@ export interface GameModeConfigProps {
   resetGameState: () => void;
   saveStats: SaveStats;
   updateSaveStats: (saveStats: SaveStats) => void;
+  showUi: boolean;
 }
 
 // =====================================

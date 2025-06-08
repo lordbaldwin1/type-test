@@ -13,6 +13,7 @@ export const GameModeConfig = memo(function GameModeConfig({
   resetGameState,
   saveStats,
   updateSaveStats,
+  showUi,
 }: GameModeConfigProps) {
   const wordOptions = [10, 25, 50, 100];
   const timeOptions = [15, 30, 60];
@@ -49,7 +50,11 @@ export const GameModeConfig = memo(function GameModeConfig({
   );
 
   return (
-    <div className="bg-card text-muted-foreground flex items-center justify-center rounded-md border">
+    <div 
+      className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${
+        showUi ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
       <div className="flex space-x-2">
         <Button
           variant="link"

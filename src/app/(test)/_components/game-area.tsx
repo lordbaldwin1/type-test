@@ -19,13 +19,72 @@ export function GameArea({
   onInputSubmit,
   onReset,
   isTextChanging,
+  inputRef,
+  onInputFocus,
+  onInputBlur,
+  showUi,
 }: GameAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showBlur, setShowBlur] = useState(false);
   const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const wordsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Handle internal focus state and call parent callbacks
+  const handleFocus = () => {
+    setIsInputFocused(true);
+    onInputFocus();
+  };
+
+  const handleBlur = () => {
+    setIsInputFocused(false);
+    onInputBlur();
+  };
+
+  // Calculate cursor position for smooth animation
+  useEffect(() => {
+    if (!wordsContainerRef.current) return;
+
+    const updateCursorPosition = () => {
+      const wordsContainer = wordsContainerRef.current;
+      if (!wordsContainer) return;
+
+      // Find the current word element
+      const wordElements = wordsContainer.querySelectorAll('[data-word-index]');
+      const currentWordElement = wordElements[currentWordIndex] as HTMLElement;
+      
+      if (!currentWordElement) return;
+
+      const containerRect = wordsContainer.getBoundingClientRect();
+      const wordRect = currentWordElement.getBoundingClientRect();
+      
+      // Find the current letter position within the word
+      const letterElements = currentWordElement.querySelectorAll('[data-letter-index]');
+      const currentLetterIndex = input.length;
+      
+      let letterX = 0;
+      if (currentLetterIndex < letterElements.length) {
+        const letterElement = letterElements[currentLetterIndex] as HTMLElement;
+        const letterRect = letterElement.getBoundingClientRect();
+        letterX = letterRect.left - wordRect.left;
+      } else {
+        // Cursor is at the end of the word
+        letterX = currentWordElement.offsetWidth;
+      }
+
+      const x = (wordRect.left - containerRect.left) + letterX;
+      const y = wordRect.top - containerRect.top;
+
+      setCursorPosition({ x, y });
+    };
+
+    // Small delay to ensure DOM has updated
+    const timeoutId = setTimeout(updateCursorPosition, 10);
+    
+    return () => clearTimeout(timeoutId);
+  }, [currentWordIndex, input, sampleText]);
 
   // Auto-scroll to active word
   useEffect(() => {
@@ -43,7 +102,7 @@ export function GameArea({
     if (status === "during" || status === "before" || status === "restart") {
       inputRef.current?.focus();
     }
-  }, [status, sampleText, saveStats]);
+  }, [status, sampleText, saveStats, inputRef]);
 
   // Focus input on keypress
   useEffect(() => {
@@ -88,7 +147,7 @@ export function GameArea({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [status]);
+  }, [status, inputRef]);
 
   // Handle blur visibility with delay to prevent flashing during mode changes
   useEffect(() => {
@@ -124,8 +183,8 @@ export function GameArea({
       <div className="mt-8 flex flex-col items-center">
         <input
           ref={inputRef}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           type="text"
           value={input}
           maxLength={15}
@@ -139,7 +198,7 @@ export function GameArea({
           {/* Blur overlay when input not focused */}
           {showBlur && (
             <div className="absolute inset-0 z-20 mt-32 flex items-center justify-center pointer-events-none">
-              <div className="absolute inset-0 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-background/90 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
                 <p className="flex flex-row items-center gap-2">
                   <MousePointerClick className="h-4 w-4" /> Click or press any
@@ -164,7 +223,11 @@ export function GameArea({
               isTextChanging ? "opacity-0" : "opacity-100"
             }`}
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide" onClick={handleGameAreaClick}>
+            <div 
+              ref={wordsContainerRef}
+              className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide" 
+              onClick={handleGameAreaClick}
+            >
               {sampleText.map((word, index) => (
                 <Word
                   key={index}
@@ -179,9 +242,24 @@ export function GameArea({
                   }
                   isActive={index === currentWordIndex}
                   isCompleted={index < currentWordIndex}
+                  wordIndex={index}
+                  showCursor={false} // Disable individual word cursors
                 />
               ))}
             </div>
+            
+            {/* Animated cursor overlay */}
+            {(status === "during" || status === "before" || status === "restart") && (
+              <div
+                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-150 ease-out"
+                style={{
+                  left: `${cursorPosition.x}px`,
+                  top: `${cursorPosition.y + 4}px`, // Slight offset for better positioning
+                  height: '2em',
+                  transform: 'translateX(-1px)',
+                }}
+              />
+            )}
           </div>
         </div>
         <Tooltip>
@@ -198,7 +276,8 @@ export function GameArea({
           <p>Restart test</p>
         </TooltipContent>
         </Tooltip>
-        <div className="mt-24">
+        {showUi && (
+        <div className="mt-24 animate-fade-in">
           <div className="flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground">
             <p className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
               tab
@@ -210,6 +289,7 @@ export function GameArea({
             <p>- restart test</p>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

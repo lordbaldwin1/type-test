@@ -5,6 +5,8 @@ interface WordProps {
     input: string;
     isActive: boolean;
     isCompleted: boolean;
+    wordIndex?: number;
+    showCursor?: boolean;
 }
 
 export const Word = memo(
@@ -16,6 +18,7 @@ export const Word = memo(
         const extraLetters =
             input.length > word.length ? input.slice(word.length) : [];
         const showEndCursor =
+            props.showCursor !== false &&
             props.isActive &&
             cursorPosition === word.length &&
             extraLetters.length === 0;
@@ -24,28 +27,25 @@ export const Word = memo(
             <div
                 ref={ref}
                 className="relative flex flex-row font-mono text-4xl tracking-wide"
+                data-word-index={props.wordIndex}
             >
                 <div className="flex">
                     {props.isCompleted && !isCorrect ? (
                         <div className="decoration-destructive flex underline">
-                            {word.map((letter, index) => {
-                                if (letter === input[index]) {
-                                    return (
-                                        <Letter key={index} letter={letter} status={"correct"} />
-                                    );
-                                } else if (letter !== input[index] && input[index]) {
-                                    return (
-                                        <Letter key={index} letter={letter} status={"incorrect"} />
-                                    );
-                                } else {
-                                    return <Letter key={index} letter={letter} status={"none"} />;
-                                }
-                            })}
+                            {word.map((letter, index) => (
+                                <Letter 
+                                    key={index} 
+                                    letter={letter} 
+                                    status={letter === input[index] ? "correct" : input[index] ? "incorrect" : "none"}
+                                    letterIndex={index}
+                                />
+                            ))}
                             {extraLetters.map((letter, index) => (
                                 <Letter
                                     key={`extra-${index}`}
                                     letter={letter}
                                     status={"incorrect"}
+                                    letterIndex={word.length + index}
                                 />
                             ))}
                         </div>
@@ -53,37 +53,25 @@ export const Word = memo(
                         <div className="flex">
                             {word.map((letter, index) => {
                                 const showCursor =
+                                    props.showCursor !== false &&
                                     props.isActive &&
                                     index === cursorPosition &&
                                     cursorPosition !== word.length + extraLetters.length;
-                                if (letter === input[index]) {
-                                    return (
-                                        <Letter
-                                            key={index}
-                                            letter={letter}
-                                            status={"correct"}
-                                            showCursor={showCursor}
-                                        />
-                                    );
-                                } else if (letter !== input[index] && input[index]) {
-                                    return (
-                                        <Letter
-                                            key={index}
-                                            letter={letter}
-                                            status={"incorrect"}
-                                            showCursor={showCursor}
-                                        />
-                                    );
-                                } else {
-                                    return (
-                                        <Letter
-                                            key={index}
-                                            letter={letter}
-                                            status={"none"}
-                                            showCursor={showCursor}
-                                        />
-                                    );
-                                }
+                                return (
+                                    <Letter
+                                        key={index}
+                                        letter={letter}
+                                        status={
+                                            letter === input[index] 
+                                                ? "correct" 
+                                                : input[index] 
+                                                    ? "incorrect" 
+                                                    : "none"
+                                        }
+                                        showCursor={showCursor}
+                                        letterIndex={index}
+                                    />
+                                );
                             })}
                             {extraLetters.map((letter, index) => (
                                 <Letter
@@ -91,10 +79,12 @@ export const Word = memo(
                                     letter={letter}
                                     status={"incorrect"}
                                     showCursor={
+                                        props.showCursor !== false &&
                                         props.isActive &&
                                         word.length + index === cursorPosition &&
                                         cursorPosition === word.length + extraLetters.length
                                     }
+                                    letterIndex={word.length + index}
                                 />
                             ))}
                         </div>
@@ -120,9 +110,10 @@ interface LetterProps {
     letter: string;
     status: "correct" | "incorrect" | "none";
     showCursor?: boolean;
+    letterIndex?: number;
 }
 
-const Letter = memo(function Letter({ letter, status, showCursor }: LetterProps) {
+const Letter = memo(function Letter({ letter, status, showCursor, letterIndex }: LetterProps) {
     let textColorClass = "";
     if (status === "correct") {
         textColorClass = "text-foreground";
@@ -133,7 +124,7 @@ const Letter = memo(function Letter({ letter, status, showCursor }: LetterProps)
     }
 
     return (
-        <div className="relative inline-block">
+        <div className="relative inline-block" data-letter-index={letterIndex}>
             <span className={textColorClass}>{letter}</span>
             {showCursor && (
                 <span

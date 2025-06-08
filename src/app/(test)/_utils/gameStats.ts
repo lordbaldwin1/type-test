@@ -33,7 +33,7 @@ export function calculateStats({
 
   const accuracy =
     totalCharCount > 0
-      ? Math.floor((letterCount.correct / totalCharCount) * 100)
+      ? Math.floor(((letterCount.correct + spaceCount) / totalCharCount) * 100)
       : 0;
 
   return {

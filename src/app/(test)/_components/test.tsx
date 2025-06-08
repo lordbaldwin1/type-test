@@ -11,13 +11,19 @@ import { calculateStats } from "~/app/(test)/_utils/gameStats";
 import { GameStats } from "./game-stats";
 import { GameArea } from "./game-area";
 import { GameModeConfig } from "./game-mode-config";
-import type { LetterCount } from "~/app/(test)/_utils/types";
+import { useTestLayout } from "../layout";
+import type { LetterCount, wpmPerSecond } from "~/app/(test)/_utils/types";
+
 
 export default function TypeTest(props: { initialSampleText: string[] }) {
   const { userId } = useAuth();
   const [isTextChanging, setIsTextChanging] = useState(false);
   const isInitialLoad = useRef(true);
-  
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const { showUi, setShowUi } = useTestLayout();
+  const [wpmPerSecond, setWpmPerSecond] = useState<wpmPerSecond[]>([]);
+
   const {
     gameState,
     updateGameStatus,
@@ -35,7 +41,16 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     gameState.status,
     gameState.timeLimit,
   );
-  
+
+  // Handle input focus changes for UI visibility
+  useEffect(() => {
+    if (gameState.status === "during") {
+      setShowUi(!isInputFocused);
+    } else {
+      setShowUi(true);
+    }
+  }, [isInputFocused, gameState.status, setShowUi]);
+
   // Generate random words when game mode is changed or game is reset with fade animation
   useEffect(() => {
     // Skip animation on initial load
@@ -43,10 +58,10 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       isInitialLoad.current = false;
       return;
     }
-    
+
     if (gameState.status === "before" || gameState.status === "restart") {
       setIsTextChanging(true);
-      
+
       // Fade out, then update text, then fade in
       setTimeout(() => {
         updateSampleText(generateRandomWords(gameState.wordCount).split(" "));
@@ -115,6 +130,36 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     onGameComplete: handleTypingGameComplete,
   });
 
+  useEffect(() => {
+    // Reset WPM tracking when game starts or resets
+    if (gameState.status === "before" || gameState.status === "restart") {
+      setWpmPerSecond([]);
+      return;
+    }
+
+    if (gameState.status === "during") {
+      const timeInMinutes = time / 60;
+      
+      if (timeInMinutes > 0) {
+        // Calculate total characters typed correctly (including spaces between words)
+        const totalCorrectChars = letterCount.correct + (completedWords.length > 0 ? completedWords.length - 1 : 0);
+        
+        // Calculate total characters typed (including incorrect/extra/missed and spaces)
+        const totalChars = letterCount.correct + letterCount.incorrect + letterCount.extra + letterCount.missed + 
+          (completedWords.length > 0 ? completedWords.length - 1 : 0);
+
+        const newWpmPerSecond = {
+          time: time,
+          wpm: (totalCorrectChars / 5) / timeInMinutes,
+          rawWpm: (totalChars / 5) / timeInMinutes,
+        };
+        
+        setWpmPerSecond(prev => [...prev, newWpmPerSecond]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState.status, time]); // Only run when status or time changes
+
   const handleTimeUp = useCallback(async () => {
     if (gameState.status === "after") return;
 
@@ -169,6 +214,14 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     resetGameState();
   };
 
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-start px-4 py-8">
       {gameState.status === "after" ? (
@@ -178,6 +231,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
           timeLimit={gameState.timeLimit}
           time={time}
           onReset={handleReset}
+          wpmPerSecond={wpmPerSecond}
         />
       ) : (
         <div className="flex w-full max-w-3xl flex-col gap-2">
@@ -192,6 +246,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
               resetGameState={resetGameState}
               saveStats={gameState.saveStats}
               updateSaveStats={updateSaveStats}
+              showUi={showUi}
             />
           </div>
           <GameArea
@@ -207,6 +262,10 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             onReset={handleReset}
             saveStats={gameState.saveStats}
             isTextChanging={isTextChanging}
+            inputRef={inputRef}
+            onInputFocus={handleInputFocus}
+            onInputBlur={handleInputBlur}
+            showUi={showUi}
           />
         </div>
       )}

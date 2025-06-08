@@ -3,8 +3,6 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/lib/theme-provider";
-import Navbar from "~/components/navbar";
-import Footer from "~/components/footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
@@ -35,11 +33,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
             <main className="flex-1 overflow-auto">
               {children}
             </main>
-            <Footer />
             <Toaster />
           </ThemeProvider>
         </body>
