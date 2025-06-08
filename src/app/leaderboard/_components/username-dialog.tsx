@@ -13,7 +13,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
-import { addUsername } from "~/server/db/actions";
+import { addUsername, makeUserAnonymous } from "~/server/db/actions";
 import { toast } from "sonner";
 import { UserPen } from "lucide-react";
 import {
@@ -21,11 +21,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { useRouter } from "next/navigation";
 
-export default function UsernameDialog() {
+export default function UsernameDialog({ isAnonymous }: { isAnonymous: boolean }) {
   const [username, setUsername] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(!isAnonymous);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const router = useRouter();
 
   const handleAddUsername = async () => {
     setStatus("loading");
@@ -33,11 +35,23 @@ export default function UsernameDialog() {
     if (result.message === "Username added.") {
       setIsOpen(false);
       toast.success("Username added.");
+      router.refresh();
     } else {
       setStatus("error");
       toast.error("Failed to add username.");
     }
   };
+
+  const handleClose = async () => {
+    setIsOpen(false);
+    const result = await makeUserAnonymous();
+    if (!result.error) {
+      toast.success(result.message);
+    } else {
+      setStatus("error");
+      toast.error(result.message);
+    }
+  }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Tooltip>
@@ -52,14 +66,14 @@ export default function UsernameDialog() {
           </DialogTrigger>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Set a username</p>
+          <p>Update your username</p>
         </TooltipContent>
       </Tooltip>
       <DialogContent className="font-mono">
         <DialogHeader>
-          <DialogTitle>Create a username</DialogTitle>
+          <DialogTitle>Update your username</DialogTitle>
           <DialogDescription>
-            de-anonimize yourself on the leaderboard.
+            Enter a new username and click set username to update it.
           </DialogDescription>
         </DialogHeader>
         <Input
@@ -68,12 +82,17 @@ export default function UsernameDialog() {
           maxLength={16}
           minLength={3}
           value={username}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await handleAddUsername();
+            }
+          }}
           onChange={(e) => setUsername(e.target.value)}
         />
         <DialogFooter>
           <DialogClose asChild>
-            <Button onClick={() => setIsOpen(false)} variant="outline">
-              Close
+            <Button onClick={handleClose} variant="outline">
+              Remain Anonymous
             </Button>
           </DialogClose>
           <Button
@@ -85,7 +104,7 @@ export default function UsernameDialog() {
             }
           >
             {" "}
-            {status === "loading" ? "Joining..." : "Join"}
+            {status === "loading" ? "setting..." : "Set Username"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -126,7 +126,7 @@ export default function LeaderboardTable({
   return (
       <div className="w-full max-w-4xl">
         <Table>
-          <TableCaption>Top 50 Players by Average WPM</TableCaption>
+          <TableCaption>top 50 players by average wpm</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[80px] text-center">rank</TableHead>
@@ -223,8 +223,8 @@ export default function LeaderboardTable({
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={5} className="text-center">
-                Total Players: {totalPlayers}
+              <TableCell colSpan={5} className="text-right">
+                total users: {totalPlayers}
               </TableCell>
             </TableRow>
           </TableFooter>

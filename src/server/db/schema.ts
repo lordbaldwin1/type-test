@@ -31,6 +31,7 @@ export const users = createTable(
   (d) => ({
     id: d.varchar({ length: 256 }).primaryKey(),
     username: d.varchar({ length: 256 }),
+    stayAnonymous: d.boolean().notNull().default(false),
     averageWpm: d.real().notNull(),
     averageAccuracy: d.real().notNull(),
     averageCorrect: d.real().notNull(),

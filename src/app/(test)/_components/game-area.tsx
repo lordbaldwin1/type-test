@@ -3,6 +3,8 @@ import { Button } from "~/components/ui/button";
 import { MousePointerClick, RotateCcw } from "lucide-react";
 import { Word } from "./word";
 import type { GameAreaProps } from "~/app/(test)/_utils/types";
+import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import { Tooltip } from "~/components/ui/tooltip";
 
 export function GameArea({
   mode,
@@ -12,6 +14,7 @@ export function GameArea({
   currentWordIndex,
   input,
   time,
+  saveStats,
   onInputChange,
   onInputSubmit,
   onReset,
@@ -20,6 +23,8 @@ export function GameArea({
   const activeWordRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [showBlur, setShowBlur] = useState(false);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-scroll to active word
   useEffect(() => {
@@ -37,7 +42,7 @@ export function GameArea({
     if (status === "during" || status === "before" || status === "restart") {
       inputRef.current?.focus();
     }
-  }, [status, sampleText]);
+  }, [status, sampleText, saveStats]);
 
   // Focus input on keypress
   useEffect(() => {
@@ -84,8 +89,31 @@ export function GameArea({
     };
   }, [status]);
 
+  // Handle blur visibility with delay to prevent flashing during mode changes
+  useEffect(() => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+
+    if (isInputFocused) {
+      setShowBlur(false);
+    } else if (status === "during" || status === "before" || status === "restart") {
+      blurTimeoutRef.current = setTimeout(() => {
+        setShowBlur(true);
+      }, 300);
+    } else {
+      setShowBlur(false);
+    }
+
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, [isInputFocused, status]);
+
   const handleGameAreaClick = () => {
-    if (status === "during" || status === "before") {
+    if (status === "during" || status === "before" || status === "restart") {
       inputRef.current?.focus();
     }
   };
@@ -106,11 +134,11 @@ export function GameArea({
         />
 
         {/* Wrapper for stats and text area with blur overlay */}
-        <div className="relative" onClick={handleGameAreaClick}>
+        <div className="relative">
           {/* Blur overlay when input not focused */}
-          {!isInputFocused && (status === "during" || status === "before" || status === "restart") && (
-            <div className="absolute inset-0 z-20 mt-32 flex items-center justify-center">
-              <div className="absolute inset-0 backdrop-blur-[4px]" />
+          {showBlur && (
+            <div className="absolute inset-0 z-20 mt-32 flex items-center justify-center pointer-events-none">
+              <div className="absolute inset-0 backdrop-blur-[2px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
                 <p className="flex flex-row items-center gap-2">
                   <MousePointerClick className="h-4 w-4" /> Click or press any
@@ -133,7 +161,7 @@ export function GameArea({
             ref={containerRef}
             className="relative mx-auto ml-2 flex h-[7.9em] w-full max-w-full items-start justify-center overflow-hidden"
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide">
+            <div className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide" onClick={handleGameAreaClick}>
               {sampleText.map((word, index) => (
                 <Word
                   key={index}
@@ -153,14 +181,20 @@ export function GameArea({
             </div>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          className="text-muted-foreground hover:text-foreground mt-24 hover:scale-110"
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="text-muted-foreground hover:text-foreground mt-24 hover:scale-110"
           onClick={onReset}
         >
           <RotateCcw />
         </Button>
-        
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Restart test</p>
+        </TooltipContent>
+        </Tooltip>
         <div className="mt-24">
           <div className="flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground">
             <p className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">

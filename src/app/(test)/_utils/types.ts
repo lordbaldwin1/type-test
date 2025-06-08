@@ -49,6 +49,7 @@ export interface GameAreaProps {
   currentWordIndex: number;
   input: string;
   time: number;
+  saveStats: SaveStats;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onInputSubmit: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onReset: () => void;

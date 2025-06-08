@@ -56,7 +56,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       updateGameStatus("after");
       updateStats(stats);
 
-      if (userId) {
+      if (userId && gameState.saveStats === "true") {
         try {
           await saveGameStats({
             userId: userId,
@@ -78,6 +78,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       gameState.timeLimit,
       userId,
       gameState.wordCount,
+      gameState.saveStats,
     ],
   );
 
@@ -110,7 +111,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     updateGameStatus("after");
     updateStats(stats);
 
-    if (userId) {
+    if (userId && gameState.saveStats === "true") {
       try {
         await saveGameStats({
           userId: userId,
@@ -134,6 +135,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     gameState.mode,
     gameState.wordCount,
     time,
+    gameState.saveStats,
   ]);
 
   if (
@@ -145,7 +147,6 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   }
 
   const handleReset = () => {
-    console.log("resetting");
     resetInputState();
     resetGameState();
   };
@@ -186,6 +187,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             onInputChange={handleInputChange}
             onInputSubmit={handleSubmit}
             onReset={handleReset}
+            saveStats={gameState.saveStats}
           />
         </div>
       )}

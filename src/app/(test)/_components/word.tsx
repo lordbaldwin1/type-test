@@ -103,10 +103,11 @@ export const Word = memo(
 
                 {showEndCursor && (
                     <span
-                        className="border-foreground absolute top-0 bottom-0 border-l-2"
+                        className="border-foreground absolute border-l-2"
                         style={{
                             left: "100%",
-                            height: "1em",
+                            height: "0.8em",
+                            top: "0.15em",
                         }}
                     ></span>
                 )}
@@ -136,10 +137,11 @@ const Letter = memo(function Letter({ letter, status, showCursor }: LetterProps)
             <span className={textColorClass}>{letter}</span>
             {showCursor && (
                 <span
-                    className="border-foreground absolute top-0 bottom-0 border-l-2"
+                    className="border-foreground absolute border-l-2"
                     style={{
                         left: "0",
-                        height: "1em",
+                        height: "0.8em",
+                        top: "0.15em",
                         transform: "translateX(-1px)",
                     }}
                 ></span>

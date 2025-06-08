@@ -109,30 +109,12 @@ export async function saveGameStats(params: SaveGameStatsParams) {
   }
 }
 
-export async function addUsername(username: string) {
-  const { userId } = await auth();
-  if (!userId) {
-    return { message: "Unauthorized" };
-  }
-
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, userId),
-  });
-
-  if (user && user.username === "Anonymous") {
-    await db
-      .update(users)
-      .set({
-        username: username,
-      })
-      .where(eq(users.id, userId));
-    return { message: "Username added." };
-  }
-
+export async function onBoardUser(userId: string) {
   try {
     await db.insert(users).values({
       id: userId,
-      username,
+      username: "Anonymous",
+      stayAnonymous: false,
       averageWpm: 0,
       averageAccuracy: 0,
       averageCorrect: 0,
@@ -146,9 +128,51 @@ export async function addUsername(username: string) {
       highestIncorrect: 0,
       highestExtra: 0,
       highestMissed: 0,
-    });
-    return { message: "Username added." };
+      });
   } catch (error) {
-    return { message: "Failed to add username.", error: error };
+    return { message: "Failed to onboard user.", error: error };
   }
-}
+};
+
+export async function makeUserAnonymous() {
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Unauthorized" };
+  }
+  try {
+    await db.update(users).set({
+      stayAnonymous: true,
+    }).where(eq(users.id, userId));
+    return { message: "You will remain anonymous." };
+  } catch (error) {
+    return { message: "Failed to make user anonymous.", error: error };
+  }
+};
+
+export async function addUsername(username: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Unauthorized" };
+  }
+
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+
+  if (user) {
+    try {
+      await db
+        .update(users)
+        .set({
+        username: username,
+        stayAnonymous: true,
+      })
+      .where(eq(users.id, userId));
+      return { message: "Username added." };
+    } catch (error) {
+      return { message: "Failed to add username.", error: error };
+    }
+  } else {
+    return { message: "User not found.", error: "User not found." };
+  }
+};
