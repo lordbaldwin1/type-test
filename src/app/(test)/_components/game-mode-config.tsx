@@ -5,64 +5,57 @@ import { Button } from "~/components/ui/button";
 
 export const GameModeConfig = memo(function GameModeConfig({
   mode,
-  setGameMode,
   timeLimit,
   wordCount,
-  setTimeLimit,
-  setWordCount,
-  resetGameState,
   saveStats,
-  updateSaveStats,
   showUi,
+  updateGameState,
+  switchMode,
+  changeWordCount,
+  changeTimeLimit,
 }: GameModeConfigProps) {
   const wordOptions = [10, 25, 50, 100];
   const timeOptions = [15, 30, 60];
 
   const handleModeChange = useCallback(
     (newMode: GameMode) => {
-      setGameMode(newMode);
-      if (newMode === "time") {
-        setTimeLimit(15);
-        setWordCount(50);
-      } else {
-        setWordCount(10);
-      }
-      resetGameState();
+      switchMode(newMode);
     },
-    [setGameMode, setTimeLimit, setWordCount, resetGameState],
+    [switchMode],
   );
 
   const handleTimeLimitChange = useCallback(
     (seconds: number) => {
-      setTimeLimit(seconds);
-      setWordCount(seconds * 2.5);
-      resetGameState();
+      changeTimeLimit(seconds);
+      // Auto-adjust word count for time mode
+      if (mode === "time") {
+        changeWordCount(seconds * 2.5);
+      }
     },
-    [setTimeLimit, setWordCount, resetGameState],
+    [changeTimeLimit, changeWordCount, mode],
   );
 
   const handleWordCountChange = useCallback(
     (count: number) => {
-      setWordCount(count);
-      resetGameState();
+      changeWordCount(count);
     },
-    [setWordCount, resetGameState],
+    [changeWordCount],
   );
 
   return (
-    <div 
+    <div
       className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${
-        showUi ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        showUi ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >
       <div className="flex space-x-2">
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer px-2 py-1 ${
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
             saveStats === "false" ? "text-green-200" : ""
           }`}
-          onClick={() => updateSaveStats("false")}
+          onClick={() => updateGameState({ saveStats: "false" })}
         >
           <div className="flex flex-row items-center gap-1">
             <Pencil className="h-3 w-3" />
@@ -73,10 +66,10 @@ export const GameModeConfig = memo(function GameModeConfig({
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer px-2 py-1 ${
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
             saveStats === "true" ? "text-red-200" : ""
           }`}
-          onClick={() => updateSaveStats("true")}
+          onClick={() => updateGameState({ saveStats: "true" })}
         >
           <div className="flex flex-row items-center gap-1">
             <Anvil className="h-3 w-3" />
@@ -86,14 +79,14 @@ export const GameModeConfig = memo(function GameModeConfig({
       </div>
 
       {/* Divider */}
-      <div className="bg-border p-0.5 rounded-sm mx-3 h-6 w-px"></div>
-      
+      <div className="bg-border mx-3 h-6 w-px rounded-sm p-0.5"></div>
+
       {/* Mode toggles */}
       <div className="flex space-x-2">
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer px-2 py-1 ${
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
             mode === "time" ? "text-foreground" : ""
           }`}
           onClick={() => handleModeChange("time")}
@@ -107,7 +100,7 @@ export const GameModeConfig = memo(function GameModeConfig({
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer px-2 py-1 ${
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
             mode === "words" ? "text-foreground" : ""
           }`}
           onClick={() => handleModeChange("words")}
@@ -120,7 +113,7 @@ export const GameModeConfig = memo(function GameModeConfig({
       </div>
 
       {/* Divider */}
-      <div className="bg-border p-0.5 rounded-sm mx-3 h-6 w-px"></div>
+      <div className="bg-border mx-3 h-6 w-px rounded-sm p-0.5"></div>
 
       {/* Options based on active mode */}
       <div className="flex space-x-2">
@@ -131,9 +124,7 @@ export const GameModeConfig = memo(function GameModeConfig({
                 key={seconds}
                 variant="link"
                 className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
-                  timeLimit === seconds
-                    ? "text-foreground"
-                    : ""
+                  timeLimit === seconds ? "text-foreground" : ""
                 }`}
                 onClick={() => handleTimeLimitChange(seconds)}
               >
@@ -150,9 +141,7 @@ export const GameModeConfig = memo(function GameModeConfig({
                 key={count}
                 variant="link"
                 className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
-                  wordCount === count
-                    ? "text-foreground"
-                    : ""
+                  wordCount === count ? "text-foreground" : ""
                 }`}
                 onClick={() => handleWordCountChange(count)}
               >

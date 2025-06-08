@@ -180,7 +180,7 @@ export function GameArea({
 
   return (
     <div className="flex w-full max-w-3xl flex-col gap-2">
-      <div className="mt-8 flex flex-col items-center">
+      <div className="flex flex-col items-center">
         <input
           ref={inputRef}
           onFocus={handleFocus}
@@ -192,12 +192,11 @@ export function GameArea({
           onKeyDown={onInputSubmit}
           className="bg-background border-border text-foreground absolute mb-4 border-2 opacity-0"
         />
-
         {/* Wrapper for stats and text area with blur overlay */}
         <div className="relative">
           {/* Blur overlay when input not focused */}
           {showBlur && (
-            <div className="absolute inset-0 z-20 mt-32 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 z-20 mt-8 flex items-center justify-center pointer-events-none">
               <div className="absolute inset-0 bg-background/90 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
                 <p className="flex flex-row items-center gap-2">
@@ -208,7 +207,9 @@ export function GameArea({
             </div>
           )}
 
-          <div className="mt-24 ml-4 w-full">
+          <div className={`ml-4 w-full transition-opacity duration-150 ${
+            isTextChanging ? "opacity-0" : "opacity-100"
+          }`}>
             {mode === "words" && (
               <p className="text-primary text-2xl font-bold">{`${completedWords.length}/${sampleText.length}`}</p>
             )}
@@ -276,9 +277,9 @@ export function GameArea({
           <p>Restart test</p>
         </TooltipContent>
         </Tooltip>
-        {showUi && (
-        <div className="mt-24 animate-fade-in">
-          <div className="flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground">
+
+        <div className="mt-24">
+          <div className={`flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground animate-fade-in transition-opacity duration-300 ${showUi ? "opacity-100" : "opacity-0"}`}>
             <p className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
               tab
             </p>
@@ -289,7 +290,7 @@ export function GameArea({
             <p>- restart test</p>
           </div>
         </div>
-        )}
+
       </div>
     </div>
   );

@@ -1,8 +1,14 @@
 import { Cat, Code, Mail } from "lucide-react";
 
-export default function Footer() {
+interface FooterProps {
+  showUi?: boolean;
+}
+
+export default function Footer({ showUi = true }: FooterProps) {
   return (
-    <footer className="mt-auto border-t border-border bg-background/50 backdrop-blur-sm">
+    <footer className={`mt-auto bg-background/50 backdrop-blur-sm transition-opacity duration-300 ${
+      showUi ? "opacity-100" : "pointer-events-none opacity-0"
+    }`}>
       <div className="mx-auto max-w-4xl px-4 py-6">
         {/* Social links */}
         <div className="flex justify-center gap-6 mb-4">

@@ -1,10 +1,13 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
+import { generateRandomWords } from "../_utils/generateRandomWords";
 import type {
-  GameState,
   GameStats,
   GameStatus,
   GameMode,
   SaveStats,
+  WordSet,
+  wpmPerSecond,
+  LetterCount,
 } from "../_utils/types";
 
 const initialStats: GameStats = {
@@ -17,85 +20,237 @@ const initialStats: GameStats = {
   missed: 0,
 };
 
+interface GameState {
+  status: GameStatus;
+  mode: GameMode;
+  stats: GameStats;
+  wordCount: number;
+  timeLimit: number;
+  sampleText: string[];
+  saveStats: SaveStats;
+  wordSet: WordSet;
+  time: number;
+  isTextChanging: boolean;
+  isInputFocused: boolean;
+  wpmPerSecond: wpmPerSecond[];
+}
+
 export function useGameState(initialSampleText: string[]) {
-  const [gameState, setGameState] = useState<GameState>({
+  // Generate initial text if none provided
+  const initialText = initialSampleText.length > 0 ? initialSampleText : generateRandomWords(10, "common200").split(" ");
+  
+  const [state, setState] = useState<GameState>({
     status: "before",
     mode: "words",
     stats: initialStats,
     wordCount: 10,
-    timeLimit: 0,
-    sampleText: initialSampleText,
+    timeLimit: 15,
+    sampleText: initialText,
     saveStats: "false",
+    wordSet: "common200",
+    time: 0,
+    isTextChanging: false,
+    isInputFocused: false,
+    wpmPerSecond: [],
   });
 
-  const updateGameStatus = useCallback((status: GameStatus) => {
-    setGameState((prev) => ({ ...prev, status }));
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Timer
+  useEffect(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    if (state.status === "during") {
+      timerRef.current = setInterval(() => {
+        setState(prev => ({
+          ...prev,
+          time: prev.mode === "words" ? prev.time + 1 : Math.max(0, prev.time - 1)
+        }));
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [state.status]);
+
+  const showUi = state.status !== "during" || !state.isInputFocused;
+
+  // Generic state update
+  const updateGameState = useCallback((updates: Partial<GameState>) => {
+    setState(prev => ({ ...prev, ...updates }));
   }, []);
 
-  const updateGameMode = useCallback((mode: GameMode) => {
-    setGameState((prev) => ({ ...prev, mode }));
-  }, []);
-
-  const updateStats = useCallback((stats: Partial<GameStats>) => {
-    setGameState((prev) => ({
-      ...prev,
-      stats: { ...prev.stats, ...stats },
-    }));
-  }, []);
-
-  const updateWordCount = useCallback((wordCount: number) => {
-    setGameState((prev) => ({ ...prev, wordCount }));
-  }, []);
-
-  const updateTimeLimit = useCallback((timeLimit: number) => {
-    setGameState((prev) => ({ ...prev, timeLimit }));
-  }, []);
-
-  const updateSampleText = useCallback((sampleText: string[]) => {
-    setGameState((prev) => ({ ...prev, sampleText }));
-  }, []);
-
-  const updateSaveStats = useCallback((saveStats: SaveStats) => {
-    setGameState((prev) => ({ ...prev, saveStats }));
-  }, []);
-
-  const resetGameState = useCallback(() => {
-    if (gameState.status === "before") {
-      setGameState((prev) => ({
-        ...prev,
-        status: "restart",
-        stats: initialStats,
-      }));
+  // Text generation with animation
+  const generateNewText = useCallback((wordCount: number, wordSet: WordSet, withAnimation = true) => {
+    if (withAnimation) {
+      setState(prev => ({ ...prev, isTextChanging: true }));
+      setTimeout(() => {
+        const newText = generateRandomWords(wordCount, wordSet).split(" ");
+        setState(prev => ({ ...prev, sampleText: newText }));
+        setTimeout(() => {
+          setState(prev => ({ ...prev, isTextChanging: false }));
+        }, 50);
+      }, 150);
     } else {
-      setGameState((prev) => ({
+      const newText = generateRandomWords(wordCount, wordSet).split(" ");
+      setState(prev => ({ ...prev, sampleText: newText, isTextChanging: false }));
+    }
+  }, []);
+
+  // Complex operations that need side effects
+  const switchMode = useCallback((mode: GameMode) => {
+    if (mode === "time") {
+      const newStatus = state.status === "before" ? "restart" : "before";
+      // First hide UI
+      setState(prev => ({ ...prev, isTextChanging: true }));
+      
+      // After fade out, update all values and generate new text
+      setTimeout(() => {
+        setState(prev => ({ 
+          ...prev,
+          mode, 
+          timeLimit: 15, 
+          wordCount: 50, 
+          time: 15,
+          status: newStatus,
+          stats: initialStats,
+          wpmPerSecond: [],
+        }));
+        
+        const newText = generateRandomWords(50, state.wordSet).split(" ");
+        setState(prev => ({ ...prev, sampleText: newText }));
+        
+        // Fade back in
+        setTimeout(() => {
+          setState(prev => ({ ...prev, isTextChanging: false }));
+        }, 50);
+      }, 150);
+    } else {
+      const newStatus = state.status === "before" ? "restart" : "before";
+      // First hide UI
+      setState(prev => ({ ...prev, isTextChanging: true }));
+      
+      // After fade out, update all values and generate new text
+      setTimeout(() => {
+        setState(prev => ({ 
+          ...prev,
+          mode, 
+          wordCount: 10, 
+          time: 0,
+          timeLimit: 15,
+          status: newStatus,
+          stats: initialStats,
+          wpmPerSecond: [],
+        }));
+        
+        const newText = generateRandomWords(10, state.wordSet).split(" ");
+        setState(prev => ({ ...prev, sampleText: newText }));
+        
+        // Fade back in
+        setTimeout(() => {
+          setState(prev => ({ ...prev, isTextChanging: false }));
+        }, 50);
+      }, 150);
+    }
+  }, [state.wordSet, state.status]);
+
+  const changeWordCount = useCallback((wordCount: number) => {
+    updateGameState({ wordCount });
+    generateNewText(wordCount, state.wordSet, true);
+  }, [updateGameState, generateNewText, state.wordSet]);
+
+  const changeWordSet = useCallback((wordSet: WordSet) => {
+    updateGameState({ wordSet });
+    generateNewText(state.wordCount, wordSet, true);
+  }, [updateGameState, generateNewText, state.wordCount]);
+
+  const changeTimeLimit = useCallback((timeLimit: number) => {
+    const time = state.mode === "time" ? timeLimit : state.time;
+    updateGameState({ timeLimit, time });
+  }, [updateGameState, state.mode, state.time]);
+
+  const resetGame = useCallback(() => {
+    const newStatus = state.status === "before" ? "restart" : "before";
+    const newTime = state.mode === "time" ? state.timeLimit : 0;
+    
+    updateGameState({
+      status: newStatus,
+      stats: initialStats,
+      time: newTime,
+      wpmPerSecond: [],
+    });
+
+    generateNewText(state.wordCount, state.wordSet, true);
+  }, [updateGameState, generateNewText, state.status, state.mode, state.timeLimit, state.wordCount, state.wordSet]);
+
+  const trackWpm = useCallback((letterCount: LetterCount, completedWords: string[]) => {
+    if (state.status === "during" && state.time > 0) {
+      const timeInMinutes = state.time / 60;
+      
+      const totalCorrectChars =
+        letterCount.correct +
+        (completedWords.length > 0 ? completedWords.length - 1 : 0);
+
+      const totalChars =
+        letterCount.correct +
+        letterCount.incorrect +
+        letterCount.extra +
+        letterCount.missed +
+        (completedWords.length > 0 ? completedWords.length - 1 : 0);
+
+      const newWpmPerSecond = {
+        time: state.time,
+        wpm: totalCorrectChars / 5 / timeInMinutes,
+        rawWpm: totalChars / 5 / timeInMinutes,
+      };
+
+      setState(prev => ({
         ...prev,
-        status: "before",
+        wpmPerSecond: [...prev.wpmPerSecond, newWpmPerSecond]
       }));
     }
-  }, [gameState.status]);
+  }, [state.status, state.time]);
 
   const resetAllState = useCallback(() => {
-    setGameState({
+    setState({
       status: "before",
       mode: "words",
       stats: initialStats,
       wordCount: 10,
-      timeLimit: 0,
-      sampleText: initialSampleText,
+      timeLimit: 15,
+      sampleText: initialText,
       saveStats: "false",
+      wordSet: "oxford3000",
+      time: 0,
+      isTextChanging: false,
+      isInputFocused: false,
+      wpmPerSecond: [],
     });
-  }, [initialSampleText]);
+  }, [initialText]);
 
   return {
-    gameState,
-    updateGameStatus,
-    updateGameMode,
-    updateStats,
-    updateWordCount,
-    updateTimeLimit,
-    updateSampleText,
-    resetGameState,
+    // State
+    ...state,
+    showUi, // Derived state
+    
+    // Generic updater (for simple updates)
+    updateGameState,
+    
+    // Specific operations (for complex logic)
+    switchMode,
+    changeWordCount,
+    changeWordSet,
+    changeTimeLimit,
+    resetGame,
+    trackWpm,
     resetAllState,
-    updateSaveStats,
+    generateNewText,
   };
 }

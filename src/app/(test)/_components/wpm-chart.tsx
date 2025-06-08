@@ -41,7 +41,7 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
   return (
     <div className="flex-1 min-w-0">
       <div className="bg-muted/30 rounded-lg p-3 h-full">
-        <h3 className="text-base font-semibold mb-1 text-center">WPM Progress</h3>
+        <h3 className="text-base font-semibold mb-1 text-center">words per minute</h3>
         <ChartContainer config={chartConfig} className="w-full h-[200px]">
           <AreaChart
             accessibilityLayer
@@ -73,10 +73,6 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
               cursor={false} 
               content={<ChartTooltipContent 
                 labelFormatter={(value) => `${value} seconds`}
-                formatter={(value, name) => [
-                  `${Math.round(Number(value))} WPM`,
-                  name === 'wpm' ? 'WPM' : 'Raw WPM'
-                ]}
               />} 
             />
             <Area

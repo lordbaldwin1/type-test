@@ -3,9 +3,15 @@ import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-export default function Navbar() {
+interface NavbarProps {
+  showUi?: boolean;
+}
+
+export default function Navbar({ showUi = true }: NavbarProps) {
   return (
-    <div className="w-full">
+    <div className={`w-full transition-opacity duration-300 ${
+      showUi ? "opacity-100" : "pointer-events-none opacity-0"
+    }`}>
       <div className="mx-24 mt-8 flex flex-row items-center justify-between">
         <div className="flex items-center gap-6">
           <Link className="flex flex-row" href={`/`}>

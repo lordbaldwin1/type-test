@@ -8,7 +8,7 @@ export function GameStats({ stats, mode, timeLimit, time, onReset, wpmPerSecond 
     return (
         <div className="flex flex-col items-center gap-4 w-full">
 
-            <div className="bg-card rounded-lg border p-4 w-full max-w-6xl flex flex-col">
+            <div className="w-full max-w-6xl flex flex-col">
                 <div className="flex flex-col items-center order-3 mt-3 gap-2">
                     <Tooltip>
                         <TooltipTrigger asChild>

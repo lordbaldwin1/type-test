@@ -5,6 +5,7 @@
 export type GameMode = "words" | "time";
 export type GameStatus = "before" | "during" | "after" | "restart";
 export type SaveStats = "true" | "false";
+export type WordSet = "oxford3000" | "common200";
 
 // =====================================
 // Core Data Structures
@@ -25,16 +26,6 @@ export interface GameStats {
   incorrect: number;
   extra: number;
   missed: number;
-}
-
-export interface GameState {
-  status: GameStatus;
-  mode: GameMode;
-  stats: GameStats;
-  wordCount: number;
-  timeLimit: number;
-  sampleText: string[];
-  saveStats: SaveStats;
 }
 
 export interface wpmPerSecond {
@@ -87,15 +78,29 @@ export interface UseTypingGameProps {
 
 export interface GameModeConfigProps {
   mode: GameMode;
-  setGameMode: (mode: GameMode) => void;
   timeLimit: number;
   wordCount: number;
-  setTimeLimit: (time: number) => void;
-  setWordCount: (count: number) => void;
-  resetGameState: () => void;
   saveStats: SaveStats;
-  updateSaveStats: (saveStats: SaveStats) => void;
   showUi: boolean;
+  // Generic updater for simple state changes
+  updateGameState: (updates: Partial<{ mode: GameMode; timeLimit: number; wordCount: number; saveStats: SaveStats }>) => void;
+  // Specific operations for complex logic
+  switchMode: (mode: GameMode) => void;
+  changeWordCount: (count: number) => void;
+  changeTimeLimit: (timeLimit: number) => void;
+  resetGame: () => void;
+}
+
+export interface WordsetSelectorProps {
+  wordCount: number;
+  wordSet: WordSet;
+  showUi: boolean;
+  updateGameState: (updates: Partial<{ wordSet: WordSet }>) => void;
+  generateNewText: (
+    wordCount: number,
+    wordSet: WordSet,
+    withAnimation: boolean,
+  ) => void;
 }
 
 // =====================================
