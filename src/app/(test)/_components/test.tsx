@@ -120,9 +120,9 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   return (
     <div className="flex h-screen flex-col">
       <Navbar showUi={gameState.showUi} />
-      <main className="flex-1">
-        <div className="flex flex-col items-center justify-start px-4 py-8">
-          {gameState.status === "after" ? (
+      <main className="flex-1 min-h-0">
+        {gameState.status === "after" ? (
+          <div className="flex items-center justify-center h-full px-4">
             <div className="animate-in fade-in duration-500">
               <GameStats
                 stats={gameState.stats}
@@ -133,51 +133,77 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                 wpmPerSecond={gameState.wpmPerSecond}
               />
             </div>
-          ) : (
-            <div className="flex w-full max-w-3xl flex-col gap-2">
-              <div className="flex w-full justify-center">
-                <GameModeConfig
-                  mode={gameState.mode}
-                  timeLimit={gameState.timeLimit}
-                  wordCount={gameState.wordCount}
-                  saveStats={gameState.saveStats}
-                  showUi={gameState.showUi}
-                  updateGameState={gameState.updateGameState}
-                  switchMode={gameState.switchMode}
-                  changeWordCount={gameState.changeWordCount}
-                  changeTimeLimit={gameState.changeTimeLimit}
-                  resetGame={gameState.resetGame}
-                  userId={userId ?? null}
-                />
-              </div>
-              <WordsetSelector
+          </div>
+        ) : (
+          <div className="flex flex-col h-full px-4">
+            {/* Top Section - Game Mode Config */}
+            <div className="flex justify-center py-6">
+              <GameModeConfig
+                mode={gameState.mode}
+                timeLimit={gameState.timeLimit}
                 wordCount={gameState.wordCount}
-                wordSet={gameState.wordSet}
+                saveStats={gameState.saveStats}
                 showUi={gameState.showUi}
                 updateGameState={gameState.updateGameState}
-                generateNewText={gameState.generateNewText}
-              />
-              <GameArea
-                mode={gameState.mode}
-                status={gameState.status}
-                sampleText={gameState.sampleText}
-                completedWords={completedWords}
-                currentWordIndex={currentWordIndex}
-                input={input}
-                time={gameState.time}
-                onInputChange={handleInputChangeWithTracking}
-                onInputSubmit={handleSubmit}
-                onReset={handleReset}
-                saveStats={gameState.saveStats}
-                isTextChanging={gameState.isTextChanging}
-                inputRef={inputRef}
-                onInputFocus={() => gameState.updateGameState({ isInputFocused: true })}
-                onInputBlur={() => gameState.updateGameState({ isInputFocused: false })}
-                showUi={gameState.showUi}
+                switchMode={gameState.switchMode}
+                changeWordCount={gameState.changeWordCount}
+                changeTimeLimit={gameState.changeTimeLimit}
+                resetGame={gameState.resetGame}
+                userId={userId ?? null}
               />
             </div>
-          )}
-        </div>
+
+            {/* Center Section - WordsetSelector + Game Area (flex-1 centers it vertically) */}
+            <div className="flex-1 flex items-center justify-center min-h-0">
+              <div className="flex flex-col items-center gap-2 -mt-40">
+                {/* WordsetSelector - Directly above GameArea */}
+                <div className="w-full max-w-3xl">
+                  <WordsetSelector
+                    wordCount={gameState.wordCount}
+                    wordSet={gameState.wordSet}
+                    showUi={gameState.showUi}
+                    updateGameState={gameState.updateGameState}
+                    generateNewText={gameState.generateNewText}
+                  />
+                </div>
+                
+                {/* GameArea */}
+                <GameArea
+                  mode={gameState.mode}
+                  status={gameState.status}
+                  sampleText={gameState.sampleText}
+                  completedWords={completedWords}
+                  currentWordIndex={currentWordIndex}
+                  input={input}
+                  time={gameState.time}
+                  onInputChange={handleInputChangeWithTracking}
+                  onInputSubmit={handleSubmit}
+                  onReset={handleReset}
+                  saveStats={gameState.saveStats}
+                  isTextChanging={gameState.isTextChanging}
+                  inputRef={inputRef}
+                  onInputFocus={() => gameState.updateGameState({ isInputFocused: true })}
+                  onInputBlur={() => gameState.updateGameState({ isInputFocused: false })}
+                  showUi={gameState.showUi}
+                />
+              </div>
+            </div>
+
+            {/* Bottom Section - Restart Instructions */}
+            <div className="flex justify-center py-6">
+              <div className={`flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground animate-fade-in transition-opacity duration-300 ${gameState.showUi ? "opacity-100" : "opacity-0"}`}>
+                <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
+                  tab
+                </kbd>
+                <p>+</p>
+                <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
+                  enter
+                </kbd>
+                <p>- restart test</p>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       <Footer showUi={gameState.showUi} />
     </div>

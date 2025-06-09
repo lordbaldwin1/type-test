@@ -22,7 +22,6 @@ export function GameArea({
   inputRef,
   onInputFocus,
   onInputBlur,
-  showUi,
 }: GameAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
@@ -179,7 +178,7 @@ export function GameArea({
   };
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-2">
+    <div className="flex w-full max-w-3xl flex-col gap-4">
       <div className="flex flex-col items-center">
         <input
           ref={inputRef}
@@ -263,34 +262,24 @@ export function GameArea({
             )}
           </div>
         </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              className="text-muted-foreground hover:text-foreground mt-24 hover:scale-110"
-          onClick={onReset}
-        >
-          <RotateCcw />
-        </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>restart test</p>
-        </TooltipContent>
-        </Tooltip>
-
-        <div className="mt-24">
-          <div className={`flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground animate-fade-in transition-opacity duration-300 ${showUi ? "opacity-100" : "opacity-0"}`}>
-            <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
-              tab
-            </kbd>
-            <p>+</p>
-            <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
-              enter
-            </kbd>
-            <p>- restart test</p>
-          </div>
+        
+        {/* Restart Button - Centered below the game area */}
+        <div className="mt-8">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground hover:scale-110"
+                onClick={onReset}
+              >
+                <RotateCcw />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>restart test</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
-
       </div>
     </div>
   );
