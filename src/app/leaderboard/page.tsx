@@ -160,18 +160,19 @@ export default async function Leaderboard() {
     : undefined;
 
   return (
-    <div className="animate-in fade-in mx-auto mt-8 flex max-w-4xl flex-col items-center gap-8 font-mono duration-500">
-      {/* Leaderboard Toggle with conditional user stats */}
-      <LeaderboardTableToggle
-        users={userList}
-        totalPlayers={totalPlayers?.[0]?.count ?? 0}
-        userBestTime={userBestTime}
-        userRank={userRank15}
-        user={user}
-        userPosition={userPosition}
-        games={timeLimit15Games}
-        userId={userId}
-      />
+    <div className="animate-in fade-in duration-500 font-mono px-4 py-8 overflow-x-auto">
+      <div className="mx-auto max-w-7xl">
+        <LeaderboardTableToggle
+          users={userList}
+          totalPlayers={totalPlayers?.[0]?.count ?? 0}
+          userBestTime={userBestTime}
+          userRank={userRank15}
+          user={user}
+          userPosition={userPosition}
+          games={timeLimit15Games}
+          userId={userId}
+        />
+      </div>
     </div>
   );
 }

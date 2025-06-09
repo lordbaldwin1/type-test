@@ -124,7 +124,7 @@ export default function LeaderboardTable({
   };
 
   return (
-      <div className="w-[800px]">
+      <div className="w-full max-w-5xl min-w-[800px]">
         <Table>
           <TableCaption>top 50 players by average wpm</TableCaption>
           <TableHeader>

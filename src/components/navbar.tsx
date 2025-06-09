@@ -1,7 +1,13 @@
-import { Crown, Info, Keyboard, Rabbit, User } from "lucide-react";
+import {
+  ChartNoAxesColumnIncreasing,
+  Pencil,
+  Scroll,
+  User,
+} from "lucide-react";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
 
 interface NavbarProps {
   showUi?: boolean;
@@ -9,26 +15,28 @@ interface NavbarProps {
 
 export default function Navbar({ showUi = true }: NavbarProps) {
   return (
-    <div className={`w-full transition-opacity duration-300 ${
-      showUi ? "opacity-100" : "pointer-events-none opacity-0"
-    }`}>
+    <div
+      className={`w-full transition-opacity duration-300 ${
+        showUi ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
+    >
       <div className="mx-24 mt-8 flex flex-row items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link className="flex flex-row" href={`/`}>
-            <Rabbit className="text-muted-foreground mr-2 h-10 w-10" />
-            <h1 className="hidden font-mono text-4xl font-semibold md:block lg:block">
+        <div className="flex items-center">
+          <Link className="mr-6 flex flex-row" href={`/`}>
+            <Image src="/cute-ghost.png" alt="logo" width={32} height={32} />
+            <h1 className="hidden font-mono text-3xl font-semibold md:block lg:block">
               type-test
             </h1>
           </Link>
           <div className="text-muted-foreground flex flex-row gap-6">
             <Link href={`/`}>
-              <Keyboard className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
+              <Pencil className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
             <Link href={`/leaderboard`}>
-              <Crown className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
+              <ChartNoAxesColumnIncreasing className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
             <Link href={`/about`}>
-              <Info className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
+              <Scroll className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
           </div>
         </div>
