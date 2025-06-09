@@ -42,7 +42,7 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
     <div className="flex-1 min-w-0">
       <div className="bg-muted/30 rounded-lg p-3 h-full">
         <h3 className="text-base font-semibold mb-1 text-center">words per minute</h3>
-        <ChartContainer config={chartConfig} className="w-full h-[200px]">
+        <ChartContainer config={chartConfig} className="w-full h-[300px]">
           <AreaChart
             accessibilityLayer
             data={wpmPerSecond}
@@ -58,12 +58,14 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
               dataKey="time"
               tickLine={false}
               axisLine={false}
+              label={{ value: "time", position: "insideBottom", offset: -7 }}
               tickMargin={6}
               tickFormatter={(value) => `${value}s`}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
+              label={{ value: "wpm", position: "insideLeft", offset: 0 }}
               tickMargin={6}
               tickCount={5}
               domain={[0, yAxisMax]}
