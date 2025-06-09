@@ -191,8 +191,16 @@ export function useGameState(initialSampleText: string[]) {
   }, [updateGameState, generateNewText, state.status, state.mode, state.timeLimit, state.wordCount, state.wordSet]);
 
   const trackWpm = useCallback((letterCount: LetterCount, completedWords: string[]) => {
-    if (state.status === "during" && state.time > 0) {
-      const timeInMinutes = state.time / 60;
+    if (state.status === "during" && state.time >= 0) {
+      // Calculate elapsed time based on mode
+      const elapsedTime = state.mode === "time" 
+        ? state.timeLimit - state.time  // For time mode: timeLimit - remaining time
+        : state.time;                   // For words mode: elapsed time
+
+      // Only track if we have elapsed time > 0
+      if (elapsedTime <= 0) return;
+      
+      const timeInMinutes = elapsedTime / 60;
       
       const totalCorrectChars =
         letterCount.correct +
@@ -206,7 +214,7 @@ export function useGameState(initialSampleText: string[]) {
         (completedWords.length > 0 ? completedWords.length - 1 : 0);
 
       const newWpmPerSecond = {
-        time: state.time,
+        time: elapsedTime,
         wpm: totalCorrectChars / 5 / timeInMinutes,
         rawWpm: totalChars / 5 / timeInMinutes,
       };
@@ -216,7 +224,7 @@ export function useGameState(initialSampleText: string[]) {
         wpmPerSecond: [...prev.wpmPerSecond, newWpmPerSecond]
       }));
     }
-  }, [state.status, state.time]);
+  }, [state.status, state.time, state.mode, state.timeLimit]);
 
   const resetAllState = useCallback(() => {
     setState({

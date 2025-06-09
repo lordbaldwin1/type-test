@@ -199,7 +199,7 @@ export function GameArea({
             <div className="absolute inset-0 z-20 mt-8 flex items-center justify-center pointer-events-none">
               <div className="absolute inset-0 bg-background/90 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
-                <p className="flex flex-row items-center gap-2">
+                <p className="flex flex-row items-center mt-2 gap-2">
                   <MousePointerClick className="h-4 w-4" /> Click or press any
                   key to start
                 </p>
@@ -220,7 +220,7 @@ export function GameArea({
 
           <div
             ref={containerRef}
-            className={`relative mx-auto ml-2 flex h-[7.9em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${
+            className={`relative mx-auto ml-2 flex h-[7.5em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${
               isTextChanging ? "opacity-0" : "opacity-100"
             }`}
           >

@@ -123,14 +123,16 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       <main className="flex-1 overflow-auto">
         <div className="flex flex-col items-center justify-start px-4 py-8">
           {gameState.status === "after" ? (
-            <GameStats
-              stats={gameState.stats}
-              mode={gameState.mode}
-              timeLimit={gameState.timeLimit}
-              time={gameState.time}
-              onReset={handleReset}
-              wpmPerSecond={gameState.wpmPerSecond}
-            />
+            <div className="animate-in fade-in duration-500">
+              <GameStats
+                stats={gameState.stats}
+                mode={gameState.mode}
+                timeLimit={gameState.timeLimit}
+                time={gameState.time}
+                onReset={handleReset}
+                wpmPerSecond={gameState.wpmPerSecond}
+              />
+            </div>
           ) : (
             <div className="flex w-full max-w-3xl flex-col gap-2">
               <div className="flex w-full justify-center">
