@@ -36,31 +36,10 @@ export default function LeaderboardTableToggle({
     <div className="w-full">
       {/* Mobile/Tablet Layout */}
       <div className="flex flex-col items-center gap-8 2xl:hidden">
-        {/* Toggle Buttons */}
-        <div className="bg-muted flex w-full max-w-lg flex-row rounded-lg p-1">
-          <Button
-            variant={"default"}
-            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
-              show15s
-                ? "text-foreground bg-background hover:bg-background"
-                : "text-muted-foreground bg-muted hover:bg-muted hover:text-foreground"
-            }`}
-            onClick={() => setShow15s(true)}
-          >
-            15s wpm
-          </Button>
-          <Button
-            variant={"default"}
-            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
-              show15s
-                ? "text-muted-foreground bg-muted hover:text-foreground hover:bg-muted"
-                : "text-foreground bg-background hover:text-foreground hover:bg-background"
-            }`}
-            onClick={() => setShow15s(false)}
-          >
-            ave. wpm
-          </Button>
-        </div>
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl font-bold text-center px-2">
+          {show15s ? "best 15s timed wpm" : "best average wpm overall"}
+        </h1>
 
         {/* User Stats */}
         <div className="relative flex justify-center">
@@ -90,10 +69,31 @@ export default function LeaderboardTableToggle({
           )}
         </div>
 
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-center">
-          {show15s ? "best 15s timed wpm" : "best average wpm overall"}
-        </h1>
+        {/* Toggle Buttons */}
+        <div className="bg-muted flex w-full max-w-lg flex-row rounded-lg p-1">
+          <Button
+            variant={"default"}
+            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
+              show15s
+                ? "text-foreground bg-background hover:bg-background"
+                : "text-muted-foreground bg-muted hover:bg-muted hover:text-foreground"
+            }`}
+            onClick={() => setShow15s(true)}
+          >
+            15s wpm
+          </Button>
+          <Button
+            variant={"default"}
+            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
+              show15s
+                ? "text-muted-foreground bg-muted hover:text-foreground hover:bg-muted"
+                : "text-foreground bg-background hover:text-foreground hover:bg-background"
+            }`}
+            onClick={() => setShow15s(false)}
+          >
+            ave. wpm
+          </Button>
+        </div>
 
         {/* Tables */}
         <div className="w-full flex justify-center">
