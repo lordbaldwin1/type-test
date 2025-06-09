@@ -208,7 +208,7 @@ export default function TimeLimit15Table({
             <TableRow key={game.id}>
               <TableCell className="text-center">{index + 1}</TableCell>
               <TableCell className="font-medium">
-                {game.user.stayAnonymous ? "Anonymous" : (game.user.username ?? "Anonymous")}
+                {game.user.username !== "Anonymous" ? game.user.username : "Anonymous"}
               </TableCell>
               <TableCell className="text-center">
                 {game.wpm}
