@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useTypingGame } from "~/app/(test)/_hooks/useTypingGame";
 import { saveGameStats } from "~/server/db/actions";
@@ -97,9 +97,11 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   }, [gameState, userId, completedWords, letterCount]);
 
   // Handle time up for time mode
-  if (gameState.mode === "time" && gameState.time === 0 && gameState.status === "during") {
-    void handleTimeUp();
-  }
+  useEffect(() => {
+    if (gameState.mode === "time" && gameState.time === 0 && gameState.status === "during") {
+      void handleTimeUp();
+    }
+  }, [gameState.mode, gameState.time, gameState.status, handleTimeUp]);
 
   const handleReset = () => {
     resetInputState();

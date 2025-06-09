@@ -7,7 +7,7 @@ export const games = createTable(
   "game",
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    userId: d.varchar({ length: 256 }),
+    userId: d.varchar({ length: 256 }).references(() => users.id),
     mode: d.varchar({ length: 256 }),
     timeLimit: d.integer(),
     wordCount: d.integer(),

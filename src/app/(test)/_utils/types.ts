@@ -2,6 +2,8 @@
 // Basic Types & Enums
 // =====================================
 
+import type { Game, User } from "~/server/db/schema";
+
 export type GameMode = "words" | "time";
 export type GameStatus = "before" | "during" | "after" | "restart";
 export type SaveStats = "true" | "false";
@@ -33,6 +35,8 @@ export interface wpmPerSecond {
   wpm: number;
   rawWpm: number;
 }
+
+export type MaxWpmGameWithUser = Game & { user: User };
 
 // =====================================
 // Component Props Interfaces
