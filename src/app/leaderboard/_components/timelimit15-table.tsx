@@ -123,7 +123,7 @@ export default function TimeLimit15Table({
   
   
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-[800px]">
       <Table>
         <TableCaption>top 50 players by best 15s WPM</TableCaption>
         <TableHeader>

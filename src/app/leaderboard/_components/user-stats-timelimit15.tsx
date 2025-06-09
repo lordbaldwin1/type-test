@@ -16,17 +16,17 @@ export default function UserStats15({
   return (
     userBestTime &&
     user && (
-      <div className="bg-muted flex flex-row gap-2 rounded-lg p-2">
-        <p className="text-muted-foreground border-border border-r pr-2 text-sm">
+      <div className="bg-muted flex flex-row lg:flex-col gap-2 lg:gap-1 rounded-lg p-2 lg:p-3">
+        <p className="text-muted-foreground border-border border-r lg:border-r-0 lg:border-b lg:pb-1 pr-2 lg:pr-0 text-sm">
           {userRank?.rank} / {totalPlayers}
         </p>
-        <p className="text-muted-foreground border-border border-r pr-2 text-sm">
+        <p className="text-muted-foreground border-border border-r lg:border-r-0 lg:border-b lg:pb-1 pr-2 lg:pr-0 text-sm">
           {user.username ?? "Anonymous"}
         </p>
-        <p className="text-muted-foreground border-border border-r pr-2 text-sm">
+        <p className="text-muted-foreground border-border border-r lg:border-r-0 lg:border-b lg:pb-1 pr-2 lg:pr-0 text-sm">
           {userBestTime.wpm} wpm
         </p>
-        <p className="text-muted-foreground text-sm border-border border-r pr-2">
+        <p className="text-muted-foreground border-border border-r lg:border-r-0 lg:border-b lg:pb-1 pr-2 lg:pr-0 text-sm">
           {userBestTime.accuracy}% acc
         </p>
         <p className="text-muted-foreground text-sm">
