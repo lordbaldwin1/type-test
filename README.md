@@ -10,6 +10,7 @@
 - [x] Refactor typing test?
 - [x] Continue refactor
 - [x] Add user table with userId and username
+- [] Sign in to save stats on stats screen, sign in prompt on ranked mode
 - [] Profile page with stats
 - [] About page
 - [x] Leaderboard
