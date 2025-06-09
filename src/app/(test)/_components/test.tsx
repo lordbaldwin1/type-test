@@ -143,6 +143,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   changeWordCount={gameState.changeWordCount}
                   changeTimeLimit={gameState.changeTimeLimit}
                   resetGame={gameState.resetGame}
+                  userId={userId ?? null}
                 />
               </div>
               <WordsetSelector

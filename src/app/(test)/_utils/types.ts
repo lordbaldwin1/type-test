@@ -89,6 +89,7 @@ export interface GameModeConfigProps {
   changeWordCount: (count: number) => void;
   changeTimeLimit: (timeLimit: number) => void;
   resetGame: () => void;
+  userId: string | null;
 }
 
 export interface WordsetSelectorProps {

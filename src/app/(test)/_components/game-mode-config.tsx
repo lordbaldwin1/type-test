@@ -2,6 +2,8 @@ import { memo, useCallback } from "react";
 import { Anvil, Clock, Hash, Pencil } from "lucide-react";
 import type { GameMode, GameModeConfigProps } from "../_utils/types";
 import { Button } from "~/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import { SignInButton } from "@clerk/nextjs";
 
 export const GameModeConfig = memo(function GameModeConfig({
   mode,
@@ -13,6 +15,7 @@ export const GameModeConfig = memo(function GameModeConfig({
   switchMode,
   changeWordCount,
   changeTimeLimit,
+  userId,
 }: GameModeConfigProps) {
   const wordOptions = [10, 25, 50, 100];
   const timeOptions = [15, 30, 60];
@@ -62,7 +65,7 @@ export const GameModeConfig = memo(function GameModeConfig({
             <span className="text-sm">practice</span>
           </div>
         </Button>
-
+        {userId ? (
         <Button
           variant="link"
           size="sm"
@@ -74,8 +77,35 @@ export const GameModeConfig = memo(function GameModeConfig({
           <div className="flex flex-row items-center gap-1">
             <Anvil className="h-3 w-3" />
             <span className="text-sm">ranked</span>
-          </div>
-        </Button>
+            </div>
+          </Button>
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+            <SignInButton mode="modal">
+              <span className="inline-block">
+                <Button
+                  variant="link"
+                  size="sm"
+                  disabled={true}
+                  className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+                saveStats === "true" ? "text-red-200" : ""
+              }`}
+              onClick={() => updateGameState({ saveStats: "true" })}
+            >
+              <div className="flex flex-row items-center gap-1">
+                <Anvil className="h-3 w-3" />
+                <span className="text-sm">ranked</span>
+                </div>
+              </Button>
+              </span>
+              </SignInButton>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span>click to sign in and play ranked</span>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
 
       {/* Divider */}

@@ -274,19 +274,19 @@ export function GameArea({
         </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Restart test</p>
+          <p>restart test</p>
         </TooltipContent>
         </Tooltip>
 
         <div className="mt-24">
           <div className={`flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground animate-fade-in transition-opacity duration-300 ${showUi ? "opacity-100" : "opacity-0"}`}>
-            <p className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
+            <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
               tab
-            </p>
+            </kbd>
             <p>+</p>
-            <p className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
+            <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
               enter
-            </p>
+            </kbd>
             <p>- restart test</p>
           </div>
         </div>

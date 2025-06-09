@@ -27,7 +27,7 @@ export default function Navbar({ showUi = true }: NavbarProps) {
             <Link href={`/leaderboard`}>
               <Crown className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
-            <Link href={`/`}>
+            <Link href={`/about`}>
               <Info className="hover:text-foreground transition-transform duration-200 hover:scale-110" />
             </Link>
           </div>
