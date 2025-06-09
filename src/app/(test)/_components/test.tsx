@@ -120,7 +120,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   return (
     <div className="flex h-screen flex-col">
       <Navbar showUi={gameState.showUi} />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1">
         <div className="flex flex-col items-center justify-start px-4 py-8">
           {gameState.status === "after" ? (
             <div className="animate-in fade-in duration-500">
