@@ -31,7 +31,7 @@ export default function LeaderboardTableToggle({
   userId: string | null;
 }) {
   const [show15s, setShow15s] = useState(true);
-
+  console.log("games", games, "totalPlayers", totalPlayers);
   return (
     <div className="w-full">
       {/* Mobile/Tablet Layout */}

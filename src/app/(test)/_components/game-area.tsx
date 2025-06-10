@@ -1,10 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { Button } from "~/components/ui/button";
-import { MousePointerClick, RotateCcw } from "lucide-react";
+import { MousePointerClick} from "lucide-react";
 import { Word } from "./word";
 import type { GameAreaProps } from "~/app/(test)/_utils/types";
-import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
-import { Tooltip } from "~/components/ui/tooltip";
 
 export function GameArea({
   mode,
@@ -17,12 +14,11 @@ export function GameArea({
   saveStats,
   onInputChange,
   onInputSubmit,
-  onReset,
   isTextChanging,
   inputRef,
   onInputFocus,
   onInputBlur,
-}: GameAreaProps) {
+}: Omit<GameAreaProps, 'onReset'>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -178,7 +174,7 @@ export function GameArea({
   };
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-4">
+    <div className="flex w-full max-w-5xl flex-col gap-4">
       <div className="flex flex-col items-center">
         <input
           ref={inputRef}
@@ -261,24 +257,6 @@ export function GameArea({
               />
             )}
           </div>
-        </div>
-        
-        {/* Restart Button - Centered below the game area */}
-        <div className="mt-8">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                className="text-muted-foreground hover:text-foreground hover:scale-110"
-                onClick={onReset}
-              >
-                <RotateCcw />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>restart test</p>
-            </TooltipContent>
-          </Tooltip>
         </div>
       </div>
     </div>
