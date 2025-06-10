@@ -21,7 +21,7 @@ export function WordsetSelector({
     <Dialog>
       <DialogTrigger asChild>
         <p
-          className={`text-muted-foreground hover:text-foreground mx-auto mt-40 flex flex-row items-center justify-center gap-2 font-mono transition-all duration-300 hover:cursor-pointer ${
+          className={`text-muted-foreground hover:text-foreground mx-auto flex flex-row items-center justify-center gap-2 font-mono transition-all duration-300 hover:cursor-pointer ${
             showUi ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >

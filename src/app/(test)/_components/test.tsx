@@ -121,10 +121,10 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   }, [handleInputChange, gameState, letterCount, completedWords]);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex min-h-screen flex-col">
       <Navbar showUi={gameState.showUi} />
-      <div className="flex-1 flex flex-col min-h-0">
-        <main className="flex-shrink-0">
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col">
           {gameState.status === "after" ? (
             <div className="flex items-center justify-center px-4 py-8">
               <div className="animate-in fade-in duration-500">
@@ -138,9 +138,9 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col px-4">
-              {/* Top Section - Game Mode Config */}
-              <div className="flex justify-center py-6">
+            <div className="flex-1 flex flex-col justify-center px-4 min-h-0">
+              {/* Game Mode Config - Fixed at top */}
+              <div className="flex justify-center py-2 sm:py-4 md:py-6">
                 <GameModeConfig
                   mode={gameState.mode}
                   timeLimit={gameState.timeLimit}
@@ -156,39 +156,35 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                 />
               </div>
 
-              {/* Center Section - WordsetSelector + Game Area */}
-              <div className="flex items-center justify-center py-8">
-                <div className="flex flex-col items-center">
-                  {/* WordsetSelector - Directly above GameArea */}
-                  <div className="w-full max-w-3xl">
-                    <WordsetSelector
-                      wordCount={gameState.wordCount}
-                      wordSet={gameState.wordSet}
-                      showUi={gameState.showUi}
-                      updateGameState={gameState.updateGameState}
-                      generateNewText={gameState.generateNewText}
-                    />
-                  </div>
-                  
-                  {/* GameArea */}
-                  <GameArea
-                    mode={gameState.mode}
-                    status={gameState.status}
-                    sampleText={gameState.sampleText}
-                    completedWords={completedWords}
-                    currentWordIndex={currentWordIndex}
-                    input={input}
-                    time={gameState.time}
-                    onInputChange={handleInputChangeWithTracking}
-                    onInputSubmit={handleSubmit}
-                    saveStats={gameState.saveStats}
-                    isTextChanging={gameState.isTextChanging}
-                    inputRef={inputRef}
-                    onInputFocus={() => gameState.updateGameState({ isInputFocused: true })}
-                    onInputBlur={() => gameState.updateGameState({ isInputFocused: false })}
-                    showUi={gameState.showUi}
-                  />
-                </div>
+              {/* Centered Content Container - WordsetSelector + GameArea */}
+              <div className="flex-1 flex flex-col items-center justify-center space-y-6 min-h-0">
+                {/* WordsetSelector */}
+                <WordsetSelector
+                  wordCount={gameState.wordCount}
+                  wordSet={gameState.wordSet}
+                  showUi={gameState.showUi}
+                  updateGameState={gameState.updateGameState}
+                  generateNewText={gameState.generateNewText}
+                />
+                
+                {/* GameArea */}
+                <GameArea
+                  mode={gameState.mode}
+                  status={gameState.status}
+                  sampleText={gameState.sampleText}
+                  completedWords={completedWords}
+                  currentWordIndex={currentWordIndex}
+                  input={input}
+                  time={gameState.time}
+                  onInputChange={handleInputChangeWithTracking}
+                  onInputSubmit={handleSubmit}
+                  saveStats={gameState.saveStats}
+                  isTextChanging={gameState.isTextChanging}
+                  inputRef={inputRef}
+                  onInputFocus={() => gameState.updateGameState({ isInputFocused: true })}
+                  onInputBlur={() => gameState.updateGameState({ isInputFocused: false })}
+                  showUi={gameState.showUi}
+                />
               </div>
             </div>
           )}

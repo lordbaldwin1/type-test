@@ -40,7 +40,7 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
 
   return (
     <div className="flex-1 min-w-0">
-      <div className="bg-muted/30 rounded-lg p-3 h-full">
+      <div className="bg-background rounded-lg p-3 h-full">
         <h3 className="text-base font-semibold mb-1 text-center">words per minute</h3>
         <ChartContainer config={chartConfig} className="w-full h-[300px]">
           <AreaChart
