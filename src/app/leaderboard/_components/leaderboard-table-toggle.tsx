@@ -8,6 +8,7 @@ import UserStats from "./user-stats";
 import UserStats15 from "./user-stats-timelimit15";
 import UsernameDialog from "./username-dialog";
 import { Button } from "~/components/ui/button";
+import { SignInButton } from "@clerk/nextjs";
 
 type MaxWpmGameWithUser = Game & { user: User };
 
@@ -41,32 +42,39 @@ export default function LeaderboardTableToggle({
         </h1>
 
         {/* User Stats */}
-        <div className="relative flex justify-center">
-          {userId && (
+        {userId ? (
+          <div className="relative flex justify-center">
             <div className="absolute top-1.25 text-muted-foreground right-full mr-3">
               you:
             </div>
-          )}
-          {show15s ? (
-            <UserStats15
-              userBestTime={userBestTime}
-              userRank={userRank}
-              user={user}
-              totalPlayers={totalPlayers}
-            />
-          ) : (
-            <UserStats
-              userPosition={userPosition}
-              user={user}
-              totalPlayers={totalPlayers}
-            />
-          )}
-          {userId && (
+            {show15s ? (
+              <UserStats15
+                userBestTime={userBestTime}
+                userRank={userRank}
+                user={user}
+                totalPlayers={totalPlayers}
+              />
+            ) : (
+              <UserStats
+                userPosition={userPosition}
+                user={user}
+                totalPlayers={totalPlayers}
+              />
+            )}
             <div className="absolute top-0 left-full ml-2">
-              <UsernameDialog isAnonymous={user?.stayAnonymous ?? false} />
+              <UsernameDialog />
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="text-sm text-muted-foreground text-center">
+            <SignInButton mode="modal">
+              <button className="underline text-sm text-muted-foreground hover:text-foreground p-0">
+                sign in
+              </button>
+            </SignInButton>
+            {" "}and play ranked to join the leaderboard
+          </div>
+        )}
 
         {/* Toggle Buttons */}
         <div className="bg-muted flex w-full max-w-lg flex-row rounded-lg p-1">
@@ -151,7 +159,7 @@ export default function LeaderboardTableToggle({
                 )}
                 {userId && (
                   <div className="absolute top-0 left-full ml-2">
-                    <UsernameDialog isAnonymous={user?.stayAnonymous ?? false} />
+                    <UsernameDialog />
                   </div>
                 )}
               </div>
@@ -164,6 +172,17 @@ export default function LeaderboardTableToggle({
             <h1 className="text-3xl font-bold whitespace-nowrap">
               {show15s ? "best 15s timed wpm" : "best average wpm overall"}
             </h1>
+            
+            {!userId && (
+              <div className="text-sm text-muted-foreground text-center">
+              <SignInButton mode="modal">
+                <button className="underline text-sm text-muted-foreground hover:text-foreground p-0">
+                  sign in
+                </button>
+              </SignInButton>
+              {" "}and play ranked to join the leaderboard
+            </div>
+            )}
 
             {/* Tables */}
             <div className="w-full flex justify-center">

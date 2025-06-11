@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChartNoAxesColumnIncreasing,
   Scroll,
@@ -44,7 +46,7 @@ export default function Navbar({ showUi = true }: NavbarProps) {
           <ModeToggle />
           <SignedOut>
             <SignInButton mode="modal">
-              <User className="text-muted-foreground hover:text-foreground h-4.5 w-4.5 hover:scale-110" />
+              <User className="text-muted-foreground hover:text-foreground h-5.5 w-5.5 hover:scale-110" />
             </SignInButton>
           </SignedOut>
           <SignedIn>
