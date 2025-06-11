@@ -11,19 +11,43 @@ import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
 interface NavbarProps {
   showUi?: boolean;
 }
 
+interface UsernameResponse {
+  username: string | null;
+}
+
 export default function Navbar({ showUi = true }: NavbarProps) {
-  const { isLoaded } = useUser();
+  const { isLoaded, user } = useUser();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const response = await fetch("/api/get-username");
+        if (!response.ok) {
+          throw new Error("Failed to fetch username");
+        }
+        const data = await response.json() as UsernameResponse;
+        setUsername(data.username);
+      } catch (error: unknown) {
+        console.error("Error fetching username:", error instanceof Error ? error.message : "Unknown error");
+      }
+    };
+
+    if (isLoaded && user) {
+      void fetchUsername();
+    }
+  }, [isLoaded, user]);
 
   return (
     <div
-      className={`w-full transition-opacity duration-300 ${
-        showUi ? "opacity-100" : "pointer-events-none opacity-0"
-      }`}
+      className={`w-full transition-opacity duration-300 ${showUi ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
     >
       <div className="mx-24 mt-8 flex flex-row items-center justify-between">
         <div className="flex items-center">
@@ -57,7 +81,12 @@ export default function Navbar({ showUi = true }: NavbarProps) {
                 </SignInButton>
               </SignedOut>
               <SignedIn>
-                <UserButton />
+                <UserButton>
+                  <UserButton.MenuItems>
+                    <UserButton.Link href={`/profile/${username}`} label="Profile" labelIcon={<User className="h-4 w-4" />} />
+                    <UserButton.Action label="manageAccount" />
+                  </UserButton.MenuItems>
+                </UserButton>
               </SignedIn>
             </>
           )}

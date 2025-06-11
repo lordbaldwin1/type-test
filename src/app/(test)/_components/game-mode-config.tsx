@@ -47,17 +47,15 @@ export const GameModeConfig = memo(function GameModeConfig({
 
   return (
     <div
-      className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${
-        showUi ? "opacity-100" : "pointer-events-none opacity-0"
-      }`}
+      className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${showUi ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
     >
       <div className="flex space-x-2">
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
-            saveStats === "false" ? "text-green-200" : ""
-          }`}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "false" ? "text-green-400" : ""
+            }`}
           onClick={() => updateGameState({ saveStats: "false" })}
         >
           <div className="flex flex-row items-center gap-1">
@@ -66,39 +64,37 @@ export const GameModeConfig = memo(function GameModeConfig({
           </div>
         </Button>
         {userId ? (
-        <Button
-          variant="link"
-          size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
-            saveStats === "true" ? "text-red-200" : ""
-          }`}
-          onClick={() => updateGameState({ saveStats: "true" })}
-        >
-          <div className="flex flex-row items-center gap-1">
-            <Sword className="h-3 w-3" />
-            <span className="text-sm">ranked</span>
+          <Button
+            variant="link"
+            size="sm"
+            className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "true" ? "text-red-400" : ""
+              }`}
+            onClick={() => updateGameState({ saveStats: "true" })}
+          >
+            <div className="flex flex-row items-center gap-1">
+              <Sword className="h-3 w-3" />
+              <span className="text-sm">ranked</span>
             </div>
           </Button>
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
-            <SignInButton mode="modal">
-              <span className="inline-block">
-                <Button
-                  variant="link"
-                  size="sm"
-                  disabled={true}
-                  className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
-                saveStats === "true" ? "text-red-200" : ""
-              }`}
-              onClick={() => updateGameState({ saveStats: "true" })}
-            >
-              <div className="flex flex-row items-center gap-1">
-                <Anvil className="h-3 w-3" />
-                <span className="text-sm">ranked</span>
-                </div>
-              </Button>
-              </span>
+              <SignInButton mode="modal">
+                <span className="inline-block">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    disabled={true}
+                    className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "true" ? "text-red-200" : ""
+                      }`}
+                    onClick={() => updateGameState({ saveStats: "true" })}
+                  >
+                    <div className="flex flex-row items-center gap-1">
+                      <Anvil className="h-3 w-3" />
+                      <span className="text-sm">ranked</span>
+                    </div>
+                  </Button>
+                </span>
               </SignInButton>
             </TooltipTrigger>
             <TooltipContent>
@@ -116,9 +112,8 @@ export const GameModeConfig = memo(function GameModeConfig({
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
-            mode === "time" ? "text-foreground" : ""
-          }`}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${mode === "time" ? "text-foreground" : ""
+            }`}
           onClick={() => handleModeChange("time")}
         >
           <div className="flex flex-row items-center gap-1">
@@ -130,9 +125,8 @@ export const GameModeConfig = memo(function GameModeConfig({
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
-            mode === "words" ? "text-foreground" : ""
-          }`}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${mode === "words" ? "text-foreground" : ""
+            }`}
           onClick={() => handleModeChange("words")}
         >
           <div className="flex flex-row items-center gap-1">
@@ -153,9 +147,8 @@ export const GameModeConfig = memo(function GameModeConfig({
               <Button
                 key={seconds}
                 variant="link"
-                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
-                  timeLimit === seconds ? "text-foreground" : ""
-                }`}
+                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${timeLimit === seconds ? "text-foreground" : ""
+                  }`}
                 onClick={() => handleTimeLimitChange(seconds)}
               >
                 {seconds}
@@ -170,9 +163,8 @@ export const GameModeConfig = memo(function GameModeConfig({
               <Button
                 key={count}
                 variant="link"
-                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
-                  wordCount === count ? "text-foreground" : ""
-                }`}
+                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${wordCount === count ? "text-foreground" : ""
+                  }`}
                 onClick={() => handleWordCountChange(count)}
               >
                 {count}
