@@ -73,11 +73,16 @@ export interface GameStatsProps {
 export interface UseTypingGameProps {
   sampleText: string[];
   gameStatus: GameStatus;
+  completedWords: string[];
+  letterCount: LetterCount;
   onGameStart?: () => void;
   onGameComplete?: (
     finalLetterCount: LetterCount,
     finalCompletedWords: string[],
   ) => Promise<void>;
+  onLetterCountUpdate?: (newLetterCount: LetterCount) => void;
+  onCompletedWordsUpdate?: (newCompletedWords: string[]) => void;
+  onReset?: () => void;
 }
 
 export interface GameModeConfigProps {
@@ -87,7 +92,14 @@ export interface GameModeConfigProps {
   saveStats: SaveStats;
   showUi: boolean;
   // Generic updater for simple state changes
-  updateGameState: (updates: Partial<{ mode: GameMode; timeLimit: number; wordCount: number; saveStats: SaveStats }>) => void;
+  updateGameState: (
+    updates: Partial<{
+      mode: GameMode;
+      timeLimit: number;
+      wordCount: number;
+      saveStats: SaveStats;
+    }>,
+  ) => void;
   // Specific operations for complex logic
   switchMode: (mode: GameMode) => void;
   changeWordCount: (count: number) => void;
@@ -119,4 +131,3 @@ export interface StatsCalculationInput {
   mode: "words" | "time";
   timeLimit?: number;
 }
-

@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { calculateLetterCount } from "../_utils/gameStats";
-import type { LetterCount, UseTypingGameProps } from "../_utils/types";
+import type { UseTypingGameProps } from "../_utils/types";
 
 export function useTypingGame({
   sampleText,
   gameStatus,
+  completedWords,
+  letterCount,
   onGameStart,
   onGameComplete,
+  onLetterCountUpdate,
+  onCompletedWordsUpdate,
+  onReset,
 }: UseTypingGameProps) {
   const [input, setInput] = useState<string>("");
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
-  const [completedWords, setCompletedWords] = useState<string[]>([]);
-  const [letterCount, setLetterCount] = useState<LetterCount>({
-    correct: 0,
-    incorrect: 0,
-    extra: 0,
-    missed: 0,
-  });
 
   // Handle resetting typing state when gameStatus or sampleText changes
   useEffect(() => {
@@ -24,25 +22,13 @@ export function useTypingGame({
 
     setInput("");
     setCurrentWordIndex(0);
-    setCompletedWords([]);
-    setLetterCount({
-      correct: 0,
-      incorrect: 0,
-      extra: 0,
-      missed: 0,
-    });
-  }, [sampleText, gameStatus]);
+    onReset?.();
+  }, [sampleText, gameStatus, onReset]);
 
   const resetInputState = () => {
     setInput("");
     setCurrentWordIndex(0);
-    setCompletedWords([]);
-    setLetterCount({
-      correct: 0,
-      incorrect: 0,
-      extra: 0,
-      missed: 0,
-    });
+    onReset?.();
   };
 
   const updateLetterCount = useCallback(
@@ -52,14 +38,9 @@ export function useTypingGame({
       }
 
       const newLetterCount = calculateLetterCount(submittedWord, sampleWord);
-      setLetterCount((prev) => ({
-        correct: prev.correct + newLetterCount.correct,
-        incorrect: prev.incorrect + newLetterCount.incorrect,
-        extra: prev.extra + newLetterCount.extra,
-        missed: prev.missed + newLetterCount.missed,
-      }));
+      onLetterCountUpdate?.(newLetterCount);
     },
-    [gameStatus],
+    [gameStatus, onLetterCountUpdate],
   );
 
   const handleInputChange = useCallback(
@@ -100,13 +81,11 @@ export function useTypingGame({
       if (e.key === " " && input.length > 0) {
         const newCompletedWords = [...completedWords, input];
         setInput("");
-        setCompletedWords(newCompletedWords);
+        onCompletedWordsUpdate?.(newCompletedWords);
         setCurrentWordIndex(currentWordIndex + 1);
 
-        const submittedWord =
-          newCompletedWords[newCompletedWords.length - 1]?.split("") ?? [];
-        const sampleWord =
-          sampleText[newCompletedWords.length - 1]?.split("") ?? [];
+        const submittedWord = input.split("");
+        const sampleWord = sampleText[completedWords.length]?.split("") ?? [];
         updateLetterCount(submittedWord, sampleWord);
 
         if (newCompletedWords.length === sampleText.length) {
@@ -122,10 +101,24 @@ export function useTypingGame({
           0,
           completedWords.length - 1,
         );
+        const sampleTextPreviousWord = sampleText[currentWordIndex - 1] ?? "";
+        const submittedPreviousWord =
+          completedWords[completedWords.length - 1] ?? "";
+        if (sampleTextPreviousWord.length > 0) {
+          const newLetterCount = calculateLetterCount(
+            submittedPreviousWord.split(""),
+            sampleTextPreviousWord.split(""),
+          );
+          onLetterCountUpdate?.({
+            correct: -newLetterCount.correct,
+            incorrect: -newLetterCount.incorrect,
+            extra: -newLetterCount.extra,
+            missed: -newLetterCount.missed,
+          });
+        }
         setInput(completedWords[completedWords.length - 1] ?? "");
         setCurrentWordIndex(currentWordIndex - 1);
-        setCompletedWords(newCompletedWords);
-        // TODO: UPDATE LETTER COUNT HERE TOO!!!!
+        onCompletedWordsUpdate?.(newCompletedWords);
       }
     },
     [
@@ -136,14 +129,14 @@ export function useTypingGame({
       updateLetterCount,
       letterCount,
       onGameComplete,
+      onCompletedWordsUpdate,
+      onLetterCountUpdate,
     ],
   );
 
   return {
     input,
-    completedWords,
     currentWordIndex,
-    letterCount,
     handleInputChange,
     handleSubmit,
     resetInputState,

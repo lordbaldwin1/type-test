@@ -58,25 +58,28 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
 
   const {
     input,
-    completedWords,
     currentWordIndex,
-    letterCount,
     handleInputChange,
     handleSubmit,
     resetInputState,
   } = useTypingGame({
     sampleText: gameState.sampleText,
     gameStatus: gameState.status,
+    completedWords: gameState.completedWords,
+    letterCount: gameState.letterCount,
     onGameStart: startGame,
     onGameComplete: handleTypingGameComplete,
+    onLetterCountUpdate: gameState.updateLetterCount,
+    onCompletedWordsUpdate: gameState.updateCompletedWords,
+    onReset: gameState.resetTypingState,
   });
 
   const handleTimeUp = useCallback(async () => {
     if (gameState.status === "after") return;
 
     const stats = calculateStats({
-      letterCount,
-      completedWords,
+      letterCount: gameState.letterCount,
+      completedWords: gameState.completedWords,
       timeInSeconds: gameState.time,
       mode: gameState.mode,
       timeLimit: gameState.timeLimit,
@@ -97,7 +100,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
         console.log(error);
       }
     }
-  }, [gameState, userId, completedWords, letterCount]);
+  }, [gameState, userId]);
 
   // Handle time up for time mode
   useEffect(() => {
@@ -110,15 +113,6 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
     resetInputState();
     gameState.resetGame();
   };
-
-  // Custom input change handler that includes WPM tracking
-  const handleInputChangeWithTracking = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    void handleInputChange(e);
-    // Track WPM on every keystroke during game
-    if (gameState.status === "during") {
-      gameState.trackWpm(letterCount, completedWords);
-    }
-  }, [handleInputChange, gameState, letterCount, completedWords]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -166,17 +160,17 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   updateGameState={gameState.updateGameState}
                   generateNewText={gameState.generateNewText}
                 />
-                
+
                 {/* GameArea */}
                 <GameArea
                   mode={gameState.mode}
                   status={gameState.status}
                   sampleText={gameState.sampleText}
-                  completedWords={completedWords}
+                  completedWords={gameState.completedWords}
                   currentWordIndex={currentWordIndex}
                   input={input}
                   time={gameState.time}
-                  onInputChange={handleInputChangeWithTracking}
+                  onInputChange={handleInputChange}
                   onInputSubmit={handleSubmit}
                   saveStats={gameState.saveStats}
                   isTextChanging={gameState.isTextChanging}
@@ -189,7 +183,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             </div>
           )}
         </main>
-        
+
         {/* Restart Button - Always positioned right after content */}
         <div className="flex justify-center">
           <Tooltip>
@@ -223,7 +217,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
           <p>- restart test</p>
         </div>
       </div>
-      
+
       <Footer showUi={gameState.showUi} />
     </div>
   );

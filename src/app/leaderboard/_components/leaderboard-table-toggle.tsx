@@ -31,7 +31,6 @@ export default function LeaderboardTableToggle({
   userId: string | null;
 }) {
   const [show15s, setShow15s] = useState(true);
-  console.log("games", games, "totalPlayers", totalPlayers);
   return (
     <div className="w-full">
       {/* Mobile/Tablet Layout */}
@@ -73,22 +72,20 @@ export default function LeaderboardTableToggle({
         <div className="bg-muted flex w-full max-w-lg flex-row rounded-lg p-1">
           <Button
             variant={"default"}
-            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
-              show15s
+            className={`w-1/2 rounded-md px-8 py-2 transition-all ${show15s
                 ? "text-foreground bg-background hover:bg-background"
                 : "text-muted-foreground bg-muted hover:bg-muted hover:text-foreground"
-            }`}
+              }`}
             onClick={() => setShow15s(true)}
           >
             15s wpm
           </Button>
           <Button
             variant={"default"}
-            className={`w-1/2 rounded-md px-8 py-2 transition-all ${
-              show15s
+            className={`w-1/2 rounded-md px-8 py-2 transition-all ${show15s
                 ? "text-muted-foreground bg-muted hover:text-foreground hover:bg-muted"
                 : "text-foreground bg-background hover:text-foreground hover:bg-background"
-            }`}
+              }`}
             onClick={() => setShow15s(false)}
           >
             ave. wpm
@@ -113,22 +110,20 @@ export default function LeaderboardTableToggle({
             <div className="bg-muted flex flex-col w-48 rounded-lg p-1 sticky top-8">
               <Button
                 variant={"default"}
-                className={`w-full rounded-md px-8 py-2 transition-all ${
-                  show15s
+                className={`w-full rounded-md px-8 py-2 transition-all ${show15s
                     ? "text-foreground bg-background hover:bg-background"
                     : "text-muted-foreground bg-muted hover:bg-muted hover:text-foreground"
-                }`}
+                  }`}
                 onClick={() => setShow15s(true)}
               >
                 15s wpm
               </Button>
               <Button
                 variant={"default"}
-                className={`w-full rounded-md px-8 py-2 transition-all ${
-                  show15s
+                className={`w-full rounded-md px-8 py-2 transition-all ${show15s
                     ? "text-muted-foreground bg-muted hover:text-foreground hover:bg-muted"
                     : "text-foreground bg-background hover:text-foreground hover:bg-background"
-                }`}
+                  }`}
                 onClick={() => setShow15s(false)}
               >
                 ave. wpm
