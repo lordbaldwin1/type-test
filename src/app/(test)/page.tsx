@@ -4,8 +4,6 @@ import { generateRandomWords } from "./_utils/generateRandomWords"
 export default function HomePage() {
   const initialSampleText = generateRandomWords(10, "common200").split(" ");
   return (
-    <div className="animate-in fade-in duration-500">
-      <TypeTest initialSampleText={initialSampleText} />
-    </div>
+    <TypeTest initialSampleText={initialSampleText} />
   );
 }

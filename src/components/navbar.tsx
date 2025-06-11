@@ -10,12 +10,15 @@ import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 
 interface NavbarProps {
   showUi?: boolean;
 }
 
 export default function Navbar({ showUi = true }: NavbarProps) {
+  const { isLoaded } = useUser();
+
   return (
     <div
       className={`w-full transition-opacity duration-300 ${
@@ -44,14 +47,20 @@ export default function Navbar({ showUi = true }: NavbarProps) {
         </div>
         <div className="flex items-center gap-6">
           <ModeToggle />
-          <SignedOut>
-            <SignInButton mode="modal">
-              <User className="text-muted-foreground hover:text-foreground h-5.5 w-5.5 hover:scale-110" />
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          {!isLoaded ? (
+            <div className="h-5.5 w-5.5 animate-pulse bg-muted rounded-full"></div>
+          ) : (
+            <>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <User className="text-muted-foreground hover:text-foreground h-5.5 w-5.5 hover:scale-110" />
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </>
+          )}
         </div>
       </div>
     </div>

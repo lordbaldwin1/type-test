@@ -134,7 +134,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
           ) : (
             <div className="flex-1 flex flex-col justify-center px-4 min-h-0">
               {/* Game Mode Config - Fixed at top */}
-              <div className="flex justify-center py-2 sm:py-4 md:py-6">
+              <div className="flex justify-center py-2 sm:py-4 md:py-6 animate-in fade-in-0 duration-500">
                 <GameModeConfig
                   mode={gameState.mode}
                   timeLimit={gameState.timeLimit}
@@ -151,7 +151,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
               </div>
 
               {/* Centered Content Container - WordsetSelector + GameArea */}
-              <div className="flex-1 flex flex-col items-center justify-center space-y-6 min-h-0">
+              <div className="flex-1 flex flex-col items-center justify-center space-y-6 min-h-0 animate-in fade-in-0 duration-500">
                 {/* WordsetSelector */}
                 <WordsetSelector
                   wordCount={gameState.wordCount}
@@ -185,7 +185,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
         </main>
 
         {/* Restart Button - Always positioned right after content */}
-        <div className="flex justify-center">
+        <div className="flex justify-center animate-in fade-in-0 duration-500">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -205,7 +205,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       </div>
 
       {/* Tab Instructions - Always at bottom */}
-      <div className="flex justify-center py-6">
+      <div className="flex justify-center py-6 animate-in fade-in-0 duration-500">
         <div className={`flex flex-row items-center justify-center gap-2 text-sm text-muted-foreground transition-opacity duration-300 ${gameState.showUi ? "opacity-100" : "opacity-0"}`}>
           <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
             tab

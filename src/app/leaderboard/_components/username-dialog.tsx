@@ -34,11 +34,11 @@ export default function UsernameDialog() {
     const result = await addUsername(username);
     if (result.message === "Username added.") {
       setIsOpen(false);
-      toast.success("Username added.");
+      toast.success(result.message);
       router.refresh();
     } else {
       setStatus("error");
-      toast.error("Failed to add username.");
+      toast.error(result.message);
     }
   };
 

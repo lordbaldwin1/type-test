@@ -176,6 +176,12 @@ export async function addUsername(username: string) {
 
   if (user) {
     try {
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.username, username),
+      });
+      if (existingUser) {
+        return { message: "Username already exists." };
+      }
       await db
         .update(users)
         .set({

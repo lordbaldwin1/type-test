@@ -8,7 +8,7 @@ export default async function About() {
   const totalUsers = await db.select({ count: count() }).from(users);
   const totalGames = await db.select({ count: count() }).from(games);
   return (
-    <div className="flex flex-col lg:max-w-3xl md:max-w-2xl mx-auto text-md mt-4 md:mt-8 px-4 pb-8">
+    <div className="flex flex-col lg:max-w-3xl md:max-w-2xl mx-auto text-md mt-4 md:mt-8 px-4 pb-8 animate-in fade-in-0 duration-500">
       <div className="flex flex-row items-center justify-center mb-4 md:mb-8 gap-4">
         <p className="text-muted-foreground border-r-2 border-border pr-4">total users: {totalUsers[0]?.count}</p>
         <p className="text-muted-foreground">total tests completed: {totalGames[0]?.count}</p>

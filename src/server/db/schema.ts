@@ -30,7 +30,7 @@ export const users = createTable(
   "user",
   (d) => ({
     id: d.varchar({ length: 256 }).primaryKey(),
-    username: d.varchar({ length: 256 }),
+    username: d.varchar({ length: 256 }).unique(),
     stayAnonymous: d.boolean().notNull().default(false),
     averageWpm: d.real().notNull(),
     averageAccuracy: d.real().notNull(),
