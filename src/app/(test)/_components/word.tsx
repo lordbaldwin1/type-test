@@ -44,7 +44,7 @@ export const Word = memo(
                                 <Letter
                                     key={`extra-${index}`}
                                     letter={letter}
-                                    status={"incorrect"}
+                                    status={"extra"}
                                     letterIndex={word.length + index}
                                 />
                             ))}
@@ -77,7 +77,7 @@ export const Word = memo(
                                 <Letter
                                     key={`extra-${index}`}
                                     letter={letter}
-                                    status={"incorrect"}
+                                    status={"extra"}
                                     showCursor={
                                         props.showCursor !== false &&
                                         props.isActive &&
@@ -108,7 +108,7 @@ export const Word = memo(
 
 interface LetterProps {
     letter: string;
-    status: "correct" | "incorrect" | "none";
+    status: "correct" | "incorrect" | "none" | "extra";
     showCursor?: boolean;
     letterIndex?: number;
 }
@@ -121,6 +121,8 @@ const Letter = memo(function Letter({ letter, status, showCursor, letterIndex }:
         textColorClass = "text-destructive";
     } else if (status === "none") {
         textColorClass = "text-muted-foreground";
+    } else if (status === "extra") {
+        textColorClass = "text-red-400/40";
     }
 
     return (
