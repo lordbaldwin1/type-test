@@ -4,6 +4,8 @@ import { games, users } from "~/server/db/schema";
 import Image from "next/image";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function About() {
   const totalUsers = await db.select({ count: count() }).from(users);
   const totalGames = await db.select({ count: count() }).from(games);
