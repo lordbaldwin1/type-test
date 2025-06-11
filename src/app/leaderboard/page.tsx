@@ -45,7 +45,7 @@ export default async function Leaderboard() {
     userBestTime = bestTimeResult;
 
     // Get user's rank on 15s leaderboard if they have a best time
-    if (userBestTime && userBestTime.wpm) {
+    if (userBestTime && userBestTime.wpm !== null) {
       userRank15 = await getUserRank15(userBestTime.wpm);
     }
   }

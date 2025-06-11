@@ -8,8 +8,8 @@ import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
 
 export const metadata: Metadata = {
-  title: "type-test",
-  description: "A simple typing test site with metrics and leaderboards",
+  title: "Vanishtype | A simple, quiet typing test",
+  description: "A simple typing test site with speed metrics and leaderboards",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

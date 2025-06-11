@@ -1,7 +1,10 @@
-"use client";
-
 import Navbar from "~/components/navbar";
 import Footer from "~/components/footer"; 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Leaderboard | Vanishtype",
+}
 
 export default function LeaderboardLayout({
   children,

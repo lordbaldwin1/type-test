@@ -129,6 +129,21 @@ export async function onBoardUser(userId: string) {
       highestExtra: 0,
       highestMissed: 0,
       });
+
+      await db.insert(games).values({
+        userId: userId,
+        mode: "time",
+        timeLimit: 15,
+        wordCount: 0,
+        wpm: 0,
+        rawWpm: 0,
+        accuracy: 0,
+        correct: 0,
+        incorrect: 0,
+        extra: 0,
+        missed: 0,
+        createdAt: new Date(0),
+      })
   } catch (error) {
     return { message: "Failed to onboard user.", error: error };
   }

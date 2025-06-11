@@ -1,5 +1,10 @@
 import Navbar from "~/components/navbar";
 import Footer from "~/components/footer"; 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About | Vanishtype",
+}
 
 export default function AboutLayout({
   children,

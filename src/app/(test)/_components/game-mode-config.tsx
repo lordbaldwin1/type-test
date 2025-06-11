@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { Anvil, Clock, Hash, Pencil } from "lucide-react";
+import { Anvil, Clock, Hash, Sword } from "lucide-react";
 import type { GameMode, GameModeConfigProps } from "../_utils/types";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
@@ -61,7 +61,7 @@ export const GameModeConfig = memo(function GameModeConfig({
           onClick={() => updateGameState({ saveStats: "false" })}
         >
           <div className="flex flex-row items-center gap-1">
-            <Pencil className="h-3 w-3" />
+            <Anvil className="h-3 w-3" />
             <span className="text-sm">practice</span>
           </div>
         </Button>
@@ -75,7 +75,7 @@ export const GameModeConfig = memo(function GameModeConfig({
           onClick={() => updateGameState({ saveStats: "true" })}
         >
           <div className="flex flex-row items-center gap-1">
-            <Anvil className="h-3 w-3" />
+            <Sword className="h-3 w-3" />
             <span className="text-sm">ranked</span>
             </div>
           </Button>

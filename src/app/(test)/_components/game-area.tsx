@@ -192,7 +192,7 @@ export function GameArea({
           {/* Blur overlay when input not focused */}
           {showBlur && (
             <div className="absolute inset-0 z-20 mt-8 flex items-center justify-center pointer-events-none">
-              <div className="absolute inset-0 bg-background/90 backdrop-blur-[4px]" />
+              <div className="absolute inset-0 -mx-4 bg-background/90 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
                 <p className="flex flex-row items-center mt-2 gap-2">
                   <MousePointerClick className="h-4 w-4" /> Click or press any
@@ -247,11 +247,11 @@ export function GameArea({
             {/* Animated cursor overlay */}
             {(status === "during" || status === "before" || status === "restart") && (
               <div
-                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-150 ease-out"
+                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-75 ease-out"
                 style={{
                   left: `${cursorPosition.x}px`,
-                  top: `${cursorPosition.y + 4}px`, // Slight offset for better positioning
-                  height: '2em',
+                  top: `${cursorPosition.y + 2}px`, // Slight offset for better positioning
+                  height: '2.25em',
                   transform: 'translateX(-1px)',
                 }}
               />

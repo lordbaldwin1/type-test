@@ -23,9 +23,9 @@ import {
 } from "~/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 
-export default function UsernameDialog({ isAnonymous }: { isAnonymous: boolean }) {
+export default function UsernameDialog() {
   const [username, setUsername] = useState("");
-  const [isOpen, setIsOpen] = useState(!isAnonymous);
+  const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const router = useRouter();
 
