@@ -245,7 +245,7 @@ export const GameArea = memo(function GameArea({
             {/* Animated cursor overlay */}
             {(status === "during" || status === "before" || status === "restart") && (
               <div
-                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-100 ease-out"
+                className="absolute border-l-3 border-foreground pointer-events-none transition-all duration-125 ease-in-out"
                 style={{
                   left: `${cursorPosition.x}px`,
                   top: `${cursorPosition.y + 2}px`, // Slight offset for better positioning
