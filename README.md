@@ -2,22 +2,22 @@
 
 ## TODO
 
-- [x] Setup and deploy app/db
-- [x] Port over typing test
-- [x] Setup shadcn and dark/light mode
-- [x] Setup auth
-- [x] Figure out db schema for users, stats, leaderboard
-- [x] Refactor typing test?
-- [x] Continue refactor
-- [x] Add user table with userId and username
-- [] Sign in to save stats on stats screen, sign in prompt on ranked mode
+- [] Figure out changes to schema for profile stats
+- [] add xp system?
 - [] Profile page with stats
-- [] About page
-- [x] Leaderboard
+
+## Schema changes for profile stats
+
+- we have tests completed stat
+- need to add tests started
+- time typing?
+
+- we have leaderboard position
+- we have stats for best time/word stats
 
 ## Notes
 
 - CONSOLIDATE types/interfaces
 - Add error handling to db fail?
-- Fix switching between text blur
-- Fix loading blur
+- look into better error handling for actions/queries
+- SEO stuff, opengraph, etc...
