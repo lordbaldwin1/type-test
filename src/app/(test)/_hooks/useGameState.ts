@@ -9,6 +9,7 @@ import type {
   wpmPerSecond,
   LetterCount,
 } from "../_utils/types";
+import { updateTimeAndGamesStarted } from "~/server/db/actions";
 
 const initialStats: GameStats = {
   wpm: 0,
@@ -278,9 +279,15 @@ export function useGameState(initialSampleText: string[]) {
     [updateGameState, state.mode, state.time],
   );
 
-  const resetGame = useCallback(() => {
+  const resetGame = useCallback(async () => {
     const newStatus = state.status === "before" ? "restart" : "before";
     const newTime = state.mode === "time" ? state.timeLimit : 0;
+
+    if (state.status === "during" && state.saveStats === "true") {
+      const elapsedTime =
+        state.mode === "words" ? state.time : state.timeLimit - state.time;
+      await updateTimeAndGamesStarted(elapsedTime);
+    }
 
     updateGameState({
       status: newStatus,
@@ -300,6 +307,8 @@ export function useGameState(initialSampleText: string[]) {
     state.timeLimit,
     state.wordCount,
     state.wordSet,
+    state.time,
+    state.saveStats,
   ]);
 
   const resetAllState = useCallback(() => {

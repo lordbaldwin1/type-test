@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { onBoardUser } from "~/server/db/actions";
+import { addEmptyTimeLimit15Game, onBoardUser } from "~/server/db/actions";
 import LeaderboardTableToggle from "./_components/leaderboard-table-toggle";
 import {
   getUserById,
@@ -15,7 +15,7 @@ export default async function Leaderboard() {
   const { userId } = await auth();
 
   let user = userId ? await getUserById(userId) : undefined;
-  
+
   // If user doesn't exist but userId does, onboard them and refetch
   if (!user && userId) {
     await onBoardUser(userId);
@@ -40,9 +40,16 @@ export default async function Leaderboard() {
       getUserPosition(user.averageWpm),
       getUserBestTime15(userId),
     ]);
-    
+
     userPosition = positionResult;
     userBestTime = bestTimeResult;
+
+    if (!userBestTime) {
+      await addEmptyTimeLimit15Game(userId);
+      userBestTime = await getUserBestTime15(userId);
+    }
+
+
 
     // Get user's rank on 15s leaderboard if they have a best time
     if (userBestTime && userBestTime.wpm !== null) {

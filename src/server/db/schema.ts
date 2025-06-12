@@ -39,6 +39,8 @@ export const users = createTable(
     averageExtra: d.real().notNull(),
     averageMissed: d.real().notNull(),
     totalGames: d.integer().notNull(),
+    totalGamesStarted: d.integer().notNull(),
+    timeTyping: d.real().notNull(),
     highestWpm: d.real().notNull(),
     highestAccuracy: d.real().notNull(),
     highestCorrect: d.real().notNull(),

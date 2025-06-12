@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect } from "react";
-import { MousePointerClick} from "lucide-react";
+import { useRef, useState, useEffect, memo } from "react";
+import { MousePointerClick } from "lucide-react";
 import { Word } from "./word";
 import type { GameAreaProps } from "~/app/(test)/_utils/types";
 
-export function GameArea({
+export const GameArea = memo(function GameArea({
   mode,
   status,
   sampleText,
@@ -49,16 +49,16 @@ export function GameArea({
       // Find the current word element
       const wordElements = wordsContainer.querySelectorAll('[data-word-index]');
       const currentWordElement = wordElements[currentWordIndex] as HTMLElement;
-      
+
       if (!currentWordElement) return;
 
       const containerRect = wordsContainer.getBoundingClientRect();
       const wordRect = currentWordElement.getBoundingClientRect();
-      
+
       // Find the current letter position within the word
       const letterElements = currentWordElement.querySelectorAll('[data-letter-index]');
       const currentLetterIndex = input.length;
-      
+
       let letterX = 0;
       if (currentLetterIndex < letterElements.length) {
         const letterElement = letterElements[currentLetterIndex] as HTMLElement;
@@ -77,7 +77,7 @@ export function GameArea({
 
     // Small delay to ensure DOM has updated
     const timeoutId = setTimeout(updateCursorPosition, 10);
-    
+
     return () => clearTimeout(timeoutId);
   }, [currentWordIndex, input, sampleText]);
 
@@ -202,9 +202,8 @@ export function GameArea({
             </div>
           )}
 
-          <div className={`ml-4 w-full transition-opacity duration-150 ${
-            isTextChanging ? "opacity-0" : "opacity-100"
-          }`}>
+          <div className={`ml-4 w-full transition-opacity duration-150 ${isTextChanging ? "opacity-0" : "opacity-100"
+            }`}>
             {mode === "words" && (
               <p className="text-primary text-2xl font-bold">{`${completedWords.length}/${sampleText.length}`}</p>
             )}
@@ -215,13 +214,12 @@ export function GameArea({
 
           <div
             ref={containerRef}
-            className={`relative mx-auto ml-2 flex h-[7.5em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${
-              isTextChanging ? "opacity-0" : "opacity-100"
-            }`}
+            className={`relative mx-auto ml-2 flex h-[7.5em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${isTextChanging ? "opacity-0" : "opacity-100"
+              }`}
           >
-            <div 
+            <div
               ref={wordsContainerRef}
-              className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide" 
+              className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide"
               onClick={handleGameAreaClick}
             >
               {sampleText.map((word, index) => (
@@ -243,11 +241,11 @@ export function GameArea({
                 />
               ))}
             </div>
-            
+
             {/* Animated cursor overlay */}
             {(status === "during" || status === "before" || status === "restart") && (
               <div
-                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-75 ease-out"
+                className="absolute border-l-2 border-foreground pointer-events-none transition-all duration-100 ease-out"
                 style={{
                   left: `${cursorPosition.x}px`,
                   top: `${cursorPosition.y + 2}px`, // Slight offset for better positioning
@@ -261,4 +259,4 @@ export function GameArea({
       </div>
     </div>
   );
-}
+});

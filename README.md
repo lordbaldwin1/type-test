@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [] Fix onboarding username as "Anonymous" since usernames are unique now
 - [] Figure out changes to schema for profile stats
 - [] add xp system?
 - [] Profile page with stats

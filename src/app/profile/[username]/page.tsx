@@ -4,6 +4,7 @@ import Image from "next/image";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import * as simpleIcons from "simple-icons";
+import { getUserBestTimeStats, getUserBestWordStats, getUserPosition, getUserRank15 } from "~/server/db/queries";
 
 export default async function ProfilePage({
   params,
@@ -25,6 +26,31 @@ export default async function ProfilePage({
   if (!user) {
     return notFound();
   }
+
+  const { time15, time30, time60 } = await getUserBestTimeStats(user.id);
+  const bestTime15Wpm = time15?.wpm || time15?.wpm !== 0 ? time15?.wpm : "n/a";
+  const bestTime30Wpm = time30?.wpm ?? "n/a";
+  const bestTime60Wpm = time60?.wpm ?? "n/a";
+  const bestTime15Accuracy = time15?.accuracy || time15?.accuracy !== 0 ? time15?.accuracy : "n/a";
+  const bestTime30Accuracy = time30?.accuracy ?? "n/a";
+  const bestTime60Accuracy = time60?.accuracy ?? "n/a";
+
+  const { word10, word25, word50, word100 } = await getUserBestWordStats(user.id);
+  const bestWord10Wpm = word10?.wpm ?? "n/a";
+  const bestWord25Wpm = word25?.wpm ?? "n/a";
+  const bestWord50Wpm = word50?.wpm ?? "n/a";
+  const bestWord100Wpm = word100?.wpm ?? "n/a";
+  const bestWord10Accuracy = word10?.accuracy ?? "n/a";
+  const bestWord25Accuracy = word25?.accuracy ?? "n/a";
+  const bestWord50Accuracy = word50?.accuracy ?? "n/a";
+  const bestWord100Accuracy = word100?.accuracy ?? "n/a";
+
+  const userRankAverageWpm = await getUserPosition(user.averageWpm);
+  const userRank15Time = await getUserRank15(user.averageWpm);
+
+  const averageWpmRank = userRankAverageWpm?.rank;
+  const average15TimeRank = userRank15Time?.rank;
+
   return (
     <div className="flex flex-col items-center justify-center px-4 md:px-8 lg:px-16 xl:px-24 mt-8 animate-in fade-in-0 duration-500">
       {/* Top Card */}
@@ -58,15 +84,19 @@ export default async function ProfilePage({
         <div className="order-2 lg:order-2 grid grid-cols-3 gap-4 place-items-center justify-self-center lg:place-items-start lg:max-w-sm mx-auto lg:flex lg:flex-1 lg:flex-col lg:justify-center w-full lg:mr-8 py-6 lg:py-0">
           <div>
             <h1 className="text-muted-foreground text-sm">tests started</h1>
-            <p className="text-2xl leading-none">89112</p>
+            <p className="text-2xl leading-none">{user.totalGamesStarted}</p>
           </div>
           <div>
             <h1 className="text-muted-foreground text-sm">tests completed</h1>
-            <p className="text-2xl leading-none">9253</p>
+            <p className="text-2xl leading-none">{user.totalGames}</p>
           </div>
           <div>
             <h1 className="text-muted-foreground text-sm">time typing</h1>
-            <p className="text-2xl leading-none">123:45:67</p>
+            <p className="text-2xl leading-none">
+              {Math.floor(user.timeTyping / 3600).toString().padStart(2, '0')}:
+              {Math.floor((user.timeTyping % 3600) / 60).toString().padStart(2, '0')}:
+              {(user.timeTyping % 60).toString().padStart(2, '0')}
+            </p>
           </div>
         </div>
 
@@ -118,13 +148,13 @@ export default async function ProfilePage({
           <h2 className="text-muted-foreground text-lg mb-4 tracking-widest text-center">leaderboards</h2>
           <div className="flex flex-row justify-center gap-16 w-full mb-2">
             <div className="flex flex-col items-center">
-              <span className="text-muted-foreground text-base">15 sec.</span>
-              <span className="text-3xl font-mono">1st</span>
+              <span className="text-muted-foreground text-base">15s wpm</span>
+              <span className="text-3xl font-mono">{averageWpmRank}</span>
               <span className="text-xs text-muted-foreground tracking-widest mt-1">GOAT</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-muted-foreground text-base">60 sec.</span>
-              <span className="text-3xl font-mono">1st</span>
+              <span className="text-muted-foreground text-base">ave. wpm</span>
+              <span className="text-3xl font-mono">{average15TimeRank}</span>
               <span className="text-xs text-muted-foreground tracking-widest mt-1">GOAT</span>
             </div>
           </div>
@@ -132,26 +162,21 @@ export default async function ProfilePage({
         {/* Time-Based Stats Card */}
         <div className="bg-card rounded-lg p-6 flex flex-col items-center">
           <h2 className="text-muted-foreground text-lg mb-4 tracking-widest">time stats (wpm)</h2>
-          <div className="grid grid-cols-4 gap-6 w-full">
+          <div className="grid grid-cols-3 gap-6 w-full">
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">15 sec.</span>
-              <span className="text-3xl font-mono">305</span>
-              <span className="text-muted-foreground text-base">98%</span>
+              <span className="text-3xl font-mono">{bestTime15Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestTime15Accuracy}%</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">30 sec.</span>
-              <span className="text-3xl font-mono">206</span>
-              <span className="text-muted-foreground text-base">96%</span>
+              <span className="text-3xl font-mono">{bestTime30Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestTime30Accuracy}%</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">60 sec.</span>
-              <span className="text-3xl font-mono">278</span>
-              <span className="text-muted-foreground text-base">95%</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-muted-foreground text-sm">120 sec.</span>
-              <span className="text-3xl font-mono">170</span>
-              <span className="text-muted-foreground text-base">92%</span>
+              <span className="text-3xl font-mono">{bestTime60Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestTime60Accuracy}%</span>
             </div>
           </div>
         </div>
@@ -161,23 +186,23 @@ export default async function ProfilePage({
           <div className="grid grid-cols-4 gap-6 w-full">
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">10 w</span>
-              <span className="text-3xl font-mono">403</span>
-              <span className="text-muted-foreground text-base">100%</span>
+              <span className="text-3xl font-mono">{bestWord10Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestWord10Accuracy}%</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">25 w</span>
-              <span className="text-3xl font-mono">322</span>
-              <span className="text-muted-foreground text-base">98%</span>
+              <span className="text-3xl font-mono">{bestWord25Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestWord25Accuracy}%</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">50 w</span>
-              <span className="text-3xl font-mono">251</span>
-              <span className="text-muted-foreground text-base">100%</span>
+              <span className="text-3xl font-mono">{bestWord50Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestWord50Accuracy}%</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-muted-foreground text-sm">100 w</span>
-              <span className="text-3xl font-mono">190</span>
-              <span className="text-muted-foreground text-base">96%</span>
+              <span className="text-3xl font-mono">{bestWord100Wpm}</span>
+              <span className="text-muted-foreground text-base">{bestWord100Accuracy}%</span>
             </div>
           </div>
         </div>

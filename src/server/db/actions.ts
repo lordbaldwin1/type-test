@@ -30,9 +30,10 @@ export async function saveGameStats(params: SaveGameStatsParams) {
   });
 
   if (!user) {
+    const randomUsername = generateRandomUsername();
     await db.insert(users).values({
       id: userId,
-      username: "Anonymous",
+      username: randomUsername,
       averageWpm: params.wpm,
       averageAccuracy: params.accuracy,
       averageCorrect: params.correct,
@@ -40,6 +41,8 @@ export async function saveGameStats(params: SaveGameStatsParams) {
       averageExtra: params.extra,
       averageMissed: params.missed,
       totalGames: 1,
+      totalGamesStarted: 1,
+      timeTyping: 0, // TODO: add time typing
       highestWpm: params.wpm,
       highestAccuracy: params.accuracy,
       highestCorrect: params.correct,
@@ -109,11 +112,53 @@ export async function saveGameStats(params: SaveGameStatsParams) {
   }
 }
 
+export async function updateTimeAndGamesStarted(time: number) {
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Unauthorized" };
+  }
+
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+
+  if (!user) {
+    return { message: "User not found" };
+  }
+
+  const totalGamesStarted = user.totalGamesStarted + 1;
+  const timeTyping = user.timeTyping + time;
+
+  try {
+    await db
+      .update(users)
+      .set({
+        totalGamesStarted: totalGamesStarted,
+        timeTyping: timeTyping,
+      })
+      .where(eq(users.id, userId));
+    return { message: "Time and games started updated." };
+  } catch (error) {
+    return {
+      message: "Failed to update time and games started.",
+      error: error,
+    };
+  }
+}
+
+function generateRandomUsername() {
+  const timeStamp = Date.now().toString(36);
+  const randomSuffix = Math.random().toString(36).substring(2, 7);
+  return `anon-${timeStamp}-${randomSuffix}`;
+}
+
 export async function onBoardUser(userId: string) {
   try {
+    // generate a random username
+    const randomUsername = generateRandomUsername();
     await db.insert(users).values({
       id: userId,
-      username: "Anonymous",
+      username: randomUsername,
       stayAnonymous: false,
       averageWpm: 0,
       averageAccuracy: 0,
@@ -122,32 +167,51 @@ export async function onBoardUser(userId: string) {
       averageExtra: 0,
       averageMissed: 0,
       totalGames: 0,
+      totalGamesStarted: 0,
+      timeTyping: 0,
       highestWpm: 0,
       highestAccuracy: 0,
       highestCorrect: 0,
       highestIncorrect: 0,
       highestExtra: 0,
       highestMissed: 0,
-      });
+    });
 
-      await db.insert(games).values({
-        userId: userId,
-        mode: "time",
-        timeLimit: 15,
-        wordCount: 0,
-        wpm: 0,
-        rawWpm: 0,
-        accuracy: 0,
-        correct: 0,
-        incorrect: 0,
-        extra: 0,
-        missed: 0,
-        createdAt: new Date(0),
-      })
+    await db.insert(games).values({
+      userId: userId,
+      mode: "time",
+      timeLimit: 15,
+      wordCount: 0,
+      wpm: 0,
+      rawWpm: 0,
+      accuracy: 0,
+      correct: 0,
+      incorrect: 0,
+      extra: 0,
+      missed: 0,
+      createdAt: new Date(0),
+    });
   } catch (error) {
     return { message: "Failed to onboard user.", error: error };
   }
-};
+}
+
+export async function addEmptyTimeLimit15Game(userId: string) {
+  await db.insert(games).values({
+    userId: userId,
+    mode: "time",
+    timeLimit: 15,
+    wordCount: 0,
+    wpm: 0,
+    rawWpm: 0,
+    accuracy: 0,
+    correct: 0,
+    incorrect: 0,
+    extra: 0,
+    missed: 0,
+    createdAt: new Date(0),
+  });
+}
 
 export async function makeUserAnonymous() {
   const { userId } = await auth();
@@ -155,14 +219,17 @@ export async function makeUserAnonymous() {
     return { message: "Unauthorized" };
   }
   try {
-    await db.update(users).set({
-      stayAnonymous: true,
-    }).where(eq(users.id, userId));
+    await db
+      .update(users)
+      .set({
+        stayAnonymous: true,
+      })
+      .where(eq(users.id, userId));
     return { message: "You will remain anonymous." };
   } catch (error) {
     return { message: "Failed to make user anonymous.", error: error };
   }
-};
+}
 
 export async function addUsername(username: string) {
   const { userId } = await auth();
@@ -185,10 +252,10 @@ export async function addUsername(username: string) {
       await db
         .update(users)
         .set({
-        username: username,
-        stayAnonymous: true,
-      })
-      .where(eq(users.id, userId));
+          username: username,
+          stayAnonymous: true,
+        })
+        .where(eq(users.id, userId));
       return { message: "Username added." };
     } catch (error) {
       return { message: "Failed to add username.", error: error };
@@ -196,4 +263,4 @@ export async function addUsername(username: string) {
   } else {
     return { message: "User not found.", error: "User not found." };
   }
-};
+}
