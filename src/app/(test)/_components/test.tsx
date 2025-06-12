@@ -111,7 +111,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
 
   const handleReset = () => {
     resetInputState();
-    gameState.resetGame();
+    void gameState.resetGame();
   };
 
   return (
