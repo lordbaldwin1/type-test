@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import * as simpleIcons from "simple-icons";
@@ -10,7 +9,10 @@ import {
   getUserPosition,
   getUserRank15,
 } from "~/server/db/queries";
-import { Link as LinkIcon, Pencil } from "lucide-react";
+import CopyUrlButton from "../_components/copy-url";
+import EditProfile from "../_components/edit-profile";
+import Link from "next/link";
+import { Globe } from "lucide-react";
 
 export default async function ProfilePage({
   params,
@@ -65,13 +67,6 @@ export default async function ProfilePage({
           {/* Profile Section */}
           <div className="border-border flex flex-col items-center justify-center border-b-2 py-6 lg:mr-8 lg:border-b-0">
             <div className="flex flex-row">
-              <Image
-                src={"/knight-helm.png"}
-                alt="knight helmet"
-                className="mr-4 rounded-full bg-gray-300"
-                width={96}
-                height={96}
-              />
               <div className="flex flex-col items-center justify-center">
                 <h1 className="text-3xl">{user.username}</h1>
                 <p className="text-muted-foreground text-sm">{`Joined ${user.createdAt.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}`}</p>
@@ -119,15 +114,12 @@ export default async function ProfilePage({
           <div className="border-border order-1 flex flex-1 flex-col justify-center border-b-2 py-6 lg:order-4 lg:mr-8 lg:border-b-0 lg:py-0">
             <h1 className="text-muted-foreground text-md -mb-1">bio</h1>
             <p className="max-w-md text-sm leading-none">
-              hi everyone, i&apos;m a keyboard enthusiast and i love to type. hi
-              everyone, i&apos;m a keyboard enthusiast and i love to type. hi
-              everyone, i&apos;m a keyboard enthusiast and i love to type. hi
-              everyone, i&apos;m a keyboard enthusiast and i love to type.
+              {user.bio}
             </p>
             <h1 className="text-muted-foreground text-md mt-4 -mb-1">
               keyboard
             </h1>
-            <p className="text-sm leading-none">Realforce 87u</p>
+            <p className="text-sm leading-none">{user.keyboard}</p>
           </div>
 
           {/* Divider after Bio */}
@@ -135,23 +127,35 @@ export default async function ProfilePage({
 
           {/* Socials Section - Remains last */}
           <div className="order-3 flex flex-row justify-center gap-4 py-6 lg:order-6 lg:flex-col lg:justify-center lg:py-0">
-            <div
-              dangerouslySetInnerHTML={{ __html: githubIcon.svg }}
-              className="[&>svg]:fill-foreground h-8 w-8"
-            />
-            <div
-              dangerouslySetInnerHTML={{ __html: xIcon.svg }}
-              className="[&>svg]:fill-foreground h-8 w-8"
-            />
+            {user.githubUsername && (
+              <Link href={`https://github.com/${user.githubUsername}`} target="_blank" rel="noopener noreferrer">
+                <div
+                  dangerouslySetInnerHTML={{ __html: githubIcon.svg }}
+                  className="[&>svg]:fill-muted-foreground hover:[&>svg]:fill-primary h-8 w-8"
+                />
+              </Link>
+            )}
+            {user.xUsername && (
+              <Link href={`https://x.com/${user.xUsername}`} target="_blank" rel="noopener noreferrer">
+                <div
+                dangerouslySetInnerHTML={{ __html: xIcon.svg }}
+                className="[&>svg]:fill-muted-foreground hover:[&>svg]:fill-primary h-8 w-8"
+                />
+              </Link>
+            )}
+            {user.websiteUrl && (
+              <Link href={user.websiteUrl} target="_blank" rel="noopener noreferrer">
+                <Globe className="h-8 w-8 text-muted-foreground hover:text-primary" />
+              </Link>
+            )}
+            {!user.githubUsername && !user.xUsername && !user.websiteUrl && (
+              <p className="text-muted-foreground text-sm">no socials</p>
+            )}
           </div>
         </div>
         <div className="flex h-full w-8 flex-col items-end">
-          <button className="hover:bg-primary hover:text-primary-foreground h-1/2 flex-1 rounded-tr-lg p-2">
-            <Pencil className="h-5 w-5" />
-          </button>
-          <button className="hover:bg-primary hover:text-primary-foreground h-1/2 flex-1 rounded-br-lg p-2">
-            <LinkIcon className="h-5 w-5" />
-          </button>
+          <EditProfile />
+          <CopyUrlButton />
         </div>
       </div>
 
@@ -243,20 +247,6 @@ export default async function ProfilePage({
               </span>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="mt-8 flex justify-center">
-        <div
-          className={`text-muted-foreground flex flex-row items-center justify-center gap-2 text-sm transition-opacity duration-300`}
-        >
-          <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
-            tab
-          </kbd>
-          <p>+</p>
-          <kbd className="bg-card text-foreground rounded-sm px-2 py-1 font-mono">
-            enter
-          </kbd>
-          <p>- start playing</p>
         </div>
       </div>
     </div>

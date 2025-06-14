@@ -35,6 +35,11 @@ export async function saveGameStats(params: SaveGameStatsParams) {
     await db.insert(users).values({
       id: userId,
       username: randomUsername,
+      bio: "",
+      keyboard: "",
+      githubUsername: "",
+      xUsername: "",
+      websiteUrl: "",
       averageWpm: params.wpm,
       averageAccuracy: params.accuracy,
       averageCorrect: params.correct,
@@ -164,6 +169,11 @@ export async function onBoardUser(userId: string) {
     await db.insert(users).values({
       id: userId,
       username: randomUsername,
+      bio: "",
+      keyboard: "",
+      githubUsername: "",
+      xUsername: "",
+      websiteUrl: "",
       stayAnonymous: false,
       averageWpm: 0,
       averageAccuracy: 0,
@@ -263,9 +273,110 @@ export async function addUsername(username: string) {
         .where(eq(users.id, userId));
       return { message: "Username added." };
     } catch (error) {
-      return { message: "Failed to add username.", error: error };
+      return { message: "Failed to add username111.", error: error };
     }
   } else {
-    return { message: "User not found.", error: "User not found." };
+    try {
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.username, username),
+      });
+      if (existingUser) {
+        return { message: "Username already exists." };
+      }
+      await db.insert(users).values({
+        id: userId,
+        username: username,
+        bio: "",
+        keyboard: "",
+        githubUsername: "",
+        xUsername: "",
+        websiteUrl: "",
+        stayAnonymous: false,
+        averageWpm: 0,
+        averageAccuracy: 0,
+        averageCorrect: 0,
+        averageIncorrect: 0,
+        averageExtra: 0,
+        averageMissed: 0,
+        totalGames: 0,
+        totalGamesStarted: 0,
+        timeTyping: 0,
+        highestWpm: 0,
+        highestAccuracy: 0,
+        highestCorrect: 0,
+        highestIncorrect: 0,
+        highestExtra: 0,
+        highestMissed: 0,
+      });
+  
+      await db.insert(games).values({
+        userId: userId,
+        mode: "time",
+        timeLimit: 15,
+        wordCount: 0,
+        wpm: 0,
+        rawWpm: 0,
+        accuracy: 0,
+        correct: 0,
+        incorrect: 0,
+        extra: 0,
+        missed: 0,
+        createdAt: new Date(0),
+      });
+
+      return { message: "Username added." };
+    } catch (error) {
+      return { message: "Failed to add username222.", error: error };
+    }
+  }
+}
+
+interface UpdateUserProfileParams {
+  bio: string;
+  keyboard: string;
+  githubUsername: string;
+  xUsername: string;
+  websiteUrl: string;
+}
+
+export async function updateUserProfile(params: UpdateUserProfileParams) {
+  const { userId } = await auth();
+  if (!userId) {
+    return { message: "Unauthorized" };
+  }
+
+  const bio = params.bio.length > 0 ? params.bio : null;
+  const keyboard = params.keyboard.length > 0 ? params.keyboard : null;
+  const githubUsername = params.githubUsername.length > 0 ? params.githubUsername : null;
+  const xUsername = params.xUsername.length > 0 ? params.xUsername : null;
+  const websiteUrl = params.websiteUrl.length > 0 ? params.websiteUrl : null;
+
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, userId),
+      columns: {
+        bio: true,
+        keyboard: true,
+        githubUsername: true,
+        xUsername: true,
+        websiteUrl: true,
+      }
+    });
+
+    if (!user) {
+      return { message: "User not found" };
+    }
+
+    await db.update(users).set({
+      bio: bio ?? user.bio,
+      keyboard: keyboard ?? user.keyboard,
+      githubUsername: githubUsername ?? user.githubUsername,
+      xUsername: xUsername ?? user.xUsername,
+      websiteUrl: websiteUrl ?? user.websiteUrl,
+    }).where(eq(users.id, userId));
+
+    return { message: "User profile updated." };
+  } catch (error) {
+    return { message: "Failed to update user profile.", error: error };
   }
 }

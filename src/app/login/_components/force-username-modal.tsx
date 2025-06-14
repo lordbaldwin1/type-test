@@ -36,7 +36,7 @@ export default function ForceUsernameModal({ open }: { open: boolean }) {
     if (result.message === "Username added.") {
       toast.success(result.message);
       setStatus("idle");
-      router.refresh();
+      router.push("/");
     } else {
       setStatus("error");
       toast.error(result.message);
@@ -58,13 +58,20 @@ export default function ForceUsernameModal({ open }: { open: boolean }) {
           maxLength={16}
           minLength={3}
           value={username}
+          className={status === "error" ? "border-red-500" : ""}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               await handleAddUsername();
             }
           }}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            if (status === "error") setStatus("idle");
+          }}
         />
+        {status === "error" && (
+          <p className="text-sm text-red-500 mt-1">Please try a different username.</p>
+        )}
         <DialogFooter>
           <Button
             onClick={handleAddUsername}

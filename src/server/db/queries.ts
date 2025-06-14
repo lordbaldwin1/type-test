@@ -1,16 +1,12 @@
 import { db } from "~/server/db";
 import { users, games, type Game, type User } from "./schema";
 import { eq, count, desc, gt, sql, and } from "drizzle-orm";
-import { onBoardUser } from "./actions";
 
 type MaxWpmGameWithUser = Game & { user: User };
 
 export const getUsername = async (userId: string | null) => {
   if (!userId) return null;
   const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
-  if (!user?.username) {
-    await onBoardUser(userId);
-  }
   return user?.username;
 };
 
@@ -76,6 +72,12 @@ export const getTimeLimit15Games = async (): Promise<MaxWpmGameWithUser[]> => {
       user: {
         id: users.id,
         username: users.username,
+        imageUrl: users.imageUrl,
+        bio: users.bio,
+        keyboard: users.keyboard,
+        githubUsername: users.githubUsername,
+        xUsername: users.xUsername,
+        websiteUrl: users.websiteUrl,
         stayAnonymous: users.stayAnonymous,
         averageWpm: users.averageWpm,
         averageAccuracy: users.averageAccuracy,
@@ -128,6 +130,12 @@ export const getUserBestTime15 = async (
       user: {
         id: users.id,
         username: users.username,
+        imageUrl: users.imageUrl,
+        bio: users.bio,
+        keyboard: users.keyboard,
+        githubUsername: users.githubUsername,
+        xUsername: users.xUsername,
+        websiteUrl: users.websiteUrl,
         stayAnonymous: users.stayAnonymous,
         averageWpm: users.averageWpm,
         averageAccuracy: users.averageAccuracy,
