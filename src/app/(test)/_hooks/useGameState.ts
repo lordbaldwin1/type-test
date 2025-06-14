@@ -43,9 +43,10 @@ interface GameState {
   wpmPerSecond: wpmPerSecond[];
   letterCount: LetterCount;
   completedWords: string[];
+  userId: string | null;
 }
 
-export function useGameState(initialSampleText: string[]) {
+export function useGameState(initialSampleText: string[], userId: string | null) {
   // Generate initial text if none provided
   const initialText =
     initialSampleText.length > 0
@@ -59,7 +60,7 @@ export function useGameState(initialSampleText: string[]) {
     wordCount: 10,
     timeLimit: 15,
     sampleText: initialText,
-    saveStats: "false",
+    saveStats: userId !== null ? "true" : "false",
     wordSet: "common200",
     time: 0,
     isTextChanging: false,
@@ -67,6 +68,7 @@ export function useGameState(initialSampleText: string[]) {
     wpmPerSecond: [],
     letterCount: initialLetterCount,
     completedWords: [],
+    userId: userId,
   });
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -327,6 +329,7 @@ export function useGameState(initialSampleText: string[]) {
       wpmPerSecond: [],
       letterCount: initialLetterCount,
       completedWords: [],
+      userId: null,
     });
   }, [initialText]);
 

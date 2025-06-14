@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
@@ -76,9 +76,9 @@ export default function Navbar({ showUi = true }: NavbarProps) {
           ) : (
             <>
               <SignedOut>
-                <SignInButton mode="modal">
+                <Link href={`/login`}>
                   <User className="text-muted-foreground hover:text-foreground h-5.5 w-5.5 hover:scale-110" />
-                </SignInButton>
+                </Link>
               </SignedOut>
               <SignedIn>
                 <UserButton>

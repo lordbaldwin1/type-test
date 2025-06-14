@@ -34,7 +34,7 @@ export default async function Leaderboard() {
   let userPosition: { rank: number } | undefined = undefined;
   let userBestTime = null;
   let userRank15 = undefined;
-
+  console.log(user?.averageWpm);
   if (userId && user) {
     const [positionResult, bestTimeResult] = await Promise.all([
       getUserPosition(user.averageWpm),

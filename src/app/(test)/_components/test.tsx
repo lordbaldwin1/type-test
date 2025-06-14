@@ -21,7 +21,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
   const { userId } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const gameState = useGameState(props.initialSampleText);
+  const gameState = useGameState(props.initialSampleText, userId ?? null);
 
   const startGame = useCallback(() => {
     gameState.updateGameState({ status: "during" });
@@ -47,6 +47,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             mode: gameState.mode,
             timeLimit: gameState.timeLimit,
             wordCount: gameState.wordCount,
+            time: gameState.time,
           });
         } catch (error) {
           console.log(error);
@@ -91,6 +92,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       try {
         await saveGameStats({
           userId: userId,
+          time: gameState.timeLimit,
           ...stats,
           mode: gameState.mode,
           timeLimit: gameState.timeLimit,

@@ -9,6 +9,7 @@ interface SaveGameStatsParams {
   userId: string;
   mode: "words" | "time";
   wpm: number;
+  time: number;
   rawWpm: number;
   accuracy: number;
   correct: number;
@@ -42,7 +43,7 @@ export async function saveGameStats(params: SaveGameStatsParams) {
       averageMissed: params.missed,
       totalGames: 1,
       totalGamesStarted: 1,
-      timeTyping: 0, // TODO: add time typing
+      timeTyping: params.time,
       highestWpm: params.wpm,
       highestAccuracy: params.accuracy,
       highestCorrect: params.correct,
@@ -70,6 +71,8 @@ export async function saveGameStats(params: SaveGameStatsParams) {
     const highestIncorrect = Math.max(user.highestIncorrect, params.incorrect);
     const highestExtra = Math.max(user.highestExtra, params.extra);
     const highestMissed = Math.max(user.highestMissed, params.missed);
+    const newTimeTyping = user.timeTyping + params.time;
+    const newTotalGamesStarted = user.totalGamesStarted + 1;
 
     await db
       .update(users)
@@ -81,6 +84,8 @@ export async function saveGameStats(params: SaveGameStatsParams) {
         averageExtra: averageExtra,
         averageMissed: averageMissed,
         totalGames: totalGames,
+        totalGamesStarted: newTotalGamesStarted,
+        timeTyping: newTimeTyping,
         highestWpm: highestWpm,
         highestAccuracy: highestAccuracy,
         highestCorrect: highestCorrect,

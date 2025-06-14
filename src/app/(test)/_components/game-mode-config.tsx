@@ -3,7 +3,7 @@ import { Anvil, Clock, Hash, Sword } from "lucide-react";
 import type { GameMode, GameModeConfigProps } from "../_utils/types";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
-import { SignInButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export const GameModeConfig = memo(function GameModeConfig({
   mode,
@@ -79,7 +79,7 @@ export const GameModeConfig = memo(function GameModeConfig({
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
-              <SignInButton mode="modal">
+              <Link href={`/login`}>
                 <span className="inline-block">
                   <Button
                     variant="link"
@@ -95,7 +95,7 @@ export const GameModeConfig = memo(function GameModeConfig({
                     </div>
                   </Button>
                 </span>
-              </SignInButton>
+              </Link>
             </TooltipTrigger>
             <TooltipContent>
               <span>click to sign in and play ranked</span>

@@ -219,7 +219,7 @@ export const GameArea = memo(function GameArea({
           >
             <div
               ref={wordsContainerRef}
-              className="flex flex-wrap gap-x-4 gap-y-0 text-center font-mono text-4xl tracking-wide"
+              className="flex flex-wrap gap-x-5 gap-y-0 text-center font-mono text-4xl tracking-wide"
               onClick={handleGameAreaClick}
             >
               {sampleText.map((word, index) => (
@@ -245,11 +245,16 @@ export const GameArea = memo(function GameArea({
             {/* Animated cursor overlay */}
             {(status === "during" || status === "before" || status === "restart") && (
               <div
-                className="absolute border-l-3 border-foreground pointer-events-none transition-all duration-125 ease-in-out"
+                className={`absolute pointer-events-none transition-all duration-75 ease-out ${
+                  status === "before" ? "animate-[blink_1s_ease-in-out_infinite]" : ""
+                }`}
                 style={{
-                  left: `${cursorPosition.x}px`,
-                  top: `${cursorPosition.y + 2}px`, // Slight offset for better positioning
+                  left: `${cursorPosition.x + 1.5}px`,
+                  top: `${cursorPosition.y + 2}px`,
                   height: '2.25em',
+                  width: '3px',
+                  backgroundColor: 'var(--primary)',
+                  borderRadius: '2px',
                   transform: 'translateX(-1px)',
                 }}
               />

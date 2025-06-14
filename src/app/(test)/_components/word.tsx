@@ -26,7 +26,7 @@ export const Word = memo(
         return (
             <div
                 ref={ref}
-                className="relative flex flex-row font-mono text-4xl tracking-wide"
+                className="relative flex flex-row font-mono text-4xl tracking-wider"
                 data-word-index={props.wordIndex}
             >
                 <div className="flex">
@@ -120,7 +120,7 @@ const Letter = memo(function Letter({ letter, status, showCursor, letterIndex }:
     } else if (status === "incorrect") {
         textColorClass = "text-destructive";
     } else if (status === "none") {
-        textColorClass = "text-muted-foreground";
+        textColorClass = "text-muted-foreground/30";
     } else if (status === "extra") {
         textColorClass = "text-red-400/40";
     }
