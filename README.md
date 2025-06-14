@@ -2,19 +2,11 @@
 
 ## TODO
 
-- [] Fix onboarding username as "Anonymous" since usernames are unique now
-- [] Figure out changes to schema for profile stats
+- [x] Fix onboarding username as "Anonymous" since usernames are unique now
+- [x] Figure out changes to schema for profile stats
+- [] Make it so themes change when selected (requires refresh rn?)
 - [] add xp system?
 - [] Profile page with stats
-
-## Schema changes for profile stats
-
-- we have tests completed stat
-- need to add tests started
-- time typing?
-
-- we have leaderboard position
-- we have stats for best time/word stats
 
 ## Notes
 
