@@ -122,7 +122,7 @@
 
 .serika-dark {
   --background: oklch(0.25 0.01 270);           /* #323437 */
-  --foreground: oklch(0.82 0.02 99.5);          /* #d1d0c5 */
+  --foreground: oklch(0.92 0.02 99.5);          /* #d1d0c5 */
   --card: oklch(0.22 0.01 270);                 /* #2c2e31 */
   --card-foreground: oklch(0.82 0.02 99.5);     /* #d1d0c5 */
   --popover: oklch(0.216 0.006 56.043);              /* #2c2e31 */
@@ -132,7 +132,7 @@
   --secondary: oklch(0.45 0.01 270);            /* #646669 */
   --secondary-foreground: oklch(0.22 0.01 270); /* #2c2e31 */
   --muted: oklch(0.45 0.01 270);                /* #646669 */
-  --muted-foreground: oklch(0.82 0.02 99.5);    /* #d1d0c5 */
+  --muted-foreground: oklch(0.62 0.02 99.5);    /* #d1d0c5 */
   --accent: oklch(0.83 0.19 99.5);              /* #e2b714 */
   --accent-foreground: oklch(0.22 0.01 270);    /* #2c2e31 */
   --destructive: oklch(0.52 0.18 29);           /* #ca4754 */
@@ -154,38 +154,154 @@
   --sidebar-ring: oklch(0.553 0.013 58.071);
 }
 
-.matcha {
-  --background: oklch(0.32 0.06 38);           /* #543828 */
-  --foreground: oklch(0.93 0.03 81.5);           /* #ecddcc */
-  --card: oklch(0.26 0.05 38);                   /* #3d271a, slightly darker brown */
-  --card-foreground: oklch(0.93 0.03 81.5);      /* #ecddcc */
-  --popover: oklch(0.26 0.05 38);                /* #3d271a */
-  --popover-foreground: oklch(0.93 0.03 81.5);   /* #ecddcc */
-  --primary: oklch(0.77 0.18 137.5);             /* #7ec160 (unchanged) */
-  --primary-foreground: oklch(0.93 0.03 81.5);   /* #ecddcc for contrast */
-  --secondary: oklch(0.55 0.08 56.5);            /* #a4846a, lighter brown for contrast */
-  --secondary-foreground: oklch(0.93 0.03 81.5); /* #ecddcc */
-  --muted: oklch(0.55 0.08 56.5);                /* #a4846a */
-  --muted-foreground: oklch(0.82 0.02 99.5);     /* #d1d0c5, slightly less bright */
-  --accent: oklch(0.77 0.18 137.5);              /* #7ec160 (unchanged) */
-  --accent-foreground: oklch(0.93 0.03 81.5);    /* #ecddcc */
-  --destructive: oklch(0.65 0.19 29.5);          /* #e05a47, lighter red for contrast */
-  --border: oklch(0.22 0.04 38);                 /* #2e1b12, dark brown for subtle border */
-  --input: oklch(0.55 0.08 56.5);                /* #a4846a */
-  --ring: oklch(0.77 0.18 137.5);                /* #7ec160 (unchanged) */
-  --chart-1: oklch(0.77 0.18 137.5);
-  --chart-2: oklch(0.55 0.08 56.5);
-  --chart-3: oklch(0.32 0.06 38);
-  --chart-4: oklch(0.65 0.19 29.5);
-  --chart-5: oklch(0.93 0.03 81.5);
-  --sidebar: oklch(0.26 0.05 38);
-  --sidebar-foreground: oklch(0.93 0.03 81.5);
-  --sidebar-primary: oklch(0.77 0.18 137.5);
-  --sidebar-primary-foreground: oklch(0.93 0.03 81.5);
-  --sidebar-accent: oklch(0.55 0.08 56.5);
-  --sidebar-accent-foreground: oklch(0.77 0.18 137.5);
-  --sidebar-border: oklch(0.22 0.04 38);
-  --sidebar-ring: oklch(0.77 0.18 137.5);
+.blue {
+  --background: oklch(0.25 0.05 240);           /* Dark blue background */
+  --foreground: oklch(0.95 0.01 240);           /* Light foreground */
+  --card: oklch(0.25 0.05 240);                 /* Matching background */
+  --card-foreground: oklch(0.95 0.01 240);      /* Matching foreground */
+  --popover: oklch(0.2 0.05 240);               /* Slightly darker than background */
+  --popover-foreground: oklch(0.95 0.01 240);   /* Matching foreground */
+  --primary: oklch(0.65 0.2 240);               /* Bright blue primary */
+  --primary-foreground: oklch(1 0 0);           /* Pure white */
+  --secondary: oklch(0.35 0.08 240);            /* Medium blue secondary */
+  --secondary-foreground: oklch(1 0 0);         /* Pure white */
+  --muted: oklch(0.4 0.08 180);                 /* Teal muted */
+  --muted-foreground: oklch(0.75 0.01 240);      /* Medium gray-blue */
+  --accent: oklch(0.4 0.08 180);                /* Teal accent */
+  --accent-foreground: oklch(0.95 0.01 240);    /* Light foreground */
+  --destructive: oklch(0.65 0.2 30);            /* Red destructive */
+  --destructive-foreground: oklch(0.95 0.01 240); /* Light foreground */
+  --border: oklch(0.4 0.08 240);                /* Medium blue border */
+  --input: oklch(0.4 0.08 240);                 /* Medium blue input */
+  --ring: oklch(0.65 0.2 240);                  /* Bright blue ring */
+  --radius: 0.5rem;
+  --chart-1: oklch(0.65 0.2 240);               /* Bright blue primary */
+  --chart-2: oklch(0.4 0.08 180);               /* Teal accent */
+  --chart-3: oklch(0.35 0.08 240);              /* Medium blue secondary */
+  --chart-4: oklch(0.75 0.15 240);              /* Light blue */
+  --chart-5: oklch(0.95 0.01 240);              /* Light foreground */
+  --sidebar: oklch(0.2 0.05 240);               /* Slightly darker than background */
+  --sidebar-foreground: oklch(0.95 0.01 240);   /* Light foreground */
+  --sidebar-primary: oklch(0.65 0.2 240);       /* Bright blue primary */
+  --sidebar-primary-foreground: oklch(1 0 0);   /* Pure white */
+  --sidebar-accent: oklch(0.4 0.08 180);        /* Teal accent */
+  --sidebar-accent-foreground: oklch(0.95 0.01 240); /* Light foreground */
+  --sidebar-border: oklch(0.4 0.08 240);        /* Medium blue border */
+  --sidebar-ring: oklch(0.65 0.2 240);          /* Bright blue ring */
+}
+
+.rose {
+  --background: oklch(0.22 0.05 350);           /* Deep rose background */
+  --foreground: oklch(0.95 0.01 350);           /* Light rose foreground */
+  --card: oklch(0.22 0.05 350);                 /* Matching background */
+  --card-foreground: oklch(0.95 0.01 350);      /* Matching foreground */
+  --popover: oklch(0.18 0.05 350);              /* Slightly darker than background */
+  --popover-foreground: oklch(0.95 0.01 350);   /* Matching foreground */
+  --primary: oklch(0.75 0.22 350);              /* Bright rose primary */
+  --primary-foreground: oklch(1 0 0);           /* Pure white */
+  --secondary: oklch(0.35 0.08 350);            /* Medium rose secondary */
+  --secondary-foreground: oklch(1 0 0);         /* Pure white */
+  --muted: oklch(0.35 0.08 313);                /* Muted purple */
+  --muted-foreground: oklch(0.7 0.01 350);      /* Medium gray-rose */
+  --accent: oklch(0.35 0.08 313);               /* Accent purple */
+  --accent-foreground: oklch(0.95 0.01 350);    /* Light foreground */
+  --destructive: oklch(0.45 0.15 25);           /* Red destructive */
+  --destructive-foreground: oklch(0.95 0.01 350); /* Light foreground */
+  --border: oklch(0.35 0.08 350);               /* Medium rose border */
+  --input: oklch(0.35 0.08 350);                /* Medium rose input */
+  --ring: oklch(0.75 0.22 350);                 /* Bright rose ring */
+  --radius: 0.5rem;
+
+  --chart-1: oklch(0.75 0.22 350);              /* Bright rose */
+  --chart-2: oklch(0.35 0.08 313);              /* Muted purple */
+  --chart-3: oklch(0.45 0.15 25);               /* Red */
+  --chart-4: oklch(0.55 0.15 20);               /* Orange-red */
+  --chart-5: oklch(0.95 0.01 350);              /* Light foreground */
+
+  --sidebar: oklch(0.18 0.05 350);              /* Slightly darker than background */
+  --sidebar-foreground: oklch(0.95 0.01 350);   /* Light foreground */
+  --sidebar-primary: oklch(0.75 0.22 350);      /* Bright rose */
+  --sidebar-primary-foreground: oklch(1 0 0);   /* Pure white */
+  --sidebar-accent: oklch(0.35 0.08 313);       /* Accent purple */
+  --sidebar-accent-foreground: oklch(0.95 0.01 350); /* Light foreground */
+  --sidebar-border: oklch(0.35 0.08 350);       /* Medium rose border */
+  --sidebar-ring: oklch(0.75 0.22 350);         /* Bright rose ring */
+}
+
+.purple {
+  --background: oklch(0.22 0.05 276);           /* Deep purple background */
+  --foreground: oklch(0.95 0.01 276);           /* Light purple foreground */
+  --card: oklch(0.22 0.05 276);                 /* Matching background */
+  --card-foreground: oklch(0.95 0.01 276);      /* Matching foreground */
+  --popover: oklch(0.18 0.05 276);              /* Slightly darker than background */
+  --popover-foreground: oklch(0.95 0.01 276);   /* Matching foreground */
+  --primary: oklch(0.45 0.15 276);              /* Bright purple primary */
+  --primary-foreground: oklch(1 0 0);           /* Pure white */
+  --secondary: oklch(0.35 0.08 276);            /* Medium purple secondary */
+  --secondary-foreground: oklch(1 0 0);         /* Pure white */
+  --muted: oklch(0.35 0.08 238);                /* Muted blue */
+  --muted-foreground: oklch(0.7 0.01 276);      /* Medium gray-purple */
+  --accent: oklch(0.35 0.08 238);               /* Accent blue */
+  --accent-foreground: oklch(0.95 0.01 276);    /* Light foreground */
+  --destructive: oklch(0.45 0.15 25);           /* Red destructive */
+  --destructive-foreground: oklch(0.95 0.01 276); /* Light foreground */
+  --border: oklch(0.35 0.08 276);               /* Medium purple border */
+  --input: oklch(0.35 0.08 276);                /* Medium purple input */
+  --ring: oklch(0.45 0.15 276);                 /* Bright purple ring */
+  --radius: 0.5rem;
+
+  --chart-1: oklch(0.45 0.15 276);              /* Bright purple */
+  --chart-2: oklch(0.35 0.08 238);              /* Muted blue */
+  --chart-3: oklch(0.55 0.15 300);              /* Pinkish purple */
+  --chart-4: oklch(0.35 0.08 320);              /* Magenta */
+  --chart-5: oklch(0.95 0.01 276);              /* Light foreground */
+
+  --sidebar: oklch(0.18 0.05 276);              /* Slightly darker than background */
+  --sidebar-foreground: oklch(0.95 0.01 276);   /* Light foreground */
+  --sidebar-primary: oklch(0.45 0.15 276);      /* Bright purple */
+  --sidebar-primary-foreground: oklch(1 0 0);   /* Pure white */
+  --sidebar-accent: oklch(0.35 0.08 238);       /* Accent blue */
+  --sidebar-accent-foreground: oklch(0.95 0.01 276); /* Light foreground */
+  --sidebar-border: oklch(0.35 0.08 276);       /* Medium purple border */
+  --sidebar-ring: oklch(0.45 0.15 276);         /* Bright purple ring */
+}
+
+.light-rose {
+  --background: oklch(0.94 0.04 20);           /* Very light rose background */
+  --foreground: oklch(0.22 0.01 20);           /* Deep rose foreground */
+  --card: oklch(0.93 0.03 20);                 /* Slightly darker than background */
+  --card-foreground: oklch(0.25 0.01 20);      /* Slightly lighter than foreground */
+  --popover: oklch(0.97 0.04 20);              /* Matching background */
+  --popover-foreground: oklch(0.22 0.01 20);   /* Matching foreground */
+  --primary: oklch(0.85 0.18 20);              /* Bright rose primary */
+  --primary-foreground: oklch(0.15 0.01 20);   /* Deep rose for contrast */
+  --secondary: oklch(0.75 0.08 20);            /* Muted rose secondary */
+  --secondary-foreground: oklch(0.22 0.01 20); /* Deep rose for contrast */
+  --muted: oklch(0.9 0.03 340);                /* Muted pink */
+  --muted-foreground: oklch(0.45 0.01 20);     /* Muted rose text */
+  --accent: oklch(0.88 0.04 340);              /* Accent pink */
+  --accent-foreground: oklch(0.22 0.01 20);    /* Deep rose for contrast */
+  --destructive: oklch(0.45 0.15 25);          /* Red destructive */
+  --destructive-foreground: oklch(0.97 0.04 20); /* Light background */
+  --border: oklch(0.7 0.02 20);                /* Subtle rose border */
+  --input: oklch(0.7 0.02 20);                 /* Subtle rose input */
+  --ring: oklch(0.85 0.18 20);                 /* Bright rose ring */
+  --radius: 0.5rem;
+
+  --chart-1: oklch(0.85 0.18 20);              /* Bright rose */
+  --chart-2: oklch(0.88 0.04 340);             /* Accent pink */
+  --chart-3: oklch(0.75 0.08 20);              /* Muted rose */
+  --chart-4: oklch(0.45 0.15 25);              /* Red */
+  --chart-5: oklch(0.22 0.01 20);              /* Deep rose */
+
+  --sidebar: oklch(0.93 0.03 20);              /* Slightly darker than background */
+  --sidebar-foreground: oklch(0.22 0.01 20);   /* Deep rose */
+  --sidebar-primary: oklch(0.85 0.18 20);      /* Bright rose */
+  --sidebar-primary-foreground: oklch(0.15 0.01 20); /* Deep rose for contrast */
+  --sidebar-accent: oklch(0.88 0.04 340);      /* Accent pink */
+  --sidebar-accent-foreground: oklch(0.22 0.01 20); /* Deep rose */
+  --sidebar-border: oklch(0.7 0.02 20);        /* Subtle rose border */
+  --sidebar-ring: oklch(0.85 0.18 20);         /* Bright rose ring */
 }
 
 @layer base {

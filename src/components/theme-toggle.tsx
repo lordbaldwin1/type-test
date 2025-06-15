@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
@@ -15,10 +14,13 @@ export function ModeToggle() {
   }, []);
 
   const themes = [
-    { value: "dark", label: "Dark", icon: <Moon className="inline h-4 w-4 mr-1" /> },
+    { value: "dark", label: "Dark", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#23251f", border: "1px solid #2c2e31" }} /> },
+    { value: "light-rose", label: "Light Rose", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#FFE4E1", border: "1px solid #2c2e31" }} /> },
+    { value: "blue", label: "Blue", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#176161", border: "1px solid #2c2e31" }} /> },
+    { value: "rose", label: "Rose", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#FF007F", border: "1px solid #2c2e31" }} /> },
+    { value: "purple", label: "Purple", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#562EB4", border: "1px solid #2c2e31" }} /> },
     { value: "serika-dark", label: "Serika Dark", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#e2b714", border: "1px solid #2c2e31" }} /> },
-    { value: "matcha", label: "Matcha", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#7ec160", border: "1px solid #2c2e31" }} /> },
-    { value: "light", label: "Light", icon: <Sun className="inline h-4 w-4 mr-1" /> },
+    { value: "light", label: "Light", icon: <span className="inline-block w-4 h-4 rounded-sm mr-1" style={{ background: "#ffffff", border: "1px solid #2c2e31" }} /> },
   ];
 
   const current = themes.find(t => t.value === theme) ?? themes[0];

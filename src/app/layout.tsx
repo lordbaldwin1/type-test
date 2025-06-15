@@ -32,7 +32,7 @@ export default function RootLayout({
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
-            themes={["dark", "light", "serika-dark", "matcha"]}
+            themes={["dark", "light", "serika-dark", "blue", "rose", "purple", "light-rose"]}
           >
             <main className="flex-1 overflow-auto">
               {children}
