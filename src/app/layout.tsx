@@ -7,9 +7,37 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "~/components/ui/sonner";
 import { dark } from "@clerk/themes";
 
+const baseUrl = "https://vanishtype.com";
+
 export const metadata: Metadata = {
   title: "Vanishtype | A simple, quiet typing test",
-  description: "A simple typing test site with speed metrics and leaderboards",
+  description: "A simple, minimalistic typing test site with speed metrics and leaderboards",
+  keywords: ["typing test", "typing", "test", "speed", "metrics", "leaderboards", "minimalistic", "simple", "quiet", "vanishtype"],
+  authors: [{ name: "Zachary Springer", url: "https://zacharyspringer.dev" }],
+  metadataBase: new URL(baseUrl),
+  applicationName: "Vanishtype",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Vanishtype | A simple, quiet typing test",
+    description: "A simple, minimalistic typing test site with speed metrics and leaderboards",
+    images: [`${baseUrl}/og-image.png`],
+  },
+  openGraph: {
+    title: "Vanishtype | A simple, quiet typing test",
+    description: "A simple, minimalistic typing test site with speed metrics and leaderboards",
+    images: [{ url: `${baseUrl}/og-image.png` }],
+  },
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

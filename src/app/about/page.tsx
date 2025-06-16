@@ -40,10 +40,10 @@ export default async function About() {
             />
           </div>
           <div className="flex min-w-[200px] flex-1 flex-col justify-center">
-            <span className="text-muted-foreground text-start text-xs">
+            <span className="text-muted-foreground text-start text-xs ml-1">
               created by:
             </span>
-            <h1 className="bg-primary bg-clip-text text-start text-4xl font-bold text-transparent md:text-5xl">
+            <h1 className="bg-primary bg-clip-text text-start text-4xl font-bold text-transparent md:text-5xl p-1">
               zachary springer
             </h1>
           </div>

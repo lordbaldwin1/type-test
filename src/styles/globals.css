@@ -267,7 +267,7 @@
 }
 
 .light-rose {
-  --background: oklch(0.94 0.04 20);           /* Very light rose background */
+  --background: oklch(0.97 0.04 20);           /* Very light rose background */
   --foreground: oklch(0.22 0.01 20);           /* Deep rose foreground */
   --card: oklch(0.93 0.03 20);                 /* Slightly darker than background */
   --card-foreground: oklch(0.25 0.01 20);      /* Slightly lighter than foreground */
