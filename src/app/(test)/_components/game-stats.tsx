@@ -4,6 +4,11 @@ import type { GameStatsProps } from "~/app/(test)/_utils/types";
 import { WpmChart } from "./wpm-chart";
 import { SignInButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 interface UserStats {
   userId: string | null;
@@ -17,11 +22,12 @@ export function GameStats({
   timeLimit,
   time,
   wpmPerSecond,
-  // xp,
-}: Omit<GameStatsProps, 'onReset'>) {
+  xp,
+}: Omit<GameStatsProps, "onReset">) {
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [progressWidth, setProgressWidth] = useState(0);
+  const [progressWidthBefore, setProgressWidthBefore] = useState(0);
+  const [progressWidthAfter, setProgressWidthAfter] = useState(0);
 
   useEffect(() => {
     const fetchUserStats = async () => {
@@ -30,7 +36,7 @@ export function GameStats({
         if (!response.ok) {
           throw new Error("Failed to fetch user stats");
         }
-        const data = await response.json() as UserStats;
+        const data = (await response.json()) as UserStats;
         setUserStats(data);
       } catch (error) {
         console.error("Error fetching user stats:", error);
@@ -53,34 +59,65 @@ export function GameStats({
     return xpRequired;
   };
 
-  const xpToNextLevel = userStats ? calculateXpForLevel(userStats.currentLevel + 1) : null;
+  const xpToNextLevel = userStats
+    ? calculateXpForLevel(userStats.currentLevel + 1)
+    : null;
   const xpIntoCurrentLevel = userStats ? userStats.totalXp : null;
-  const progressRatio = xpIntoCurrentLevel && xpToNextLevel ? xpIntoCurrentLevel / xpToNextLevel : 0;
+  const progressWidthBeforeGame =
+    xpIntoCurrentLevel && xpToNextLevel
+      ? (xpIntoCurrentLevel - xp) / xpToNextLevel
+      : 0;
+  const progressWidthAfterGame =
+    xpIntoCurrentLevel && xpToNextLevel
+      ? xpIntoCurrentLevel / xpToNextLevel
+      : 0;
+
+  const displayXpToNextLevel = xpToNextLevel
+    ? (xpToNextLevel / 1000).toFixed(1)
+    : null;
+  const displayXpIntoCurrentLevel = xpIntoCurrentLevel
+    ? (xpIntoCurrentLevel / 1000).toFixed(1)
+    : null;
 
   // Animate progress bar when stats change
   useEffect(() => {
     if (!isLoading && userStats) {
-      setProgressWidth(0);
+      setProgressWidthBefore(0);
+      setProgressWidthAfter(0);
       const timer = setTimeout(() => {
-        setProgressWidth(progressRatio * 100);
+        setProgressWidthBefore(progressWidthBeforeGame);
+        // Delay the new XP animation slightly
+        setTimeout(() => {
+          setProgressWidthAfter(progressWidthAfterGame);
+        }, 500);
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [isLoading, userStats, progressRatio]);
+  }, [isLoading, userStats, progressWidthBeforeGame, progressWidthAfterGame]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-6 px-4 py-4" tabIndex={-1}>
+    <div
+      className="flex w-full flex-col items-center gap-6 px-4 py-4"
+      tabIndex={-1}
+    >
       {/* Top Stats Row */}
       <div className="w-full">
         <div className="grid grid-cols-5 gap-6 text-center">
           {/* Raw WPM */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
-              raw
+              raw wpm
             </div>
-            <div className="text-foreground text-3xl leading-none font-bold">
-              {stats.rawWpm}
-            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="text-foreground text-3xl leading-none font-bold">
+                  {stats.rawWpm}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>correct + incorrect + extra</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {/* Accuracy */}
@@ -88,19 +125,33 @@ export function GameStats({
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               acc
             </div>
-            <div className="text-primary text-3xl leading-none font-bold">
-              {stats.accuracy}%
-            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="text-primary text-3xl leading-none font-bold">
+                  {stats.accuracy}%
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>correct / total</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {/* WPM - Center and Largest */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
-              wmp
+              wpm
             </div>
-            <div className="text-primary text-6xl leading-none font-bold">
-              {stats.wpm}
-            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="text-primary text-6xl leading-none font-bold">
+                  {stats.wpm}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>only correct letters</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {/* Time */}
@@ -108,9 +159,16 @@ export function GameStats({
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               time
             </div>
-            <div className="text-foreground text-3xl leading-none font-bold">
-              {mode === "time" ? timeLimit : time}s
-            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="text-foreground text-3xl leading-none font-bold">
+                  {mode === "time" ? timeLimit : time}s
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>yep, just game duration</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {/* Characters */}
@@ -119,13 +177,20 @@ export function GameStats({
               characters
             </div>
             <div className="text-3xl leading-none font-bold">
-              <span className="text-primary">{stats.correct}</span>
-              <span className="text-muted-foreground">/</span>
-              <span className="text-destructive">{stats.incorrect}</span>
-              <span className="text-muted-foreground">/</span>
-              <span className="text-muted-foreground">{stats.extra}</span>
-              <span className="text-muted-foreground">/</span>
-              <span className="text-muted-foreground">{stats.missed}</span>
+              <Tooltip>
+                <TooltipTrigger>
+                  <span className="text-primary">{stats.correct}</span>
+                  <span className="text-muted-foreground">/</span>
+                  <span className="text-destructive">{stats.incorrect}</span>
+                  <span className="text-muted-foreground">/</span>
+                  <span className="text-muted-foreground">{stats.extra}</span>
+                  <span className="text-muted-foreground">/</span>
+                  <span className="text-muted-foreground">{stats.missed}</span>
+                </TooltipTrigger>
+                <TooltipContent className="flex items-center gap-2">
+                  <p>correct/incorrect/extra/missed</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -135,20 +200,41 @@ export function GameStats({
       {isLoading ? (
         <div className="text-muted-foreground text-sm">Loading...</div>
       ) : userStats ? (
-        <div className="text-muted-foreground flex w-full max-w-[90rem] flex-row items-center gap-4 text-sm">
-          <span className="min-w-[100px] text-right">Level {userStats.currentLevel}</span>
-          <div className="relative h-4 w-full max-w-2xl rounded-full bg-muted">
-            <div 
-              className="absolute left-0 top-0 h-full rounded-full bg-primary transition-all duration-1000 ease-out"
-              style={{ width: `${progressWidth}%` }}
+        <div className="text-muted-foreground flex w-full max-w-5xl flex-row items-center gap-4 text-sm">
+          <span className="min-w-[100px] text-right text-2xl font-bold">
+            {userStats.currentLevel}
+          </span>
+          <div className="bg-muted relative h-4 w-full max-w-2xl overflow-hidden rounded-sm">
+            {/* Previous progress */}
+            <div
+              className="bg-primary absolute top-0 left-0 h-full transition-all duration-500 ease-out"
+              style={{ width: `${progressWidthBefore * 100}%` }}
+            />
+            {/* New XP gain */}
+            <div
+              className="absolute top-0 h-full bg-green-500 transition-all duration-500 ease-out"
+              style={{
+                width: `${Math.max(progressWidthAfter - progressWidthBefore, 0) * 100}%`,
+                left: `${progressWidthBefore * 100}%`,
+                opacity: 0.8,
+              }}
             />
           </div>
-          <span className="min-w-[120px] text-left">XP: {xpIntoCurrentLevel} / {xpToNextLevel}</span>
+          <Tooltip>
+            <TooltipTrigger>
+              <span className="min-w-[120px] text-left text-xl font-bold">{`${displayXpIntoCurrentLevel}k / ${displayXpToNextLevel}k`}</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{`${xpIntoCurrentLevel} / ${xpToNextLevel} xp`}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       ) : (
         <div className="text-muted-foreground flex items-center gap-2 text-sm">
           <SignInButton mode="modal">
-            <span className="underline hover:text-foreground hover:scale-105 hover:cursor-pointer">sign in</span>
+            <span className="hover:text-foreground underline hover:scale-105 hover:cursor-pointer">
+              sign in
+            </span>
           </SignInButton>
           <span>to save future stats</span>
         </div>

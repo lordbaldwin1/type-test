@@ -143,7 +143,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
         <main className="flex-1 flex flex-col">
           {gameState.status === "after" ? (
             <div className="flex items-center justify-center px-4 py-8">
-              <div className="animate-in fade-in duration-500">
+              <div className="animate-in fade-in duration-500 w-full">
                 <GameStats
                   stats={gameState.stats}
                   mode={gameState.mode}
