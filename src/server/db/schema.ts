@@ -32,6 +32,8 @@ export const users = createTable(
     id: d.varchar({ length: 256 }).primaryKey(),
     username: d.varchar({ length: 256 }).unique(),
     imageUrl: d.varchar({ length: 256 }),
+    currentLevel: d.integer().notNull().default(1),
+    totalXp: d.integer().notNull().default(0),
     bio: d.varchar({ length: 250 }),
     keyboard: d.varchar({ length: 75 }),
     githubUsername: d.varchar({ length: 256 }),

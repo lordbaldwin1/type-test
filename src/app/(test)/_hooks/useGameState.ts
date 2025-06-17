@@ -44,6 +44,7 @@ interface GameState {
   letterCount: LetterCount;
   completedWords: string[];
   userId: string | null;
+  xp: number;
 }
 
 export function useGameState(initialSampleText: string[], userId: string | null) {
@@ -69,6 +70,7 @@ export function useGameState(initialSampleText: string[], userId: string | null)
     letterCount: initialLetterCount,
     completedWords: [],
     userId: userId,
+    xp: 0,
   });
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -330,6 +332,7 @@ export function useGameState(initialSampleText: string[], userId: string | null)
       letterCount: initialLetterCount,
       completedWords: [],
       userId: null,
+      xp: 0,
     });
   }, [initialText]);
 

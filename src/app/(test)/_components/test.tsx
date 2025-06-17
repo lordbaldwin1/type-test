@@ -3,9 +3,9 @@
 import { useCallback, useRef, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useTypingGame } from "~/app/(test)/_hooks/useTypingGame";
-import { saveGameStats } from "~/server/db/actions";
+import { saveGameStats, updateUserXp } from "~/server/db/actions";
 import { useGameState } from "~/app/(test)/_hooks/useGameState";
-import { calculateStats } from "~/app/(test)/_utils/gameStats";
+import { calculateStats, calculateXp } from "~/app/(test)/_utils/gameStats";
 import { GameStats } from "./game-stats";
 import { GameArea } from "./game-area";
 import { GameModeConfig } from "./game-mode-config";
@@ -37,10 +37,18 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
         timeLimit: gameState.timeLimit,
       });
 
-      gameState.updateGameState({ status: "after", stats });
+      const xp = calculateXp({
+        letterCount: gameState.letterCount,
+        completedWords: gameState.completedWords,
+        wpm: stats.wpm,
+        accuracy: stats.accuracy,
+      });
+
+      gameState.updateGameState({ status: "after", stats, xp });
 
       if (userId && gameState.saveStats === "true") {
         try {
+          await updateUserXp(xp);
           await saveGameStats({
             userId: userId,
             ...stats,
@@ -52,6 +60,8 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
         } catch (error) {
           console.log(error);
         }
+      } else if (userId) {
+        await updateUserXp(xp);
       }
     },
     [gameState, userId],
@@ -86,10 +96,18 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       timeLimit: gameState.timeLimit,
     });
 
-    gameState.updateGameState({ status: "after", stats });
+    const xp = calculateXp({
+      letterCount: gameState.letterCount,
+      completedWords: gameState.completedWords,
+      wpm: stats.wpm,
+      accuracy: stats.accuracy,
+    });
+
+    gameState.updateGameState({ status: "after", stats, xp });
 
     if (userId && gameState.saveStats === "true") {
       try {
+        await updateUserXp(xp);
         await saveGameStats({
           userId: userId,
           time: gameState.timeLimit,
@@ -101,6 +119,8 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       } catch (error) {
         console.log(error);
       }
+    } else if (userId) {
+      await updateUserXp(xp);
     }
   }, [gameState, userId]);
 
@@ -130,6 +150,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   timeLimit={gameState.timeLimit}
                   time={gameState.time}
                   wpmPerSecond={gameState.wpmPerSecond}
+                  xp={gameState.xp}
                 />
               </div>
             </div>

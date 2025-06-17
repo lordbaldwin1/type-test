@@ -380,3 +380,50 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
     return { message: "Failed to update user profile.", error: error };
   }
 }
+
+export async function updateUserXp (xp: number) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return { message: "Unauthorized" };
+  }
+
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+
+  if (!user) {
+    return { message: "User not found" };
+  }
+
+  const totalXp = Math.ceil(user.totalXp + xp);
+  
+  // Calculate new level based on cumulative XP
+  // Level 1: 0 XP
+  // Level 2: 100 XP
+  // Level 3: 300 XP (100 + 200)
+  // Level 4: 600 XP (100 + 200 + 300)
+  // Level 5: 1000 XP (100 + 200 + 300 + 400)
+  // etc...
+  let newLevel = 1;
+  let xpRequired = 0;
+  let xpIncrement = 100;
+
+  while (totalXp >= xpRequired) {
+    xpRequired += xpIncrement;
+    xpIncrement += 100;
+    newLevel++;
+  }
+
+  try {
+    await db.update(users).set({
+      totalXp: totalXp,
+      currentLevel: newLevel,
+    }).where(eq(users.id, user.id));
+
+    return { message: "User xp updated." };
+  } catch (error) {
+    console.log("error", error);
+    return { message: "Failed to update user xp.", error: error };
+  }
+}

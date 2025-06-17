@@ -68,6 +68,7 @@ export interface GameStatsProps {
   time: number;
   onReset: () => void;
   wpmPerSecond: wpmPerSecond[];
+  xp: number;
 }
 
 export interface UseTypingGameProps {
