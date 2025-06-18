@@ -9,6 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { Skeleton } from "~/components/ui/skeleton";
 
 interface UserStats {
   userId: string | null;
@@ -190,9 +191,11 @@ export function GameStats({
 
       {/* User Stats */}
       {isLoading ? (
-        <div className="text-muted-foreground text-sm">Loading...</div>
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <Skeleton className="h-4 w-full" />
+        </div>
       ) : userStats ? (
-        <div className="text-muted-foreground flex w-full max-w-5xl flex-row items-center gap-4 text-sm">
+        <div className="text-muted-foreground flex w-full max-w-5xl flex-row items-center gap-4 text-sm animate-in fade-in-0 duration-500">
           <span className="min-w-[100px] text-right text-2xl font-bold">
             {userStats.currentLevel}
           </span>
