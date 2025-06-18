@@ -60,6 +60,22 @@ export default async function ProfilePage({
   const average15TimeRank = userRank15Time?.rank;
 
   // ADD XP BAR HERE
+  const calculateXpForLevel = (level: number) => {
+    let xpRequired = 0;
+    let xpIncrement = 100;
+    for (let i = 1; i < level; i++) {
+      xpRequired += xpIncrement;
+      xpIncrement += 100;
+    }
+    return xpRequired;
+  };
+
+  const xpToNextLevel = calculateXpForLevel(user.currentLevel + 1);
+  const xpIntoCurrentLevel = user.totalXp;
+  const progressWidth = xpIntoCurrentLevel / xpToNextLevel;
+
+  const xpToNextLevelDisplay = (xpToNextLevel / 1000).toFixed(1);
+  const xpIntoCurrentLevelDisplay = (xpIntoCurrentLevel / 1000).toFixed(1);
 
   return (
     <div className="animate-in fade-in-0 mx-24 mt-8 flex flex-col items-center justify-center duration-500">
@@ -67,19 +83,23 @@ export default async function ProfilePage({
       <div className="bg-card outline-border flex h-full w-full flex-row rounded-lg outline-2">
         <div className="bg-card flex w-full flex-col rounded-lg p-4 lg:flex-row">
           {/* Profile Section */}
-          <div className="border-border flex flex-col items-center justify-center border-b-2 py-6 lg:mr-8 lg:border-b-0">
-            <div className="flex flex-row">
-              <div className="flex flex-col items-center justify-center">
+          <div className="border-border flex flex-1 flex-col items-center justify-center border-b-2 py-6 lg:mr-8 lg:border-b-0">
+            <div className="flex flex-row w-full">
+              <div className="flex flex-col items-center justify-center w-full">
                 <h1 className="text-3xl">{user.username}</h1>
                 <p className="text-muted-foreground text-sm">{`Joined ${user.createdAt.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}`}</p>
-                <p className="text-muted-foreground text-sm">{`Level ${user.currentLevel}`}</p>
+                <div className="flex flex-row items-center justify-between w-full gap-4 mt-1">
+                  <span className="text-muted-foreground text-xl font-semibold text-right min-w-[60px]">{`${user.currentLevel}`}</span>
+                  <div className="relative flex-1 h-4 bg-muted rounded-sm overflow-hidden">
+                    <div
+                      className="bg-primary h-full transition-all duration-500 ease-out"
+                      style={{ width: `${Math.min(progressWidth * 100, 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-muted-foreground text-sm min-w-[80px] text-left">{`${xpIntoCurrentLevelDisplay}k/${xpToNextLevelDisplay}k`}</span>
+                </div>
               </div>
             </div>
-            {/* <div className="mt-4 flex w-full flex-row items-center justify-center">
-              <p className="text-left text-lg">127</p>
-              <div className="bg-border mx-3 h-2 w-full rounded-sm" />
-              <p className="text-muted-foreground text-sm">1.2k/19.1k</p>
-            </div> */}
           </div>
 
           {/* Divider after Profile */}
