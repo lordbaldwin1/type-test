@@ -33,9 +33,7 @@ export function GameStats({
     const fetchUserStats = async () => {
       try {
         const response = await fetch("/api/get-user-stats");
-        if (!response.ok) {
-          throw new Error("Failed to fetch user stats");
-        }
+        if (!response.ok) return;
         const data = (await response.json()) as UserStats;
         setUserStats(data);
       } catch (error) {
@@ -79,17 +77,11 @@ export function GameStats({
     ? (xpIntoCurrentLevel / 1000).toFixed(1)
     : null;
 
-  // Animate progress bar when stats change
   useEffect(() => {
     if (!isLoading && userStats) {
-      setProgressWidthBefore(0);
-      setProgressWidthAfter(0);
       const timer = setTimeout(() => {
         setProgressWidthBefore(progressWidthBeforeGame);
-        // Delay the new XP animation slightly
-        setTimeout(() => {
-          setProgressWidthAfter(progressWidthAfterGame);
-        }, 500);
+        setProgressWidthAfter(progressWidthAfterGame);
       }, 100);
       return () => clearTimeout(timer);
     }
