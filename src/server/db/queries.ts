@@ -285,3 +285,15 @@ export const getUserBestWordStats = async (
   };
 };
 
+export const getUserStats = async (userId: string) => {
+  try {
+    const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
+    if (!user) return { error: "User not found" };
+
+    const stats = await db.query.games.findMany({ where: eq(games.userId, userId) });
+    return stats;
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    return { error: "Failed to fetch user stats" };
+  }
+  }
