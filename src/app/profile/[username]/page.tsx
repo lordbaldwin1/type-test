@@ -59,6 +59,8 @@ export default async function ProfilePage({
   const averageWpmRank = userRankAverageWpm?.rank;
   const average15TimeRank = userRank15Time?.rank;
 
+  // ADD XP BAR HERE
+
   return (
     <div className="animate-in fade-in-0 mx-24 mt-8 flex flex-col items-center justify-center duration-500">
       {/* Top Card */}
@@ -70,6 +72,7 @@ export default async function ProfilePage({
               <div className="flex flex-col items-center justify-center">
                 <h1 className="text-3xl">{user.username}</h1>
                 <p className="text-muted-foreground text-sm">{`Joined ${user.createdAt.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}`}</p>
+                <p className="text-muted-foreground text-sm">{`Level ${user.currentLevel}`}</p>
               </div>
             </div>
             {/* <div className="mt-4 flex w-full flex-row items-center justify-center">

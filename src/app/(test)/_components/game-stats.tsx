@@ -9,7 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { Skeleton } from "~/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 
 interface UserStats {
   userId: string | null;
@@ -192,7 +192,7 @@ export function GameStats({
       {/* User Stats */}
       {isLoading ? (
         <div className="text-muted-foreground flex items-center gap-2 text-sm">
-          <Skeleton className="h-4 w-full" />
+          <Loader2 className="animate-spin" />
         </div>
       ) : userStats ? (
         <div className="text-muted-foreground flex w-full max-w-5xl flex-row items-center gap-4 text-sm animate-in fade-in-0 duration-500">
