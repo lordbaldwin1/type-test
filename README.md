@@ -4,13 +4,6 @@ Welcome friends! This is the codebase for the Vanishtype typing test site. Check
 
 - [vanishtype.com](https://vanishtype.com)
 
-## Demo
-
-<div align="center">
-  <img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="600">
-</div>
-
-
 ## Overview
 
 Vanishtype is a minimalistic typing test site with the following features:
@@ -25,6 +18,12 @@ Vanishtype is a minimalistic typing test site with the following features:
 - Your position on leaderboard is shown in case you are outside top 50
 - XP system to track progress
 - User profiles, with bio, keyboard information, socials, and user statistics
+
+## Demo
+
+<div align="center">
+  <img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="600">
+</div>
 
 ## Goals
 
