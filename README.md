@@ -1,6 +1,6 @@
 # Vanishtype
 
-![GIF demo of typing](public/demo-small.gif)
+![GIF demo of typing](public/tiny-demo.gif)
 
 ## Overview
 
