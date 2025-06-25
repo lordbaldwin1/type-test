@@ -56,3 +56,7 @@ Additionally, I believe the state management could be implemented in a cleaner w
 - Tailwind
 - shadcn/ui
 - Railway
+
+## Contributing
+
+- If you would like to contribute, reach out: springerczachary@gmail.com
