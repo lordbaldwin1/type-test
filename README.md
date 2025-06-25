@@ -1,4 +1,5 @@
-# Vanishtype [Markdown link](https://vanishtype.com)
+# Vanishtype 
+[Check it out now!](https://vanishtype.com)
 
 <div align="center">
   <img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="600">
