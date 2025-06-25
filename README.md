@@ -1,5 +1,7 @@
 # Vanishtype
 
+![GIF demo of typing](public/demo.gif)
+
 ## Overview
 
 Vanishtype is a minimalistic typing test site with the following features:
