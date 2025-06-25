@@ -1,6 +1,6 @@
 # Vanishtype
 
-<img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="1000" height="800">
+<img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="400">
 
 
 ## Overview
