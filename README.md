@@ -1,8 +1,10 @@
 # Vanishtype
 
-Welcome friends! This is the codebase for the Vanishtype typing test site.
+Welcome friends! This is the codebase for the Vanishtype typing test site. Check it out now at the link below:
 
-- [Web App](https://vanishtype.com)
+- [vanishtype.com](https://vanishtype.com)
+
+## Demo
 
 <div align="center">
   <img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="600">
