@@ -12,7 +12,19 @@ export default async function Login() {
   return (
     <div className="flex h-full w-full items-center justify-center">
       <SignedOut>
-        <SignIn />
+        <SignIn 
+          redirectUrl="/login"
+          signUpUrl="/sign-up"
+          appearance={{
+            elements: {
+              formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
+              card: "bg-card text-card-foreground shadow-lg",
+            },
+            layout: {
+              socialButtonsPlacement: "top",
+            }
+          }}
+        />
       </SignedOut>
       <SignedIn>
         <ForceUsernameModal open={needsUsername} />
