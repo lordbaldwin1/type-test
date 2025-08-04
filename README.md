@@ -1,5 +1,9 @@
 # Vanishtype
 
+Welcome friends! This is the codebase for the Vanishtype typing test site. Check it out now at the link below:
+
+- [vanishtype.com](https://vanishtype.com)
+
 ## Overview
 
 Vanishtype is a minimalistic typing test site with the following features:
@@ -15,7 +19,13 @@ Vanishtype is a minimalistic typing test site with the following features:
 - XP system to track progress
 - User profiles, with bio, keyboard information, socials, and user statistics
 
-## Goals for Project
+## Demo
+
+<div align="center">
+  <img src="public/tiny-demo.gif" alt="Demo GIF of Vanishtype showing user typing" width="600" height="600">
+</div>
+
+## Goals
 
 My primary goal for this project was to understand and learn the complex client-side state management that is used in typing test sites. Particularly, I wanted to learn how live updates work to track correct/incorrect characters as a user types. I also wanted to learn how to have an animated cursor follow the user's position as they type. I achieved this state management by leveraging custom hooks to separately manage game configuration state and user input state. I also lifted commonly shared state up to the highest component so that each piece of UI could be separated.
 
@@ -46,3 +56,7 @@ Additionally, I believe the state management could be implemented in a cleaner w
 - Tailwind
 - shadcn/ui
 - Railway
+
+## Contributing
+
+- If you would like to contribute, reach out: springerczachary@gmail.com
