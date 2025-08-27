@@ -27,7 +27,6 @@ export const GameArea = memo(function GameArea({
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const wordsContainerRef = useRef<HTMLDivElement>(null);
 
-  // Handle internal focus state and call parent callbacks
   const handleFocus = () => {
     setIsInputFocused(true);
     onInputFocus();
@@ -38,7 +37,6 @@ export const GameArea = memo(function GameArea({
     onInputBlur();
   };
 
-  // Calculate cursor position for smooth animation
   useEffect(() => {
     if (!wordsContainerRef.current) return;
 
@@ -46,7 +44,6 @@ export const GameArea = memo(function GameArea({
       const wordsContainer = wordsContainerRef.current;
       if (!wordsContainer) return;
 
-      // Find the current word element
       const wordElements = wordsContainer.querySelectorAll('[data-word-index]');
       const currentWordElement = wordElements[currentWordIndex] as HTMLElement;
 
@@ -55,7 +52,6 @@ export const GameArea = memo(function GameArea({
       const containerRect = wordsContainer.getBoundingClientRect();
       const wordRect = currentWordElement.getBoundingClientRect();
 
-      // Find the current letter position within the word
       const letterElements = currentWordElement.querySelectorAll('[data-letter-index]');
       const currentLetterIndex = input.length;
 
@@ -65,7 +61,6 @@ export const GameArea = memo(function GameArea({
         const letterRect = letterElement.getBoundingClientRect();
         letterX = letterRect.left - wordRect.left;
       } else {
-        // Cursor is at the end of the word
         letterX = currentWordElement.offsetWidth;
       }
 
@@ -75,13 +70,11 @@ export const GameArea = memo(function GameArea({
       setCursorPosition({ x, y });
     };
 
-    // Small delay to ensure DOM has updated
     const timeoutId = setTimeout(updateCursorPosition, 10);
 
     return () => clearTimeout(timeoutId);
   }, [currentWordIndex, input, sampleText]);
 
-  // Auto-scroll to active word
   useEffect(() => {
     if (activeWordRef.current && containerRef.current) {
       activeWordRef.current.scrollIntoView({
@@ -92,14 +85,12 @@ export const GameArea = memo(function GameArea({
     }
   }, [currentWordIndex]);
 
-  // Focus input when game starts or resets
   useEffect(() => {
     if (status === "during" || status === "before" || status === "restart") {
       inputRef.current?.focus();
     }
   }, [status, sampleText, saveStats, inputRef]);
 
-  // Focus input on keypress
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (status !== "during" && status !== "before" && status !== "restart") return;
@@ -144,7 +135,6 @@ export const GameArea = memo(function GameArea({
     };
   }, [status, inputRef]);
 
-  // Handle blur visibility with delay to prevent flashing during mode changes
   useEffect(() => {
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
@@ -187,9 +177,7 @@ export const GameArea = memo(function GameArea({
           onKeyDown={onInputSubmit}
           className="bg-background border-border text-foreground absolute mb-4 border-2 opacity-0"
         />
-        {/* Wrapper for stats and text area with blur overlay */}
         <div className="relative">
-          {/* Blur overlay when input not focused */}
           {showBlur && (
             <div className="absolute inset-0 z-20 mt-8 flex items-center justify-center pointer-events-none">
               <div className="absolute inset-0 -mx-4 bg-background/90 backdrop-blur-[4px]" />
@@ -208,7 +196,7 @@ export const GameArea = memo(function GameArea({
               <p className="text-primary text-2xl font-bold">{`${completedWords.length}/${sampleText.length}`}</p>
             )}
             {mode === "time" && (
-              <p className="text-primary text-2xl font-bold">{`${time}s`}</p>
+              <p className="text-primary text-2xl font-bold">{`${time.toFixed(0)}s`}</p>
             )}
           </div>
 
@@ -237,12 +225,11 @@ export const GameArea = memo(function GameArea({
                   isActive={index === currentWordIndex}
                   isCompleted={index < currentWordIndex}
                   wordIndex={index}
-                  showCursor={false} // Disable individual word cursors
+                  showCursor={false}
                 />
               ))}
             </div>
 
-            {/* Animated cursor overlay */}
             {(status === "during" || status === "before" || status === "restart") && (
               <div
                 className={`absolute pointer-events-none transition-all duration-75 ease-out ${

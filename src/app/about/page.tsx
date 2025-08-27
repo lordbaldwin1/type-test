@@ -1,15 +1,11 @@
-import { count } from "drizzle-orm";
-import { db } from "~/server/db";
-import { games, users } from "~/server/db/schema";
 import Image from "next/image";
 import Link from "next/link";
 import * as simpleIcons from "simple-icons";
+import PlayerBaseStats from "~/components/player-base-stats";
 
 export const dynamic = "force-dynamic";
 
 export default async function About() {
-  const totalUsers = await db.select({ count: count() }).from(users);
-  const totalGames = await db.select({ count: count() }).from(games);
 
   // Icon references
   const TypeScriptIcon = simpleIcons.siTypescript;
@@ -28,6 +24,7 @@ export default async function About() {
   return (
     <div className="animate-fade-in flex w-full flex-col items-center px-4 py-8">
       <div className="mx-auto w-full max-w-3xl lg:max-w-5xl">
+        <PlayerBaseStats />
         <div className="mt-0 mb-4 flex w-full flex-wrap items-center justify-center gap-4">
           <div className="">
             <Image
@@ -46,14 +43,6 @@ export default async function About() {
             <h1 className="bg-primary bg-clip-text text-start text-4xl font-bold text-transparent md:text-5xl p-1">
               zachary springer
             </h1>
-          </div>
-          <div className="flex flex-shrink-0 items-center gap-2">
-            <p className="text-muted-foreground border-border border-r-2 pr-4">
-              total users: {totalUsers[0]?.count}
-            </p>
-            <p className="text-muted-foreground">
-              total tests completed: {totalGames[0]?.count}
-            </p>
           </div>
         </div>
 

@@ -75,7 +75,6 @@ export function useGameState(initialSampleText: string[], userId: string | null)
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Timer with WPM tracking
   useEffect(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -86,9 +85,8 @@ export function useGameState(initialSampleText: string[], userId: string | null)
       timerRef.current = setInterval(() => {
         setState((prev) => {
           const newTime =
-            prev.mode === "words" ? prev.time + 1 : Math.max(0, prev.time - 1);
+            prev.mode === "words" ? prev.time + 0.5 : Math.max(0, prev.time - 0.5);
 
-          // Track WPM when time changes
           const elapsedTime =
             prev.mode === "time" ? prev.timeLimit - newTime : newTime;
 
@@ -126,7 +124,7 @@ export function useGameState(initialSampleText: string[], userId: string | null)
             time: newTime,
           };
         });
-      }, 1000);
+      }, 500);
     }
 
     return () => {
@@ -139,12 +137,10 @@ export function useGameState(initialSampleText: string[], userId: string | null)
 
   const showUi = state.status !== "during" || !state.isInputFocused;
 
-  // Generic state update
   const updateGameState = useCallback((updates: Partial<GameState>) => {
     setState((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  // Update letter count
   const updateLetterCount = useCallback((newLetterCount: LetterCount) => {
     setState((prev) => ({
       ...prev,
@@ -157,12 +153,10 @@ export function useGameState(initialSampleText: string[], userId: string | null)
     }));
   }, []);
 
-  // Update completed words
   const updateCompletedWords = useCallback((newCompletedWords: string[]) => {
     setState((prev) => ({ ...prev, completedWords: newCompletedWords }));
   }, []);
 
-  // Reset typing state
   const resetTypingState = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -171,7 +165,6 @@ export function useGameState(initialSampleText: string[], userId: string | null)
     }));
   }, []);
 
-  // Text generation with animation
   const generateNewText = useCallback(
     (wordCount: number, wordSet: WordSet, withAnimation = true) => {
       if (withAnimation) {
@@ -200,10 +193,8 @@ export function useGameState(initialSampleText: string[], userId: string | null)
     (mode: GameMode) => {
       if (mode === "time") {
         const newStatus = state.status === "before" ? "restart" : "before";
-        // First hide UI
         setState((prev) => ({ ...prev, isTextChanging: true }));
 
-        // After fade out, update all values and generate new text
         setTimeout(() => {
           setState((prev) => ({
             ...prev,
@@ -221,17 +212,14 @@ export function useGameState(initialSampleText: string[], userId: string | null)
           const newText = generateRandomWords(50, state.wordSet).split(" ");
           setState((prev) => ({ ...prev, sampleText: newText }));
 
-          // Fade back in
           setTimeout(() => {
             setState((prev) => ({ ...prev, isTextChanging: false }));
           }, 50);
         }, 150);
       } else {
         const newStatus = state.status === "before" ? "restart" : "before";
-        // First hide UI
         setState((prev) => ({ ...prev, isTextChanging: true }));
 
-        // After fade out, update all values and generate new text
         setTimeout(() => {
           setState((prev) => ({
             ...prev,
@@ -249,7 +237,6 @@ export function useGameState(initialSampleText: string[], userId: string | null)
           const newText = generateRandomWords(10, state.wordSet).split(" ");
           setState((prev) => ({ ...prev, sampleText: newText }));
 
-          // Fade back in
           setTimeout(() => {
             setState((prev) => ({ ...prev, isTextChanging: false }));
           }, 50);
@@ -337,19 +324,15 @@ export function useGameState(initialSampleText: string[], userId: string | null)
   }, [initialText]);
 
   return {
-    // State
     ...state,
-    showUi, // Derived state
+    showUi,
 
-    // Generic updater (for simple updates)
     updateGameState,
 
-    // Typing state updaters
     updateLetterCount,
     updateCompletedWords,
     resetTypingState,
 
-    // Specific operations (for complex logic)
     switchMode,
     changeWordCount,
     changeWordSet,

@@ -156,7 +156,6 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
             </div>
           ) : (
             <div className="flex-1 flex flex-col justify-center px-4 min-h-0">
-              {/* Game Mode Config - Fixed at top */}
               <div className="flex justify-center py-2 sm:py-4 md:py-6 animate-in fade-in-0 duration-500">
                 <GameModeConfig
                   mode={gameState.mode}
@@ -173,9 +172,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                 />
               </div>
 
-              {/* Centered Content Container - WordsetSelector + GameArea */}
               <div className="flex-1 flex flex-col items-center justify-center space-y-6 min-h-0 animate-in fade-in-0 duration-500">
-                {/* WordsetSelector */}
                 <WordsetSelector
                   wordCount={gameState.wordCount}
                   wordSet={gameState.wordSet}
@@ -184,7 +181,6 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   generateNewText={gameState.generateNewText}
                 />
 
-                {/* GameArea */}
                 <GameArea
                   mode={gameState.mode}
                   status={gameState.status}

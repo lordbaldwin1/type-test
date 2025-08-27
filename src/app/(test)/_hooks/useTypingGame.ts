@@ -16,7 +16,6 @@ export function useTypingGame({
   const [input, setInput] = useState<string>("");
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
 
-  // Handle resetting typing state when gameStatus or sampleText changes
   useEffect(() => {
     if (gameStatus === "during") return;
 
