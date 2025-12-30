@@ -8,15 +8,18 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { SquarePen } from "lucide-react";
-import type { WordsetSelectorProps } from "../_utils/types";
+import { useGameStore } from "../_store/gameStore";
 
-export function WordsetSelector({
-  wordCount,
-  wordSet,
-  showUi,
-  updateGameState,
-  generateNewText,
-}: WordsetSelectorProps) {
+export function WordsetSelector() {
+  const isInitialized = useGameStore((s) => s.isInitialized);
+  const wordSet = useGameStore((s) => s.wordSet);
+  const status = useGameStore((s) => s.status);
+  const isTextChanging = useGameStore((s) => s.isTextChanging);
+
+  const setWordSet = useGameStore((s) => s.setWordSet);
+
+  const showUi = isInitialized && !isTextChanging && status !== "playing";
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -31,32 +34,36 @@ export function WordsetSelector({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[250px]">
         <DialogHeader>
-          <DialogTitle className="text-center border-b border-border pb-2">word sets</DialogTitle>
+          <DialogTitle className="border-border border-b pb-2 text-center">
+            word sets
+          </DialogTitle>
         </DialogHeader>
         <DialogClose asChild>
           <div className="flex flex-col items-center gap-2">
             <p
-              className={`${wordSet === "common200" ? "text-foreground" : "text-muted-foreground"} hover:text-foreground hover:scale-102 hover:cursor-pointer`}
-              onClick={() => {
-                updateGameState({ wordSet: "common200" });
-                generateNewText(wordCount, "common200", true);
-              }}
+              className={`${
+                wordSet === "common200"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              } hover:text-foreground hover:scale-102 hover:cursor-pointer`}
+              onClick={() => setWordSet("common200")}
             >
               english 300
             </p>
             <p
-              className={`${wordSet === "oxford3000" ? "text-foreground" : "text-muted-foreground"} hover:text-foreground hover:scale-102 hover:cursor-pointer`}
-              onClick={() => {
-                updateGameState({ wordSet: "oxford3000" });
-                generateNewText(wordCount, "oxford3000", true);
-              }}
+              className={`${
+                wordSet === "oxford3000"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              } hover:text-foreground hover:scale-102 hover:cursor-pointer`}
+              onClick={() => setWordSet("oxford3000")}
             >
               english 3k
             </p>
           </div>
         </DialogClose>
-        <DialogFooter className="w-full flex flex-col items-center justify-center sm:justify-center">
-          <p className="text-center text-muted-foreground text-sm">
+        <DialogFooter className="flex w-full flex-col items-center justify-center sm:justify-center">
+          <p className="text-muted-foreground text-center text-sm">
             more coming soon!
           </p>
         </DialogFooter>

@@ -1,41 +1,44 @@
-import { useRef, useState, useEffect, memo } from "react";
+import { useRef, useState, useEffect } from "react";
 import { MousePointerClick } from "lucide-react";
 import { Word } from "./word";
-import type { GameAreaProps } from "~/app/(test)/_utils/types";
+import { useGameStore } from "../_store/gameStore";
 
-export const GameArea = memo(function GameArea({
-  mode,
-  status,
-  sampleText,
-  completedWords,
-  currentWordIndex,
+interface GameAreaProps {
+  input: string;
+  currentWordIndex: number;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}
+
+export function GameArea({
   input,
-  time,
-  saveStats,
+  currentWordIndex,
   onInputChange,
-  onInputSubmit,
-  isTextChanging,
+  onKeyDown,
   inputRef,
-  onInputFocus,
-  onInputBlur,
-}: Omit<GameAreaProps, 'onReset'>) {
+}: GameAreaProps) {
+  const isInitialized = useGameStore((s) => s.isInitialized);
+  const status = useGameStore((s) => s.status);
+  const mode = useGameStore((s) => s.mode);
+  const sampleText = useGameStore((s) => s.sampleText);
+  const completedWords = useGameStore((s) => s.completedWords);
+  const time = useGameStore((s) => s.time);
+  const isTextChanging = useGameStore((s) => s.isTextChanging);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLDivElement>(null);
+  const wordsContainerRef = useRef<HTMLDivElement>(null);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showBlur, setShowBlur] = useState(false);
-  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const wordsContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleFocus = () => {
-    setIsInputFocused(true);
-    onInputFocus();
-  };
+  const showUi = status !== "playing" || !isInputFocused;
 
-  const handleBlur = () => {
-    setIsInputFocused(false);
-    onInputBlur();
-  };
+  const handleFocus = () => setIsInputFocused(true);
+  const handleBlur = () => setIsInputFocused(false);
 
   useEffect(() => {
     if (!wordsContainerRef.current) return;
@@ -44,7 +47,7 @@ export const GameArea = memo(function GameArea({
       const wordsContainer = wordsContainerRef.current;
       if (!wordsContainer) return;
 
-      const wordElements = wordsContainer.querySelectorAll('[data-word-index]');
+      const wordElements = wordsContainer.querySelectorAll("[data-word-index]");
       const currentWordElement = wordElements[currentWordIndex] as HTMLElement;
 
       if (!currentWordElement) return;
@@ -52,7 +55,8 @@ export const GameArea = memo(function GameArea({
       const containerRect = wordsContainer.getBoundingClientRect();
       const wordRect = currentWordElement.getBoundingClientRect();
 
-      const letterElements = currentWordElement.querySelectorAll('[data-letter-index]');
+      const letterElements =
+        currentWordElement.querySelectorAll("[data-letter-index]");
       const currentLetterIndex = input.length;
 
       let letterX = 0;
@@ -64,14 +68,13 @@ export const GameArea = memo(function GameArea({
         letterX = currentWordElement.offsetWidth;
       }
 
-      const x = (wordRect.left - containerRect.left) + letterX;
+      const x = wordRect.left - containerRect.left + letterX;
       const y = wordRect.top - containerRect.top;
 
       setCursorPosition({ x, y });
     };
 
     const timeoutId = setTimeout(updateCursorPosition, 10);
-
     return () => clearTimeout(timeoutId);
   }, [currentWordIndex, input, sampleText]);
 
@@ -86,15 +89,14 @@ export const GameArea = memo(function GameArea({
   }, [currentWordIndex]);
 
   useEffect(() => {
-    if (status === "during" || status === "before" || status === "restart") {
+    if (status === "playing" || status === "idle") {
       inputRef.current?.focus();
     }
-  }, [status, sampleText, saveStats, inputRef]);
+  }, [status, sampleText, inputRef]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (status !== "during" && status !== "before" && status !== "restart") return;
-
+      if (status !== "playing" && status !== "idle") return;
       if (document.activeElement === inputRef.current) return;
 
       const specialKeys = [
@@ -124,17 +126,14 @@ export const GameArea = memo(function GameArea({
       ];
 
       if (specialKeys.includes(e.key)) return;
-
       inputRef.current?.focus();
     };
 
     document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [status, inputRef]);
 
+  // Delay showing blur overlay to avoid flash on quick focus changes
   useEffect(() => {
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
@@ -142,7 +141,7 @@ export const GameArea = memo(function GameArea({
 
     if (isInputFocused) {
       setShowBlur(false);
-    } else if (status === "during" || status === "before" || status === "restart") {
+    } else if (status === "playing" || status === "idle") {
       blurTimeoutRef.current = setTimeout(() => {
         setShowBlur(true);
       }, 300);
@@ -158,7 +157,7 @@ export const GameArea = memo(function GameArea({
   }, [isInputFocused, status]);
 
   const handleGameAreaClick = () => {
-    if (status === "during" || status === "before" || status === "restart") {
+    if (status === "playing" || status === "idle") {
       inputRef.current?.focus();
     }
   };
@@ -174,15 +173,15 @@ export const GameArea = memo(function GameArea({
           value={input}
           maxLength={15}
           onChange={onInputChange}
-          onKeyDown={onInputSubmit}
+          onKeyDown={onKeyDown}
           className="bg-background border-border text-foreground absolute mb-4 border-2 opacity-0"
         />
         <div className="relative">
           {showBlur && (
-            <div className="absolute inset-0 z-20 mt-8 flex items-center justify-center pointer-events-none">
-              <div className="absolute inset-0 -mx-4 bg-background/90 backdrop-blur-[4px]" />
+            <div className="pointer-events-none absolute inset-0 z-20 mt-8 flex items-center justify-center">
+              <div className="bg-background/90 absolute inset-0 -mx-4 backdrop-blur-[4px]" />
               <div className="bg-background/80 relative z-10 rounded-lg p-0 text-center backdrop-blur-[4px]">
-                <p className="flex flex-row items-center mt-2 gap-2">
+                <p className="mt-2 flex flex-row items-center gap-2">
                   <MousePointerClick className="h-4 w-4" /> Click or press any
                   key to start
                 </p>
@@ -190,8 +189,11 @@ export const GameArea = memo(function GameArea({
             </div>
           )}
 
-          <div className={`ml-4 w-full transition-opacity duration-150 ${isTextChanging ? "opacity-0" : "opacity-100"
-            }`}>
+          <div
+            className={`ml-4 w-full transition-opacity duration-150 ${
+              !isInitialized || isTextChanging ? "opacity-0" : "opacity-100"
+            }`}
+          >
             {mode === "words" && (
               <p className="text-primary text-2xl font-bold">{`${completedWords.length}/${sampleText.length}`}</p>
             )}
@@ -202,8 +204,9 @@ export const GameArea = memo(function GameArea({
 
           <div
             ref={containerRef}
-            className={`relative mx-auto ml-2 flex h-[7.5em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${isTextChanging ? "opacity-0" : "opacity-100"
-              }`}
+            className={`relative mx-auto ml-2 flex h-[7.5em] w-full max-w-full items-start justify-center overflow-hidden transition-opacity duration-150 ${
+              !isInitialized || isTextChanging ? "opacity-0" : "opacity-100"
+            }`}
           >
             <div
               ref={wordsContainerRef}
@@ -230,19 +233,21 @@ export const GameArea = memo(function GameArea({
               ))}
             </div>
 
-            {(status === "during" || status === "before" || status === "restart") && (
+            {isInitialized && (status === "playing" || status === "idle") && (
               <div
-                className={`absolute pointer-events-none transition-all duration-75 ease-out ${
-                  status === "before" ? "animate-[blink_1s_ease-in-out_infinite]" : ""
+                className={`pointer-events-none absolute transition-all duration-75 ease-out ${
+                  status === "idle"
+                    ? "animate-[blink_1s_ease-in-out_infinite]"
+                    : ""
                 }`}
                 style={{
                   left: `${cursorPosition.x + 1.5}px`,
                   top: `${cursorPosition.y + 2}px`,
-                  height: '2.25em',
-                  width: '3px',
-                  backgroundColor: 'var(--primary)',
-                  borderRadius: '2px',
-                  transform: 'translateX(-1px)',
+                  height: "2.25em",
+                  width: "3px",
+                  backgroundColor: "var(--primary)",
+                  borderRadius: "2px",
+                  transform: "translateX(-1px)",
                 }}
               />
             )}
@@ -251,4 +256,4 @@ export const GameArea = memo(function GameArea({
       </div>
     </div>
   );
-});
+}

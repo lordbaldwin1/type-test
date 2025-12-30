@@ -1,9 +1,9 @@
 "use client";
 
-import type { GameStatsProps } from "~/app/(test)/_utils/types";
-import { WpmChart } from "./wpm-chart";
-import { SignInButton } from "@clerk/nextjs";
 import { useEffect, useState, useRef } from "react";
+import { SignInButton } from "@clerk/nextjs";
+import { useGameStore } from "../_store/gameStore";
+import { WpmChart } from "./wpm-chart";
 import {
   Tooltip,
   TooltipContent,
@@ -19,15 +19,18 @@ interface UserStats {
   totalXp: number;
 }
 
-export function GameStats({
-  stats,
-  mode,
-  timeLimit,
-  time,
-  wpmPerSecond,
-  xp,
-  onReset,
-}: GameStatsProps) {
+interface GameStatsProps {
+  onReset: () => void;
+}
+
+export function GameStats({ onReset }: GameStatsProps) {
+  const stats = useGameStore((s) => s.stats);
+  const mode = useGameStore((s) => s.mode);
+  const timeLimit = useGameStore((s) => s.timeLimit);
+  const time = useGameStore((s) => s.time);
+  const wpmPerSecond = useGameStore((s) => s.wpmPerSecond);
+  const xp = useGameStore((s) => s.xp);
+
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [progressWidthBefore, setProgressWidthBefore] = useState(0);
@@ -61,7 +64,6 @@ export function GameStats({
     void fetchUserStats();
   }, []);
 
-  // Calculate XP progress
   const calculateXpForLevel = (level: number) => {
     let xpRequired = 0;
     let xpIncrement = 100;
@@ -120,7 +122,7 @@ export function GameStats({
           <Button
             variant="ghost"
             size="icon"
-            className="order-last text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground order-last"
             onClick={onReset}
           >
             <RotateCcw className="h-4 w-4" />
@@ -139,7 +141,7 @@ export function GameStats({
             </div>
             <Tooltip>
               <TooltipTrigger>
-                <div className="text-foreground text-3xl leading-none font-bold">
+                <div className="text-foreground text-3xl font-bold leading-none">
                   {stats.rawWpm}
                 </div>
               </TooltipTrigger>
@@ -155,7 +157,7 @@ export function GameStats({
             </div>
             <Tooltip>
               <TooltipTrigger>
-                <div className="text-primary text-3xl leading-none font-bold">
+                <div className="text-primary text-3xl font-bold leading-none">
                   {stats.accuracy}%
                 </div>
               </TooltipTrigger>
@@ -171,7 +173,7 @@ export function GameStats({
             </div>
             <Tooltip>
               <TooltipTrigger>
-                <div className="text-primary text-6xl leading-none font-bold">
+                <div className="text-primary text-6xl font-bold leading-none">
                   {stats.wpm}
                 </div>
               </TooltipTrigger>
@@ -187,7 +189,7 @@ export function GameStats({
             </div>
             <Tooltip>
               <TooltipTrigger>
-                <div className="text-foreground text-3xl leading-none font-bold">
+                <div className="text-foreground text-3xl font-bold leading-none">
                   {mode === "time" ? timeLimit : time}s
                 </div>
               </TooltipTrigger>
@@ -201,7 +203,7 @@ export function GameStats({
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               characters
             </div>
-            <div className="text-3xl leading-none font-bold">
+            <div className="text-3xl font-bold leading-none">
               <Tooltip>
                 <TooltipTrigger>
                   <span className="text-primary">{stats.correct}</span>
@@ -234,7 +236,7 @@ export function GameStats({
           </span>
           <div className="bg-muted relative h-4 w-full max-w-2xl overflow-hidden rounded-sm">
             <div
-              className="bg-primary absolute top-0 left-0 h-full transition-all duration-500 ease-out"
+              className="bg-primary absolute left-0 top-0 h-full transition-all duration-500 ease-out"
               style={{ width: `${progressWidthBefore * 100}%` }}
             />
             <div

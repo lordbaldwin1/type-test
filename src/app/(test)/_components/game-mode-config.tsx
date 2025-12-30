@@ -1,62 +1,67 @@
-import { memo, useCallback } from "react";
 import { Anvil, Clock, Hash, Sword } from "lucide-react";
-import type { GameMode, GameModeConfigProps } from "../_utils/types";
+import { useGameStore } from "../_store/gameStore";
 import { Button } from "~/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import Link from "next/link";
 
-export const GameModeConfig = memo(function GameModeConfig({
-  mode,
-  timeLimit,
-  wordCount,
-  saveStats,
-  showUi,
-  updateGameState,
-  switchMode,
-  changeWordCount,
-  changeTimeLimit,
-  userId,
-}: GameModeConfigProps) {
+interface GameModeConfigProps {
+  userId: string | null;
+  onReset: () => void;
+}
+
+export function GameModeConfig({ userId, onReset }: GameModeConfigProps) {
+  const isInitialized = useGameStore((s) => s.isInitialized);
+  const mode = useGameStore((s) => s.mode);
+  const timeLimit = useGameStore((s) => s.timeLimit);
+  const wordCount = useGameStore((s) => s.wordCount);
+  const isRanked = useGameStore((s) => s.isRanked);
+  const status = useGameStore((s) => s.status);
+  const isTextChanging = useGameStore((s) => s.isTextChanging);
+
+  const setMode = useGameStore((s) => s.setMode);
+  const setWordCount = useGameStore((s) => s.setWordCount);
+  const setTimeLimit = useGameStore((s) => s.setTimeLimit);
+  const setRanked = useGameStore((s) => s.setRanked);
+
   const wordOptions = [10, 25, 50, 100];
   const timeOptions = [15, 30, 60];
 
-  const handleModeChange = useCallback(
-    (newMode: GameMode) => {
-      switchMode(newMode);
-    },
-    [switchMode],
-  );
+  const showUi = isInitialized && !isTextChanging && status !== "playing";
 
-  const handleTimeLimitChange = useCallback(
-    (seconds: number) => {
-      changeTimeLimit(seconds);
-      // Auto-adjust word count for time mode
-      if (mode === "time") {
-        changeWordCount(seconds * 2.5);
-      }
-    },
-    [changeTimeLimit, changeWordCount, mode],
-  );
+  const handleModeChange = (newMode: "words" | "time") => {
+    setMode(newMode);
+    onReset();
+  };
 
-  const handleWordCountChange = useCallback(
-    (count: number) => {
-      changeWordCount(count);
-    },
-    [changeWordCount],
-  );
+  const handleTimeLimitChange = (seconds: number) => {
+    setTimeLimit(seconds);
+    if (mode === "time") {
+      setWordCount(seconds * 2.5);
+    }
+  };
+
+  const handleWordCountChange = (count: number) => {
+    setWordCount(count);
+  };
 
   return (
     <div
-      className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${showUi ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+      className={`bg-card text-muted-foreground flex items-center justify-center rounded-md border transition-opacity duration-300 ${
+        showUi ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
     >
       <div className="flex space-x-2">
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "false" ? "text-green-400" : ""
-            }`}
-          onClick={() => updateGameState({ saveStats: "false" })}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+            !isRanked ? "text-green-400" : ""
+          }`}
+          onClick={() => setRanked(false)}
         >
           <div className="flex flex-row items-center gap-1">
             <Anvil className="h-3 w-3" />
@@ -67,9 +72,10 @@ export const GameModeConfig = memo(function GameModeConfig({
           <Button
             variant="link"
             size="sm"
-            className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "true" ? "text-red-400" : ""
-              }`}
-            onClick={() => updateGameState({ saveStats: "true" })}
+            className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+              isRanked ? "text-red-400" : ""
+            }`}
+            onClick={() => setRanked(true)}
           >
             <div className="flex flex-row items-center gap-1">
               <Sword className="h-3 w-3" />
@@ -85,9 +91,9 @@ export const GameModeConfig = memo(function GameModeConfig({
                     variant="link"
                     size="sm"
                     disabled={true}
-                    className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${saveStats === "true" ? "text-red-200" : ""
-                      }`}
-                    onClick={() => updateGameState({ saveStats: "true" })}
+                    className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+                      isRanked ? "text-red-200" : ""
+                    }`}
                   >
                     <div className="flex flex-row items-center gap-1">
                       <Anvil className="h-3 w-3" />
@@ -104,16 +110,15 @@ export const GameModeConfig = memo(function GameModeConfig({
         )}
       </div>
 
-      {/* Divider */}
       <div className="bg-border mx-3 h-6 w-px rounded-sm p-0.5"></div>
 
-      {/* Mode toggles */}
       <div className="flex space-x-2">
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${mode === "time" ? "text-foreground" : ""
-            }`}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+            mode === "time" ? "text-foreground" : ""
+          }`}
           onClick={() => handleModeChange("time")}
         >
           <div className="flex flex-row items-center gap-1">
@@ -125,8 +130,9 @@ export const GameModeConfig = memo(function GameModeConfig({
         <Button
           variant="link"
           size="sm"
-          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${mode === "words" ? "text-foreground" : ""
-            }`}
+          className={`text-muted-foreground hover:text-foreground px-2 py-1 transition-colors hover:cursor-pointer ${
+            mode === "words" ? "text-foreground" : ""
+          }`}
           onClick={() => handleModeChange("words")}
         >
           <div className="flex flex-row items-center gap-1">
@@ -136,10 +142,8 @@ export const GameModeConfig = memo(function GameModeConfig({
         </Button>
       </div>
 
-      {/* Divider */}
       <div className="bg-border mx-3 h-6 w-px rounded-sm p-0.5"></div>
 
-      {/* Options based on active mode */}
       <div className="flex space-x-2">
         {mode === "time" && (
           <>
@@ -147,8 +151,9 @@ export const GameModeConfig = memo(function GameModeConfig({
               <Button
                 key={seconds}
                 variant="link"
-                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${timeLimit === seconds ? "text-foreground" : ""
-                  }`}
+                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
+                  timeLimit === seconds ? "text-foreground" : ""
+                }`}
                 onClick={() => handleTimeLimitChange(seconds)}
               >
                 {seconds}
@@ -163,8 +168,9 @@ export const GameModeConfig = memo(function GameModeConfig({
               <Button
                 key={count}
                 variant="link"
-                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${wordCount === count ? "text-foreground" : ""
-                  }`}
+                className={`text-muted-foreground hover:text-foreground rounded px-2 py-1 transition-colors ${
+                  wordCount === count ? "text-foreground" : ""
+                }`}
                 onClick={() => handleWordCountChange(count)}
               >
                 {count}
@@ -175,4 +181,4 @@ export const GameModeConfig = memo(function GameModeConfig({
       </div>
     </div>
   );
-});
+}
