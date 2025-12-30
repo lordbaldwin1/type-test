@@ -84,6 +84,7 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
               fillOpacity={0.2}
               stroke="var(--color-rawWpm)"
               strokeWidth={2}
+              isAnimationActive={false}
             />
             <Area
               dataKey="wpm"
@@ -92,6 +93,7 @@ export function WpmChart({ wpmPerSecond }: WpmChartProps) {
               fillOpacity={0.4}
               stroke="var(--color-wpm)"
               strokeWidth={2}
+              isAnimationActive={false}
             />
           </AreaChart>
         </ChartContainer>

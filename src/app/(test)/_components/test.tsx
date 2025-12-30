@@ -142,7 +142,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
       <div className="flex-1 flex flex-col">
         <main className="flex-1 flex flex-col">
           {gameState.status === "after" ? (
-            <div className="flex items-center justify-center px-4 py-8">
+            <div className="flex-1 flex items-center justify-center px-4">
               <div className="animate-in fade-in duration-500 w-full">
                 <GameStats
                   stats={gameState.stats}
@@ -151,6 +151,7 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   time={gameState.time}
                   wpmPerSecond={gameState.wpmPerSecond}
                   xp={gameState.xp}
+                  onReset={handleReset}
                 />
               </div>
             </div>
@@ -198,29 +199,27 @@ export default function TypeTest(props: { initialSampleText: string[] }) {
                   onInputBlur={() => gameState.updateGameState({ isInputFocused: false })}
                   showUi={gameState.showUi}
                 />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={handleReset}
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>restart test</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
           )}
         </main>
 
-        {/* Restart Button - Always positioned right after content */}
-        <div className="flex justify-center animate-in fade-in-0 duration-500">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="flex items-center justify-center text-muted-foreground hover:text-foreground"
-                onClick={handleReset}
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>restart test</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
       </div>
 
       {/* Tab Instructions - Always at bottom */}

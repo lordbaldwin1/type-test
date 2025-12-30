@@ -3,13 +3,15 @@
 import type { GameStatsProps } from "~/app/(test)/_utils/types";
 import { WpmChart } from "./wpm-chart";
 import { SignInButton } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { Loader2 } from "lucide-react";
+import { RotateCcw } from "lucide-react";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Button } from "~/components/ui/button";
 
 interface UserStats {
   userId: string | null;
@@ -24,11 +26,23 @@ export function GameStats({
   time,
   wpmPerSecond,
   xp,
-}: Omit<GameStatsProps, "onReset">) {
+  onReset,
+}: GameStatsProps) {
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [progressWidthBefore, setProgressWidthBefore] = useState(0);
   const [progressWidthAfter, setProgressWidthAfter] = useState(0);
+  const focusTrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    focusTrapRef.current?.focus();
+  }, []);
+
+  const handleBlur = (e: React.FocusEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      focusTrapRef.current?.focus();
+    }
+  };
 
   useEffect(() => {
     const fetchUserStats = async () => {
@@ -90,13 +104,35 @@ export function GameStats({
 
   return (
     <div
-      className="flex w-full flex-col items-center gap-6 px-4 py-4"
+      className="flex w-full flex-col items-center gap-6 px-4 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
       tabIndex={-1}
+      onBlur={handleBlur}
     >
-      {/* Top Stats Row */}
+      <div
+        ref={focusTrapRef}
+        tabIndex={0}
+        className="sr-only order-last"
+        aria-hidden="true"
+      />
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="order-last text-muted-foreground hover:text-foreground"
+            onClick={onReset}
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>restart test</p>
+        </TooltipContent>
+      </Tooltip>
+
       <div className="w-full">
         <div className="grid grid-cols-5 gap-6 text-center">
-          {/* Raw WPM */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               raw wpm
@@ -113,7 +149,6 @@ export function GameStats({
             </Tooltip>
           </div>
 
-          {/* Accuracy */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               acc
@@ -130,7 +165,6 @@ export function GameStats({
             </Tooltip>
           </div>
 
-          {/* WPM - Center and Largest */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               wpm
@@ -147,7 +181,6 @@ export function GameStats({
             </Tooltip>
           </div>
 
-          {/* Time */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               time
@@ -164,7 +197,6 @@ export function GameStats({
             </Tooltip>
           </div>
 
-          {/* Characters */}
           <div>
             <div className="text-muted-foreground mb-2 text-sm font-medium">
               characters
@@ -189,10 +221,11 @@ export function GameStats({
         </div>
       </div>
 
-      {/* User Stats */}
       {isLoading ? (
-        <div className="text-muted-foreground flex items-center gap-2 text-sm">
-          <Loader2 className="animate-spin" />
+        <div className="flex w-full max-w-5xl flex-row items-center gap-4">
+          <Skeleton className="h-8 min-w-[100px]" />
+          <Skeleton className="h-4 w-full max-w-2xl" />
+          <Skeleton className="h-7 min-w-[120px]" />
         </div>
       ) : userStats ? (
         <div className="text-muted-foreground flex w-full max-w-5xl flex-row items-center gap-4 text-sm animate-in fade-in-0 duration-500">
@@ -200,12 +233,10 @@ export function GameStats({
             {userStats.currentLevel}
           </span>
           <div className="bg-muted relative h-4 w-full max-w-2xl overflow-hidden rounded-sm">
-            {/* Previous progress */}
             <div
               className="bg-primary absolute top-0 left-0 h-full transition-all duration-500 ease-out"
               style={{ width: `${progressWidthBefore * 100}%` }}
             />
-            {/* New XP gain */}
             <div
               className="absolute top-0 h-full bg-green-500 transition-all duration-500 ease-out"
               style={{
@@ -235,7 +266,6 @@ export function GameStats({
         </div>
       )}
 
-      {/* Chart */}
       <div className="w-full max-w-[90rem]">
         <WpmChart wpmPerSecond={wpmPerSecond} />
       </div>
