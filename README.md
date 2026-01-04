@@ -1,6 +1,6 @@
 # Vanishtype
 
-Welcome friends! This is the codebase for the Vanishtype typing test site. Check it out now at the link below:
+Hi there. This is the codebase for the Vanishtype typing test site. Check it out now at the link below:
 
 - [vanishtype.com](https://vanishtype.com)
 

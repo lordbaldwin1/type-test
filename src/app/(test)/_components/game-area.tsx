@@ -35,8 +35,6 @@ export function GameArea({
   const [showBlur, setShowBlur] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
-  const showUi = status !== "playing" || !isInputFocused;
-
   const handleFocus = () => setIsInputFocused(true);
   const handleBlur = () => setIsInputFocused(false);
 
